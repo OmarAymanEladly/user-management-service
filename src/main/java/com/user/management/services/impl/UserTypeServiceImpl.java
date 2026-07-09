@@ -1,4 +1,4 @@
-package com.user.management.services.Impl;
+package com.user.management.services.impl;
 
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserTypeImpl implements UserTypeService {
+public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeRepository repository;
     private final UserTypeMapper mapper;

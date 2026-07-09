@@ -29,7 +29,7 @@ public class UserTypeController {
         return userTypeService.getAllTypes();
     }
 
-    @GetMapping({"/{id}"})
+    @GetMapping("/{id}")
     public UserTypeResponseDTO getTypeById(@PathVariable Long id){
         return userTypeService.getTypeById(id);
     }

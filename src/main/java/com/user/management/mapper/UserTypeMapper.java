@@ -40,10 +40,10 @@ public class UserTypeMapper {
 
     // --- Helper Methods for the internal List of Fields ---
 
-    private List<UserTypeResponseDTO.FieldDTO> mapFieldsToResponseDto(List<FieldDefinition> entities) {
+    private List<UserTypeResponseDTO.UserTypeResponseFieldDTO> mapFieldsToResponseDto(List<FieldDefinition> entities) {
         if (entities == null) return new ArrayList<>();
         return entities.stream().map(field ->
-                UserTypeResponseDTO.FieldDTO.builder()
+                UserTypeResponseDTO.UserTypeResponseFieldDTO.builder()
                         .fieldName(field.getFieldName())
                         .displayName(field.getDisplayName())
                         .dataType(field.getDataType())
@@ -53,7 +53,7 @@ public class UserTypeMapper {
         ).collect(Collectors.toList());
     }
 
-    private List<FieldDefinition> mapFieldsToEntity(List<UserTypeRequestDTO.FieldDTO> dtos) {
+    private List<FieldDefinition> mapFieldsToEntity(List<UserTypeRequestDTO.UserTypeRequestFieldDTO> dtos) {
         if (dtos == null) return new ArrayList<>();
         return dtos.stream().map(dto -> {
             FieldDefinition field = new FieldDefinition();
