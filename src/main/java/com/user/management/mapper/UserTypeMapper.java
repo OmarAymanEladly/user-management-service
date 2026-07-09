@@ -1,0 +1,68 @@
+package com.user.management.mapper;
+
+import com.user.management.dto.request.UserTypeRequestDTO;
+import com.user.management.dto.response.UserTypeResponseDTO;
+import com.user.management.entity.FieldDefinition;
+import com.user.management.entity.UserType;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class UserTypeMapper {
+
+    // 1. Convert Entity -> Response DTO
+    public UserTypeResponseDTO toResponse(UserType entity) {
+        if (entity == null) return null;
+
+        return UserTypeResponseDTO.builder()
+                .id(entity.getId())
+                .type(entity.getType())
+                .description(entity.getDescription())
+                .status(entity.getStatus())
+                .fields(mapFieldsToResponseDto(entity.getFields()))
+                .build();
+    }
+
+    // 2. Convert Request DTO -> Entity
+    public UserType toEntity(UserTypeRequestDTO request) {
+        if (request == null) return null;
+
+        return UserType.builder()
+                .type(request.getType())
+                .description(request.getDescription())
+                .status(request.getStatus())
+                .fields(mapFieldsToEntity(request.getFields()))
+                .build();
+    }
+
+    // --- Helper Methods for the internal List of Fields ---
+
+    private List<UserTypeResponseDTO.FieldDTO> mapFieldsToResponseDto(List<FieldDefinition> entities) {
+        if (entities == null) return new ArrayList<>();
+        return entities.stream().map(field ->
+                UserTypeResponseDTO.FieldDTO.builder()
+                        .fieldName(field.getFieldName())
+                        .displayName(field.getDisplayName())
+                        .dataType(field.getDataType())
+                        .required(field.isRequired())
+                        .validation(field.getValidation())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    private List<FieldDefinition> mapFieldsToEntity(List<UserTypeRequestDTO.FieldDTO> dtos) {
+        if (dtos == null) return new ArrayList<>();
+        return dtos.stream().map(dto -> {
+            FieldDefinition field = new FieldDefinition();
+            field.setFieldName(dto.getFieldName());
+            field.setDisplayName(dto.getDisplayName());
+            field.setDataType(dto.getDataType());
+            field.setRequired(dto.isRequired());
+            field.setValidation(dto.getValidation());
+            return field;
+        }).collect(Collectors.toList());
+    }
+}
