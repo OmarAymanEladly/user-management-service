@@ -16,13 +16,13 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception ex, WebRequest request) {
 
         ErrorResponse error = ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .timestamp(LocalDateTime.now())
                 .message(ex.getMessage())
-                .path(request.getRequestURI())
+                .path(request.getDescription(false).replace("uri=", ""))
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -23,7 +23,7 @@ public class UserTypeServiceImpl implements UserTypeService {
     @Override
     public UserTypeResponseDTO createType(UserTypeRequestDTO request){
 
-        if(repository.findByType(request.getType()).isPresent()){
+        if(repository.findByType(request.getType().toLowerCase()).isPresent()){
             throw new RuntimeException("User Type: "+request.getType()+" already exist");
         }
 

@@ -3,7 +3,7 @@ services:
     image: postgres:17
     container_name: keycloak-postgres
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-keycloak}
+      POSTGRES_DB: user_management_db
       POSTGRES_USER: ${POSTGRES_USER:-keycloak}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-keycloak}
     ports:
