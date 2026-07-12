@@ -66,6 +66,15 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
+    public UserTypeResponseDTO deactivateType(UUID id) {
+        UserType existingEntity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
+
+        existingEntity.setStatus("INACTIVE");
+        return mapper.toResponse(repository.save(existingEntity));
+    }
+
+    @Override
     public void deleteType(UUID id){
 
         if(!repository.existsById(id)){

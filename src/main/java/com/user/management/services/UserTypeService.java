@@ -10,5 +10,6 @@ public interface UserTypeService {
     List<UserTypeResponseDTO> getAllTypes();
     UserTypeResponseDTO getTypeById(UUID id);
     UserTypeResponseDTO updateType(UUID id, UserTypeRequestDTO request);
+    UserTypeResponseDTO deactivateType(UUID id);
     void deleteType(UUID id);
 }
