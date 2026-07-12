@@ -34,6 +34,18 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
+    public List<AdminUserResponseDTO> getAllUsers() {
+        return managedUserRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Override
+    public AdminUserResponseDTO getUserById(Long id) {
+        return toResponse(getUser(id));
+    }
+
+    @Override
     public AdminUserResponseDTO updateUser(Long id, AdminUserRequestDTO request) {
         ManagedUser user = getUser(id);
         UserType userType = getUserType(request.getUserTypeId());
