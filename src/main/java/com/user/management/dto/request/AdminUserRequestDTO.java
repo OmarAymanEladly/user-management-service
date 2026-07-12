@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class AdminUserRequestDTO {
     private String phoneNumber;
 
     @NotNull(message = "User type is required")
-    private Long userTypeId;
+    private UUID userTypeId;
 
     private Boolean enabled = true;
     private Map<String, Object> attributes;

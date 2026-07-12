@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/userTypes")
@@ -30,18 +31,18 @@ public class UserTypeController {
     }
 
     @GetMapping("/{id}")
-    public UserTypeResponseDTO getTypeById(@PathVariable Long id){
+    public UserTypeResponseDTO getTypeById(@PathVariable UUID id){
         return userTypeService.getTypeById(id);
     }
 
     @PutMapping("/{id}")
-    public UserTypeResponseDTO updateType(@PathVariable Long id, @Valid @RequestBody UserTypeRequestDTO request){
+    public UserTypeResponseDTO updateType(@PathVariable UUID id, @Valid @RequestBody UserTypeRequestDTO request){
         return userTypeService.updateType(id,request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteType(@PathVariable Long id){
+    public void deleteType(@PathVariable UUID id){
        userTypeService.deleteType(id);
     }
 

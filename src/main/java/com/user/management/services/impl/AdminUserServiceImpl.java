@@ -41,12 +41,12 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUserResponseDTO getUserById(Long id) {
+    public AdminUserResponseDTO getUserById(UUID id) {
         return toResponse(getUser(id));
     }
 
     @Override
-    public AdminUserResponseDTO updateUser(Long id, AdminUserRequestDTO request) {
+    public AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request) {
         ManagedUser user = getUser(id);
         UserType userType = getUserType(request.getUserTypeId());
         validateAttributes(userType, request.getAttributes());
@@ -56,33 +56,33 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUserResponseDTO activateUser(Long id) {
+    public AdminUserResponseDTO activateUser(UUID id) {
         ManagedUser user = getUser(id);
         user.setEnabled(true);
         return toResponse(managedUserRepository.save(user));
     }
 
     @Override
-    public AdminUserResponseDTO deactivateUser(Long id) {
+    public AdminUserResponseDTO deactivateUser(UUID id) {
         ManagedUser user = getUser(id);
         user.setEnabled(false);
         return toResponse(managedUserRepository.save(user));
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(UUID id) {
         if (!managedUserRepository.existsById(id)) {
             throw new RuntimeException("User to delete doesn't exist");
         }
         managedUserRepository.deleteById(id);
     }
 
-    private ManagedUser getUser(Long id) {
+    private ManagedUser getUser(UUID id) {
         return managedUserRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
-    private UserType getUserType(Long id) {
+    private UserType getUserType(UUID id) {
         return userTypeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
     }

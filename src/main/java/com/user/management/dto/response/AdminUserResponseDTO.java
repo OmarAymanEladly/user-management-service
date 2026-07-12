@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminUserResponseDTO {
-    private Long id;
+    private UUID id;
     private String username;
     private String email;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private Long userTypeId;
+    private UUID userTypeId;
     private Boolean enabled;
     private Map<String, Object> attributes;
 }

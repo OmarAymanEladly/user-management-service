@@ -1,6 +1,6 @@
 -- 1. Table for User Types
 CREATE TABLE user_types (
-                            id uuid PRIMARY KEY,
+                            id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
                             type VARCHAR(50) NOT NULL UNIQUE,
                             description TEXT,
                             status VARCHAR(20) DEFAULT 'ACTIVE',

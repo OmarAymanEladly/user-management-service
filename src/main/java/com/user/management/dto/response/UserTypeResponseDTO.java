@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Data
@@ -14,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserTypeResponseDTO {
-    private Long id;
+    private UUID id;
     private String type;
     private String description;
     private String status;
