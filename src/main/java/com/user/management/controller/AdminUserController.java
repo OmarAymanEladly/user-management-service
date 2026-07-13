@@ -69,13 +69,6 @@ public class AdminUserController {
         adminUserService.deleteUser(id);
     }
 
-    @GetMapping
-    public List<AdminUserResponseDTO> getUsers(){
-        return adminUserService.getAllUsers();
-    }
 
-    @GetMapping("/{id}")
-    public AdminUserResponseDTO getUserById(@PathVariable UUID id){
-        return adminUserService.getUserById(id);
-    }
+
 }

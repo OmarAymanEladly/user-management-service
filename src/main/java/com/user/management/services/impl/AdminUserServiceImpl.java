@@ -8,12 +8,13 @@ import com.user.management.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.AdminUserService;
+import com.user.management.services.KeycloakService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
-import jakarta.ws.rs.core.Response;
-import java.util.stream.Collectors;
+
 
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeRepository userTypeRepository;
+    private final KeycloakService keycloakService;
     private final Keycloak keycloak;
 
     @Override
@@ -38,22 +40,23 @@ public class AdminUserServiceImpl implements AdminUserService {
         UserType userType = getUserType(request.getUserTypeId());
         validateAttributes(userType, request.getAttributes());
 
-        String keycloakId = createKeycloakUser(request);
+        UUID localId = UUID.randomUUID();
+        ManagedUser user = ManagedUser.builder().id(localId)
+        .isNewUser(true)
+        .syncStatus("PENDING_SYNC").build();
+        applyRequest(user, request, userType);
+
+
 
         try{
-            ManagedUser user = managedUserRepository.findByUsername(request.getUsername())
-                    .orElseGet(ManagedUser::new);
-
-            user.setId(UUID.fromString(keycloakId));
-
-            applyRequest(user, request, userType);
-            return toResponse(managedUserRepository.save(user));
+            String confirmedId = keycloakService.createKeycloakUser(localId,request);
+            user.setId(UUID.fromString(confirmedId));
+            user.setSyncStatus("SYNCED");
         } catch (Exception e) {
-            deleteKeycloakUser(UUID.fromString(keycloakId));
-            throw new RuntimeException("Local database failed.Rolling back keycloak user.");
-
+            System.err.println("Keycloak unavailable. Sync will be handled by background worker.");
         }
 
+        return toResponse(managedUserRepository.save(user));
 
     }
 
@@ -75,14 +78,14 @@ public class AdminUserServiceImpl implements AdminUserService {
         UserType userType = getUserType(request.getUserTypeId());
         validateAttributes(userType, request.getAttributes());
 
-        updateKeycloakUser(id, request);
+        keycloakService.updateKeycloakUser(id, request);
         applyRequest(user, request, userType);
         return toResponse(managedUserRepository.save(user));
     }
 
     @Override
     public AdminUserResponseDTO activateUser(UUID id) {
-        updateKeycloakStatus(id, true);
+        keycloakService.updateKeycloakStatus(id, true);
         ManagedUser user = getUser(id);
         user.setEnabled(true);
         return toResponse(managedUserRepository.save(user));
@@ -90,19 +93,28 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUserResponseDTO deactivateUser(UUID id) {
-        updateKeycloakStatus(id, false);
+        keycloakService.updateKeycloakStatus(id, false);
         ManagedUser user = getUser(id);
         user.setEnabled(false);
         return toResponse(managedUserRepository.save(user));
     }
 
+
+
     @Override
     public void deleteUser(UUID id) {
-        if (!managedUserRepository.existsById(id)) {
-            throw new RuntimeException("User to delete doesn't exist");
+        boolean existsInDb = managedUserRepository.existsById(id);
+
+        try {
+            keycloakService.deleteKeycloakUser(id);
+        } catch (Exception e) {
+            System.err.println("Note: User was already missing from Keycloak or Keycloak is down.");
         }
-        deleteKeycloakUser(id);
-        managedUserRepository.deleteById(id);
+        if (existsInDb) {
+            managedUserRepository.deleteById(id);
+        } else {
+            System.out.println("User was not in local DB, but Keycloak cleanup was attempted.");
+        }
     }
 
     private ManagedUser getUser(UUID id) {
@@ -152,61 +164,6 @@ public class AdminUserServiceImpl implements AdminUserService {
                 user.getEnabled(),
                 user.getAttributes()
         );
-    }
-
-    private String createKeycloakUser(AdminUserRequestDTO request){
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEnabled(true);
-        user.setEmailVerified(false);
-
-        Response response = keycloak.realm("user-management").users().create(user);
-
-        if(response.getStatus()!=201){
-            throw new RuntimeException("Keycloak user creation failed with status: " + response.getStatus());
-        }
-
-        String path = response.getLocation().getPath();
-        String keycloakId = path.substring(path.lastIndexOf('/')+1);
-
-        try {
-            keycloak.realm("user-management")
-                    .users()
-                    .get(keycloakId)
-                    .executeActionsEmail(List.of("UPDATE_PASSWORD","VERIFY_EMAIL"));
-        } catch (Exception e) {
-
-            System.err.println("Failed to send welcome email: " + e.getMessage());
-        }
-
-        return keycloakId;
-    }
-
-    private void updateKeycloakStatus(UUID id,boolean enabled){
-        var userResource = keycloak.realm("user-management").users().get(id.toString());
-        UserRepresentation user = userResource.toRepresentation();
-        user.setEnabled(enabled);
-        userResource.update(user);
-    }
-
-    private void deleteKeycloakUser(UUID id){
-        keycloak.realm("user-management").users().get(id.toString()).remove();
-
-    }
-
-    private void updateKeycloakUser(UUID id,AdminUserRequestDTO request){
-        UserRepresentation user = keycloak.realm("user-management").
-                users().get(id.toString()).toRepresentation();
-
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-
-        keycloak.realm("user-management").
-                users().get(id.toString()).update(user);
     }
 
 
