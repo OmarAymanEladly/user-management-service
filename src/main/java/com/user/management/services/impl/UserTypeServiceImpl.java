@@ -43,7 +43,7 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
-    public UserTypeResponseDTO getTypeById(Long id){
+    public UserTypeResponseDTO getTypeById(UUID id){
         UserType entity = repository.findById(id).
                 orElseThrow(()->new RuntimeException("User Type not found with ID: "+ id));
 
@@ -51,10 +51,9 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
-    public UserTypeResponseDTO updateType(Long id, UserTypeRequestDTO request){
+    public UserTypeResponseDTO updateType(UUID id, UserTypeRequestDTO request){
         UserType existingEntity = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("User Type not found with id: "+ id));
-
+                .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
         UserType updatedData = mapper.toEntity(request);
 
         existingEntity.setDescription(updatedData.getDescription());
@@ -66,7 +65,7 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
-    public void deleteType(Long id){
+    public void deleteType(UUID id){
 
         if(!repository.existsById(id)){
             throw new RuntimeException("User Type to delete doesn't exist");
