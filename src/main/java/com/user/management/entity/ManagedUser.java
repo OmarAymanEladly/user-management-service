@@ -28,6 +28,7 @@ import java.util.UUID;
 public class ManagedUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, unique = true)

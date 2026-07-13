@@ -1,5 +1,6 @@
 -- 1. Table for User Types
 CREATE TABLE user_types (
+
                             id UUID PRIMARY KEY,
                             type VARCHAR(50) NOT NULL UNIQUE,
                             description TEXT,

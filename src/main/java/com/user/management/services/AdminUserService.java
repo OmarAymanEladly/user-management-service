@@ -8,10 +8,10 @@ import java.util.UUID;
 
 public interface AdminUserService {
     AdminUserResponseDTO createUser(AdminUserRequestDTO request);
+    List<AdminUserResponseDTO> getAllUsers();
     AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request);
     AdminUserResponseDTO activateUser(UUID id);
     AdminUserResponseDTO deactivateUser(UUID id);
     void deleteUser(UUID id);
-    List<AdminUserResponseDTO> getAllUsers();
     AdminUserResponseDTO getUserById(UUID id);
 }

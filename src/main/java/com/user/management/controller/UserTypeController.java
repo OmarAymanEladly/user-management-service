@@ -40,6 +40,11 @@ public class UserTypeController {
         return userTypeService.updateType(id,request);
     }
 
+    @PatchMapping("/{id}/deactivate")
+    public UserTypeResponseDTO deactivateType(@PathVariable UUID id){
+        return userTypeService.deactivateType(id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteType(@PathVariable UUID id){

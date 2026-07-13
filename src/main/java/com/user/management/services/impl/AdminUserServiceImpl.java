@@ -13,14 +13,13 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 import jakarta.ws.rs.core.Response;
+import java.util.stream.Collectors;
 
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.substring;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +31,10 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUserResponseDTO createUser(AdminUserRequestDTO request) {
+
+        if (managedUserRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("User already exists in local database");
+        }
         UserType userType = getUserType(request.getUserTypeId());
         validateAttributes(userType, request.getAttributes());
 
@@ -53,6 +56,18 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
     }
+
+    @Override
+    public List<AdminUserResponseDTO> getAllUsers() {
+        return managedUserRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    /*@Override
+    public AdminUserResponseDTO getUserById(UUID id) {
+        return toResponse(getUser(id));
+    }*/
 
     @Override
     public AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request) {
@@ -171,10 +186,10 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     private void updateKeycloakStatus(UUID id,boolean enabled){
-        UserRepresentation user = keycloak.realm("user-management").
-                users().get(id.toString()).toRepresentation();
+        var userResource = keycloak.realm("user-management").users().get(id.toString());
+        UserRepresentation user = userResource.toRepresentation();
         user.setEnabled(enabled);
-        keycloak.realm("user-management").users().get(id.toString()).update(user);
+        userResource.update(user);
     }
 
     private void deleteKeycloakUser(UUID id){
@@ -194,12 +209,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 users().get(id.toString()).update(user);
     }
 
-    @Override
-    public List<AdminUserResponseDTO> getAllUsers(){
-        return managedUserRepository.findAll().stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
-    }
+
 
     @Override
     public AdminUserResponseDTO getUserById(UUID id){
