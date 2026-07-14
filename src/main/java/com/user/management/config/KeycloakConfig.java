@@ -1,10 +1,13 @@
 package com.user.management.config;
 
+import org.jboss.resteasy.client.jaxrs.internal.ResteasyClientBuilderImpl;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class KeycloakConfig {
@@ -18,6 +21,10 @@ public class KeycloakConfig {
                 .username("admin")
                 .password("admin123")
                 .grantType(OAuth2Constants.PASSWORD)
+                .resteasyClient(new ResteasyClientBuilderImpl()
+                        .connectTimeout(5, TimeUnit.SECONDS)
+                        .readTimeout(5, TimeUnit.SECONDS).build())
+
                 .build();
     }
 

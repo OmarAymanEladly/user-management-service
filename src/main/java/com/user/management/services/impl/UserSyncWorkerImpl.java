@@ -33,10 +33,18 @@ public class UserSyncWorkerImpl implements UserSyncWorker {
                 user.setSyncStatus("SYNCED");
                 repository.save(user);
             } catch (Exception e) {
-                System.err.println("Retry failed for " + user.getUsername());
+                if (e.getMessage().contains("409")) {
+                    user.setSyncStatus("SYNCED");
+                    repository.save(user);
+                    System.out.println("Worker: User already existed in Keycloak (likely recovered from timeout).");
+
+                } else {
+                    System.err.println("Worker: Retry failed for " + user.getUsername());
+                }
             }
         }
     }
+
 
     private AdminUserRequestDTO mapEntityToRequest(ManagedUser user) {
         AdminUserRequestDTO request = new AdminUserRequestDTO();

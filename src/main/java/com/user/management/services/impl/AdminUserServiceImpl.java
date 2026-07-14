@@ -53,7 +53,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             user.setId(UUID.fromString(confirmedId));
             user.setSyncStatus("SYNCED");
         } catch (Exception e) {
-            System.err.println("Keycloak unavailable. Sync will be handled by background worker.");
+            System.err.println("Keycloak timeout/error: " + e.getMessage());
         }
 
         return toResponse(managedUserRepository.save(user));
