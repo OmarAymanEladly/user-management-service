@@ -6,8 +6,6 @@ import com.user.management.repository.ManagedUserRepository;
 import com.user.management.services.KeycloakService;
 import com.user.management.services.UserSyncWorker;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,10 +24,10 @@ public class UserSyncWorkerImpl implements UserSyncWorker {
 
         for (ManagedUser user : pendingUsers) {
             try {
-                // Convert Entity back to DTO briefly to use the shared function
+                // Convert Entity back to DTO
                 AdminUserRequestDTO request = mapEntityToRequest(user);
 
-                // Use the SAME tool!
+
                 keycloakService.createKeycloakUser(user.getId(), request);
 
                 user.setSyncStatus("SYNCED");
