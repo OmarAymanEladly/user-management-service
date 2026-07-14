@@ -67,10 +67,10 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .toList();
     }
 
-    /*@Override
+    @Override
     public AdminUserResponseDTO getUserById(UUID id) {
         return toResponse(getUser(id));
-    }*/
+    }
 
     @Override
     public AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request) {
@@ -168,7 +168,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
 
-    @Override
+    /*@Override
     public AdminUserResponseDTO getUserById(UUID id){
         ManagedUser user = managedUserRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("user not found: " + id));
@@ -182,5 +182,5 @@ public class AdminUserServiceImpl implements AdminUserService {
         }
 
         return toResponse(user);
-    }
+    }*/
 }
