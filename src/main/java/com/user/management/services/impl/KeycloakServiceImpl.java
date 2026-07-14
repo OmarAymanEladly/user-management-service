@@ -4,6 +4,7 @@ import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KeycloakServiceImpl implements KeycloakService {
 
+
     private final Keycloak keycloak;
+    @Value("${keycloak.realm}")
+    private String realm;
+
 
     @Override
     public String createKeycloakUser(UUID id, AdminUserRequestDTO request){
@@ -29,7 +34,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         user.setEnabled(true);
         user.setEmailVerified(false);
 
-        Response response = keycloak.realm("user-management").users().create(user);
+        Response response = keycloak.realm(realm).users().create(user);
 
         if(response.getStatus()!=201){
             throw new RuntimeException("Keycloak user creation failed with status: " + response.getStatus());
@@ -40,7 +45,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
 
         try {
-            keycloak.realm("user-management")
+            keycloak.realm(realm)
                     .users()
                     .get(keycloakId)
                     .executeActionsEmail(List.of("UPDATE_PASSWORD","VERIFY_EMAIL"));
@@ -54,7 +59,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
     @Override
     public void updateKeycloakStatus(UUID id,boolean enabled){
-        var userResource = keycloak.realm("user-management").users().get(id.toString());
+        var userResource = keycloak.realm(realm).users().get(id.toString());
         UserRepresentation user = userResource.toRepresentation();
         user.setEnabled(enabled);
         userResource.update(user);
@@ -63,7 +68,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public void deleteKeycloakUser(UUID id){
         try {
-            keycloak.realm("user-management").users().get(id.toString()).remove();
+            keycloak.realm(realm).users().get(id.toString()).remove();
         } catch (jakarta.ws.rs.NotFoundException e) {
 
             System.out.println("User already gone from Keycloak: " + id);
@@ -72,14 +77,14 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public void updateKeycloakUser(UUID id,AdminUserRequestDTO request){
-        UserRepresentation user = keycloak.realm("user-management").
+        UserRepresentation user = keycloak.realm(realm).
                 users().get(id.toString()).toRepresentation();
 
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        keycloak.realm("user-management").
+        keycloak.realm(realm).
                 users().get(id.toString()).update(user);
     }
 }
