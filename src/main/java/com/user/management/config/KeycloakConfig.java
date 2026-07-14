@@ -17,8 +17,6 @@ public class KeycloakConfig {
     @Value("${keycloak.server-url}")
     private String serverUrl;
 
-    @Value("${keycloak.realm}")
-    private String realm;
 
     @Value("${keycloak.username}")
     private String username;
@@ -33,11 +31,11 @@ public class KeycloakConfig {
     @Bean
     public Keycloak keycloak(){
         return KeycloakBuilder.builder()
-                .serverUrl("http://localhost:8081")
+                .serverUrl(serverUrl)
                 .realm("master")
-                .clientId("admin-cli")
-                .username("admin")
-                .password("admin123")
+                .clientId(clientId)
+                .username(username)
+                .password(password)
                 .grantType(OAuth2Constants.PASSWORD)
                 .resteasyClient(new ResteasyClientBuilderImpl()
                         .connectTimeout(5, TimeUnit.SECONDS)
