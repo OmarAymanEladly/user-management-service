@@ -28,7 +28,7 @@ public class UserSyncWorkerImpl implements UserSyncWorker {
                 AdminUserRequestDTO request = mapEntityToRequest(user);
 
 
-                keycloakService.createKeycloakUser(user.getId(), request);
+                keycloakService.createKeycloakUser(user.getId(), request, user.getUserType());
 
                 user.setSyncStatus("SYNCED");
                 repository.save(user);

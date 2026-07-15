@@ -18,6 +18,7 @@ public class AdminUserResponseDTO {
     private String lastName;
     private String phoneNumber;
     private UUID userTypeId;
+    private String roleName;
     private Boolean enabled;
     private Map<String, Object> attributes;
 }

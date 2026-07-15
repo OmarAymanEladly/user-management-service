@@ -42,6 +42,7 @@ services:
       KC_DB_PASSWORD: keycloak123
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
+      KC_LOG_LEVEL: DEBUG
     ports:
       - "8081:8080"
     depends_on:

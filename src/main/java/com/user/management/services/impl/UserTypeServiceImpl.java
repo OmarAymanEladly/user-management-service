@@ -3,6 +3,7 @@ package com.user.management.services.impl;
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
 import com.user.management.repository.UserTypeRepository;
+import com.user.management.services.KeycloakService;
 import com.user.management.services.UserTypeService;
 import com.user.management.entity.UserType;
 import com.user.management.mapper.UserTypeMapper;
@@ -19,6 +20,7 @@ public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeRepository repository;
     private final UserTypeMapper mapper;
+    private final KeycloakService keycloakService;
 
     @Override
     public UserTypeResponseDTO createType(UserTypeRequestDTO request){
@@ -26,6 +28,7 @@ public class UserTypeServiceImpl implements UserTypeService {
         if(repository.findByType(request.getType().toLowerCase()).isPresent()){
             throw new RuntimeException("User Type: "+request.getType()+" already exist");
         }
+        validateRole(request.getRoleName());
 
         UserType entity = mapper.toEntity(request);
 
@@ -43,6 +46,11 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
+    public List<String> getAvailableRoles() {
+        return keycloakService.getRealmRoles();
+    }
+
+    @Override
     public UserTypeResponseDTO getTypeById(UUID id){
         UserType entity = repository.findById(id).
                 orElseThrow(()->new RuntimeException("User Type not found with ID: "+ id));
@@ -54,10 +62,12 @@ public class UserTypeServiceImpl implements UserTypeService {
     public UserTypeResponseDTO updateType(UUID id, UserTypeRequestDTO request){
         UserType existingEntity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
+        validateRole(request.getRoleName());
         UserType updatedData = mapper.toEntity(request);
 
         existingEntity.setDescription(updatedData.getDescription());
         existingEntity.setType(updatedData.getType());
+        existingEntity.setRoleName(updatedData.getRoleName());
         existingEntity.setFields(updatedData.getFields());
         existingEntity.setStatus(updatedData.getStatus());
 
@@ -80,6 +90,12 @@ public class UserTypeServiceImpl implements UserTypeService {
             throw new RuntimeException("User Type to delete doesn't exist");
         }
         repository.deleteById(id);
+    }
+
+    private void validateRole(String roleName) {
+        if (!keycloakService.realmRoleExists(roleName)) {
+            throw new RuntimeException("Keycloak role not found: " + roleName);
+        }
     }
 
 }

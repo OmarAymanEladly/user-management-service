@@ -24,6 +24,9 @@ public class UserType {
 
     private String description;
 
+    @Column(nullable = false)
+    private String roleName;
+
     private String status;
 
     @JdbcTypeCode(SqlTypes.JSON)

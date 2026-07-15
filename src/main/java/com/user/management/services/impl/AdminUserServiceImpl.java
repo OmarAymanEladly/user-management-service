@@ -9,10 +9,7 @@ import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.AdminUserService;
 import com.user.management.services.KeycloakService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 
@@ -29,7 +26,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeRepository userTypeRepository;
     private final KeycloakService keycloakService;
-    private final Keycloak keycloak;
 
     @Override
     public AdminUserResponseDTO createUser(AdminUserRequestDTO request) {
@@ -49,7 +45,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
         try{
-            String confirmedId = keycloakService.createKeycloakUser(localId,request);
+            String confirmedId = keycloakService.createKeycloakUser(localId, request, userType);
             user.setId(UUID.fromString(confirmedId));
             user.setSyncStatus("SYNCED");
         } catch (Exception e) {
@@ -161,6 +157,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 user.getLastName(),
                 user.getPhoneNumber(),
                 user.getUserType().getId(),
+                user.getUserType().getRoleName(),
                 user.getEnabled(),
                 user.getAttributes()
         );

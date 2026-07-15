@@ -30,6 +30,11 @@ public class UserTypeController {
         return userTypeService.getAllTypes();
     }
 
+    @GetMapping("/roles")
+    public List<String> getAvailableRoles(){
+        return userTypeService.getAvailableRoles();
+    }
+
     @GetMapping("/{id}")
     public UserTypeResponseDTO getTypeById(@PathVariable UUID id){
         return userTypeService.getTypeById(id);

@@ -10,6 +10,7 @@ public interface UserTypeService {
     UserTypeResponseDTO createType(UserTypeRequestDTO request);
 
     List<UserTypeResponseDTO> getAllTypes();
+    List<String> getAvailableRoles();
 
     UserTypeResponseDTO getTypeById(UUID id);
 
