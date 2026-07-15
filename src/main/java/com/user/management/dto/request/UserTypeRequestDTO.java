@@ -12,6 +12,7 @@ import java.util.*;
 public class UserTypeRequestDTO {
     private String type;
     private String description;
+    private String roleName;
     private String status;
     private List<UserTypeRequestFieldDTO> fields;
 

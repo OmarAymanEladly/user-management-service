@@ -21,6 +21,7 @@ public class UserTypeMapper {
                 .id(entity.getId())
                 .type(entity.getType())
                 .description(entity.getDescription())
+                .roleName(entity.getRoleName())
                 .status(entity.getStatus())
                 .fields(mapFieldsToResponseDto(entity.getFields()))
                 .build();
@@ -33,6 +34,7 @@ public class UserTypeMapper {
         return UserType.builder()
                 .type(request.getType())
                 .description(request.getDescription())
+                .roleName(request.getRoleName())
                 .status(request.getStatus())
                 .fields(mapFieldsToEntity(request.getFields()))
                 .build();

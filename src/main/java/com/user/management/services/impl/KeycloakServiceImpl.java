@@ -1,15 +1,18 @@
 package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.entity.UserType;
 import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -23,7 +26,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
 
     @Override
-    public String createKeycloakUser(UUID id, AdminUserRequestDTO request){
+    public String createKeycloakUser(UUID id, AdminUserRequestDTO request, UserType userType){
 
         UserRepresentation user = new UserRepresentation();
         user.setId(id.toString());
@@ -43,6 +46,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         String path = response.getLocation().getPath();
         String keycloakId = path.substring(path.lastIndexOf('/') + 1);
 
+        assignRealmRole(keycloakId, userType.getRoleName());
 
         try {
             keycloak.realm(realm)
@@ -56,6 +60,24 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         return keycloakId;
 
+    }
+
+    private void assignRealmRole(String keycloakId, String roleName) {
+        if (roleName == null || roleName.isBlank()) {
+            return;
+        }
+
+        RoleRepresentation role = keycloak.realm(realm)
+                .roles()
+                .get(roleName)
+                .toRepresentation();
+
+        keycloak.realm(realm)
+                .users()
+                .get(keycloakId)
+                .roles()
+                .realmLevel()
+                .add(List.of(role));
     }
     @Override
     public void updateKeycloakStatus(UUID id,boolean enabled){
@@ -86,5 +108,33 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         keycloak.realm(realm).
                 users().get(id.toString()).update(user);
+    }
+
+    @Override
+    public List<String> getRealmRoles() {
+        return keycloak.realm(realm)
+                .roles()
+                .list()
+                .stream()
+                .map(RoleRepresentation::getName)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Override
+    public boolean realmRoleExists(String roleName) {
+        if (roleName == null || roleName.isBlank()) {
+            return false;
+        }
+
+        try {
+            keycloak.realm(realm)
+                    .roles()
+                    .get(roleName)
+                    .toRepresentation();
+            return true;
+        } catch (jakarta.ws.rs.NotFoundException e) {
+            return false;
+        }
     }
 }
