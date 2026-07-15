@@ -2,8 +2,10 @@ package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.services.KeycloakService;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -59,7 +61,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
     @Override
     public void updateKeycloakStatus(UUID id,boolean enabled){
-        var userResource = keycloak.realm(realm).users().get(id.toString());
+        UserResource userResource = keycloak.realm(realm).users().get(id.toString());
         UserRepresentation user = userResource.toRepresentation();
         user.setEnabled(enabled);
         userResource.update(user);
@@ -69,7 +71,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     public void deleteKeycloakUser(UUID id){
         try {
             keycloak.realm(realm).users().get(id.toString()).remove();
-        } catch (jakarta.ws.rs.NotFoundException e) {
+        } catch(NotFoundException e) {
 
             System.out.println("User already gone from Keycloak: " + id);
         }
@@ -77,14 +79,15 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public void updateKeycloakUser(UUID id,AdminUserRequestDTO request){
-        UserRepresentation user = keycloak.realm(realm).
-                users().get(id.toString()).toRepresentation();
+        UserResource userResource = keycloak.realm(realm).
+                users().get(id.toString());
+
+        UserRepresentation user = userResource.toRepresentation();
 
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        keycloak.realm(realm).
-                users().get(id.toString()).update(user);
+        userResource.update(user);
     }
 }
