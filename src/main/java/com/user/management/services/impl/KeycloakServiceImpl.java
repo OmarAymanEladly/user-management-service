@@ -114,6 +114,19 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
+    public void sendWelcomeEmail(UUID id) {
+        try {
+            keycloak.realm(realm)
+                    .users()
+                    .get(id.toString())
+                    .executeActionsEmail(List.of("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+            System.out.println("Email sent successfully to: " + id);
+        } catch (Exception e) {
+            System.err.println("Failed to send email during recovery: " + e.getMessage());
+        }
+    }
+
+    @Override
     public List<String> getRealmRoles() {
         return keycloak.realm(realm)
                 .roles()
@@ -139,5 +152,19 @@ public class KeycloakServiceImpl implements KeycloakService {
         } catch (jakarta.ws.rs.NotFoundException e) {
             return false;
         }
+    }
+
+    @Override
+    public String findIdByUsername(String username) {
+        List<UserRepresentation> users = keycloak.realm(realm)
+                .users()
+                .search(username, true);
+
+        if (users == null || users.isEmpty()) {
+            return null;
+        }
+
+        // Return the ID that Keycloak officially uses
+        return users.get(0).getId();
     }
 }

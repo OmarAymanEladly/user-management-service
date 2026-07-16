@@ -42,8 +42,6 @@ public class AdminUserServiceImpl implements AdminUserService {
         .syncStatus("PENDING_SYNC").build();
         applyRequest(user, request, userType);
 
-
-
         try{
             String confirmedId = keycloakService.createKeycloakUser(localId, request, userType);
             user.setId(UUID.fromString(confirmedId));
