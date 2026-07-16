@@ -1,0 +1,231 @@
+{
+  "info": {
+    "_postman_id": "9a68cdb8-24c8-4bd5-keycloak-data-check",
+    "name": "Keycloak Data Check - User Management",
+    "description": "Use this collection to check the mounted Keycloak database data, get tokens from the expected realm, and test the app APIs.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "keycloakUrl", "value": "http://localhost:8081" },
+    { "key": "realm", "value": "investor-portal" },
+    { "key": "clientId", "value": "investor-portal-frontend" },
+    { "key": "clientSecret", "value": "" },
+    { "key": "username", "value": "test" },
+    { "key": "password", "value": "" },
+    { "key": "accessToken", "value": "" },
+    { "key": "baseUrl", "value": "http://localhost:9090" },
+    { "key": "userTypeId", "value": "00000000-0000-0000-0000-000000000000" },
+    { "key": "roleName", "value": "PORTAL_ADMIN" }
+  ],
+  "item": [
+    {
+      "name": "01 - Keycloak Discovery",
+      "item": [
+        {
+          "name": "Keycloak Server Root",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{keycloakUrl}}",
+              "host": ["{{keycloakUrl}}"]
+            },
+            "description": "Checks that Keycloak is reachable."
+          }
+        },
+        {
+          "name": "Realm OpenID Configuration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('realm exists', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/.well-known/openid-configuration",
+              "host": ["{{keycloakUrl}}"],
+              "path": ["realms", "{{realm}}", ".well-known", "openid-configuration"]
+            },
+            "description": "If this returns 404 Realm does not exist, change the realm collection variable to the exact realm name in your mounted Keycloak data."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Token",
+      "item": [
+        {
+          "name": "Get Access Token - Password Grant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('token returned', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const json = pm.response.json();",
+                  "if (json.access_token) {",
+                  "  pm.collectionVariables.set('accessToken', json.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "password", "type": "text" },
+                { "key": "client_id", "value": "{{clientId}}", "type": "text" },
+                { "key": "client_secret", "value": "{{clientSecret}}", "type": "text", "disabled": true },
+                { "key": "username", "value": "{{username}}", "type": "text" },
+                { "key": "password", "value": "{{password}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": ["{{keycloakUrl}}"],
+              "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+            },
+            "description": "Set realm, clientId, username, and password variables first. Enable client_secret only if the client is confidential."
+          }
+        },
+        {
+          "name": "Get Access Token - Client Credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.access_token) pm.collectionVariables.set('accessToken', json.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "client_credentials", "type": "text" },
+                { "key": "client_id", "value": "{{clientId}}", "type": "text" },
+                { "key": "client_secret", "value": "{{clientSecret}}", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": ["{{keycloakUrl}}"],
+              "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+            },
+            "description": "Use only if your Keycloak client supports service accounts and has a client secret."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - App API With Token",
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          { "key": "token", "value": "{{accessToken}}", "type": "string" }
+        ]
+      },
+      "item": [
+        {
+          "name": "List User Types - Requires PORTAL_ADMIN",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/userTypes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "userTypes"]
+            },
+            "description": "Expected 200 only when the token contains realm_access.roles with PORTAL_ADMIN."
+          }
+        },
+        {
+          "name": "List Roles From Keycloak Through App - Requires PORTAL_ADMIN",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/userTypes/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "userTypes", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Create User Type - Requires PORTAL_ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.id) pm.collectionVariables.set('userTypeId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"investor-{{$timestamp}}\",\n  \"description\": \"Investor user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"fields\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/userTypes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "userTypes"]
+            }
+          }
+        },
+        {
+          "name": "List Users - Any Valid Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "users"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

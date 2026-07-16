@@ -1,0 +1,213 @@
+{
+  "info": {
+    "_postman_id": "64298464-9d2d-45ad-noauth-user-management",
+    "name": "User Management Service - No Auth Testing",
+    "description": "Use this collection only when running the app with the noauth profile. No Keycloak token is needed.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:9090" },
+    { "key": "userTypeId", "value": "00000000-0000-0000-0000-000000000000" },
+    { "key": "userId", "value": "00000000-0000-0000-0000-000000000000" },
+    { "key": "roleName", "value": "PORTAL_ADMIN" }
+  ],
+  "item": [
+    {
+      "name": "00 - Notes",
+      "item": [
+        {
+          "name": "Run App Without Keycloak Security",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/swagger-ui/index.html", "host": ["{{baseUrl}}"], "path": ["swagger-ui", "index.html"] },
+            "description": "Run the app with profile noauth: mvn spring-boot:run -Dspring-boot.run.profiles=noauth. In IntelliJ, add VM option or program argument: --spring.profiles.active=noauth."
+          }
+        }
+      ]
+    },
+    {
+      "name": "01 - User Types",
+      "item": [
+        {
+          "name": "List Keycloak Roles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/userTypes/roles", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "roles"] },
+            "description": "This still calls Keycloak through the backend, because this endpoint lists roles from Keycloak. Use it only if Keycloak is running."
+          }
+        },
+        {
+          "name": "Create User Type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.id) pm.collectionVariables.set('userTypeId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"employee-{{$timestamp}}\",\n  \"description\": \"Employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {}\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/userTypes", "host": ["{{baseUrl}}"], "path": ["api", "userTypes"] }
+          }
+        },
+        {
+          "name": "Get All User Types",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/userTypes", "host": ["{{baseUrl}}"], "path": ["api", "userTypes"] }
+          }
+        },
+        {
+          "name": "Get User Type By ID",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/userTypes/{{userTypeId}}", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "{{userTypeId}}"] }
+          }
+        },
+        {
+          "name": "Update User Type",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"employee-updated-{{$timestamp}}\",\n  \"description\": \"Updated employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {}\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/userTypes/{{userTypeId}}", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "{{userTypeId}}"] }
+          }
+        },
+        {
+          "name": "Deactivate User Type",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/userTypes/{{userTypeId}}/deactivate", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "{{userTypeId}}", "deactivate"] }
+          }
+        },
+        {
+          "name": "Delete User Type",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/userTypes/{{userTypeId}}", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "{{userTypeId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Users",
+      "item": [
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.id) pm.collectionVariables.set('userId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john.doe.{{$timestamp}}\",\n  \"email\": \"john.doe.{{$timestamp}}@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+201000000000\",\n  \"userTypeId\": \"{{userTypeId}}\",\n  \"enabled\": true,\n  \"attributes\": {\n    \"department\": \"Engineering\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/admin/users", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users"] },
+            "description": "This still creates the user in Keycloak through the backend. Use this only if Keycloak is running. For DB-only testing, use the UserType requests."
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users"] }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john.doe.updated\",\n  \"email\": \"john.updated@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+201000000001\",\n  \"userTypeId\": \"{{userTypeId}}\",\n  \"enabled\": true,\n  \"attributes\": {\n    \"department\": \"Product\"\n  }\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/admin/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Activate User",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users/{{userId}}/activate", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", "{{userId}}", "activate"] }
+          }
+        },
+        {
+          "name": "Deactivate User",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "PATCH",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users/{{userId}}/deactivate", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", "{{userId}}", "deactivate"] }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/admin/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "admin", "users", "{{userId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}
