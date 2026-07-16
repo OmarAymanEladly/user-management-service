@@ -18,56 +18,29 @@ public class UserSyncWorkerImpl {
     private final ManagedUserRepository repository;
     private final KeycloakService keycloakService;
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelayString = "${user.sync.worker.delay}")
     @Transactional
     public void retrySync() {
         List<ManagedUser> pendingUsers = repository.findBySyncStatus("PENDING_SYNC");
 
         for (ManagedUser user : pendingUsers) {
             try {
-                // Convert Entity back to DTO
                 AdminUserRequestDTO request = mapEntityToRequest(user);
 
-                keycloakService.createKeycloakUser(user.getId(), request, user.getUserType());
+                // Try to create and get the REAL ID
+                String confirmedId = keycloakService.createKeycloakUser(user.getId(), request, user.getUserType());
 
-                user.setSyncStatus("SYNCED");
-                repository.save(user);
-                System.out.println("Worker: Successfully synced " + user.getUsername());
+                // If success, sync the database
+                handleIdSync(user, confirmedId);
 
             } catch (Exception e) {
+                // Handle Conflict (409) - User already existed from a previous attempt
                 if (e.getMessage() != null && e.getMessage().contains("409")) {
                     String realIdStr = keycloakService.findIdByUsername(user.getUsername());
-
                     if (realIdStr != null) {
-                        UUID confirmedUUID = UUID.fromString(realIdStr);
-
-                        keycloakService.sendWelcomeEmail(confirmedUUID);
-
-                        if (!user.getId().equals(confirmedUUID)) {
-                            // 1. Remove the old record with the wrong ID
-                            repository.delete(user);
-                            repository.flush();
-
-                            // 2. Create the new record with the correct ID
-                            ManagedUser newUser = ManagedUser.builder()
-                                    .id(confirmedUUID)
-                                    .username(user.getUsername())
-                                    .email(user.getEmail())
-                                    .firstName(user.getFirstName())
-                                    .lastName(user.getLastName())
-                                    .enabled(true)
-                                    .userType(user.getUserType())
-                                    .attributes(user.getAttributes())
-                                    .syncStatus("SYNCED")
-                                    .isNewUser(true)
-                                    .build();
-
-                            repository.save(newUser);
-                            System.out.println("Worker: ID Mismatch fixed via recreation for " + user.getUsername());
-                        } else {
-                            user.setSyncStatus("SYNCED");
-                            repository.save(user);
-                        }
+                        keycloakService.sendWelcomeEmail(UUID.fromString(realIdStr));
+                        handleIdSync(user, realIdStr);
+                        System.out.println("Worker: Recovered 409 conflict for " + user.getUsername());
                     }
                 } else {
                     System.err.println("Worker: Retry failed for " + user.getUsername() + ": " + e.getMessage());
@@ -76,6 +49,41 @@ public class UserSyncWorkerImpl {
         }
     }
 
+    private void handleIdSync(ManagedUser user, String confirmedIdStr) {
+        UUID confirmedUUID = UUID.fromString(confirmedIdStr);
+
+        if (!user.getId().equals(confirmedUUID)) {
+            // ID Mismatch: Delete old, create new
+            String username = user.getUsername();
+            repository.delete(user);
+            repository.flush();
+
+            ManagedUser newUser = buildNewUser(user, confirmedUUID);
+            repository.save(newUser);
+
+            System.out.println("Worker: ID Mismatch fixed via recreation for user: " + username);
+        } else {
+            // IDs match: Just update status
+            user.setSyncStatus("SYNCED");
+            repository.save(user);
+            System.out.println("Worker: Successfully synced user: " + user.getUsername());
+        }
+    }
+
+    private ManagedUser buildNewUser(ManagedUser oldUser, UUID newId) {
+        return ManagedUser.builder()
+                .id(newId)
+                .username(oldUser.getUsername())
+                .email(oldUser.getEmail())
+                .firstName(oldUser.getFirstName())
+                .lastName(oldUser.getLastName())
+                .enabled(oldUser.getEnabled())
+                .userType(oldUser.getUserType())
+                .attributes(oldUser.getAttributes())
+                .syncStatus("SYNCED")
+                .isNewUser(true)
+                .build();
+    }
 
     private AdminUserRequestDTO mapEntityToRequest(ManagedUser user) {
         AdminUserRequestDTO request = new AdminUserRequestDTO();
@@ -83,10 +91,9 @@ public class UserSyncWorkerImpl {
         request.setEmail(user.getEmail());
         request.setFirstName(user.getFirstName());
         request.setLastName(user.getLastName());
-        request.setPhoneNumber(user.getPhoneNumber());
-        request.setEnabled(user.getEnabled());
         request.setUserTypeId(user.getUserType().getId());
         request.setAttributes(user.getAttributes());
+        request.setEnabled(user.getEnabled());
         return request;
     }
 }
