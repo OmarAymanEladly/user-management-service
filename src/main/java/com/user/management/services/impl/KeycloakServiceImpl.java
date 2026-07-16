@@ -3,8 +3,10 @@ package com.user.management.services.impl;
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.entity.UserType;
 import com.user.management.services.KeycloakService;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import org.keycloak.admin.client.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -81,7 +83,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
     @Override
     public void updateKeycloakStatus(UUID id,boolean enabled){
-        var userResource = keycloak.realm(realm).users().get(id.toString());
+        UserResource userResource = keycloak.realm(realm).users().get(id.toString());
         UserRepresentation user = userResource.toRepresentation();
         user.setEnabled(enabled);
         userResource.update(user);
@@ -91,7 +93,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     public void deleteKeycloakUser(UUID id){
         try {
             keycloak.realm(realm).users().get(id.toString()).remove();
-        } catch (jakarta.ws.rs.NotFoundException e) {
+        } catch(NotFoundException e) {
 
             System.out.println("User already gone from Keycloak: " + id);
         }
@@ -99,15 +101,29 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public void updateKeycloakUser(UUID id,AdminUserRequestDTO request){
-        UserRepresentation user = keycloak.realm(realm).
-                users().get(id.toString()).toRepresentation();
+        UserResource userResource = keycloak.realm(realm).
+                users().get(id.toString());
+
+        UserRepresentation user = userResource.toRepresentation();
 
         user.setEmail(request.getEmail());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        keycloak.realm(realm).
-                users().get(id.toString()).update(user);
+        userResource.update(user);
+    }
+
+    @Override
+    public void sendWelcomeEmail(UUID id) {
+        try {
+            keycloak.realm(realm)
+                    .users()
+                    .get(id.toString())
+                    .executeActionsEmail(List.of("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+            System.out.println("Email sent successfully to: " + id);
+        } catch (Exception e) {
+            System.err.println("Failed to send email during recovery: " + e.getMessage());
+        }
     }
 
     @Override
@@ -136,5 +152,19 @@ public class KeycloakServiceImpl implements KeycloakService {
         } catch (jakarta.ws.rs.NotFoundException e) {
             return false;
         }
+    }
+
+    @Override
+    public String findIdByUsername(String username) {
+        List<UserRepresentation> users = keycloak.realm(realm)
+                .users()
+                .search(username, true);
+
+        if (users == null || users.isEmpty()) {
+            return null;
+        }
+
+        // Return the ID that Keycloak officially uses
+        return users.get(0).getId();
     }
 }

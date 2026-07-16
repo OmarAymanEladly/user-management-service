@@ -14,6 +14,8 @@ public interface KeycloakService {
     void deleteKeycloakUser(UUID id);
     List<String> getRealmRoles();
     boolean realmRoleExists(String roleName);
+    void sendWelcomeEmail(UUID id);
+    String findIdByUsername(String username);
 
 
 }

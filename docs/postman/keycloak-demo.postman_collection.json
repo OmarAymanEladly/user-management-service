@@ -1,0 +1,224 @@
+{
+  "info": {
+    "_postman_id": "560434c5-06a3-4adc-816e-59058a749c62",
+    "name": "keycloak-demo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47314370",
+    "_collection_link": "https://go.postman.co/collection/47314370-560434c5-06a3-4adc-816e-59058a749c62?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "password",
+              "type": "text",
+              "uuid": "8ff62512-3a1d-459e-8ac3-bbf9ef24ce94"
+            },
+            {
+              "key": "client_id",
+              "value": "{{clientId}}",
+              "type": "text",
+              "uuid": "80dbdae0-6668-4f0d-ae65-a7cb885d5377"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{clientSecret}}",
+              "type": "text",
+              "uuid": "f3ec2bdd-4bac-49b8-be1a-90ec0a790ae6"
+            },
+            {
+              "key": "username",
+              "value": "{{username}}",
+              "type": "text",
+              "uuid": "72b2095d-3c1b-4fab-88e7-436534671ac8"
+            },
+            {
+              "key": "password",
+              "value": "{{password}}",
+              "type": "text",
+              "uuid": "171b184f-797f-4d0c-aedd-eeaaa5507fa8"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "realms",
+            "{{realm}}",
+            "protocol",
+            "openid-connect",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Refresh Token",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "grant_type",
+              "value": "refresh_token",
+              "type": "text",
+              "uuid": "8ff62512-3a1d-459e-8ac3-bbf9ef24ce94"
+            },
+            {
+              "key": "client_id",
+              "value": "{{clientId}}",
+              "type": "text",
+              "uuid": "80dbdae0-6668-4f0d-ae65-a7cb885d5377"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{clientSecret}}",
+              "type": "text",
+              "uuid": "f3ec2bdd-4bac-49b8-be1a-90ec0a790ae6"
+            },
+            {
+              "key": "refresh_token",
+              "value": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2MjU5MGFhZi0zOGU1LTQ0MjMtYTVlMi01ZTdjYjQxNDAzMTIifQ.eyJleHAiOjE3ODM1ODM2MTUsImlhdCI6MTc4MzU4MTgxNSwianRpIjoiOWM3NjkyODEtZGM2NC1kMDVlLTMwOWMtNmJmMDQxZThiOGRjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL3JlYWxtcy90YXNrLW1hbmFnZW1lbnQtZGVtbyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MS9yZWFsbXMvdGFzay1tYW5hZ2VtZW50LWRlbW8iLCJzdWIiOiJhMmYzNjU4ZC03N2VmLTQ3ZmQtODRiMi1lNGU2ZGU3Njg4NGEiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoidGFzay1tYW5hZ2VtZW50LWFwaSIsInNpZCI6Ikpaa0ZPZjBPNnc5am55X19VTEhVc1JaYyIsInNjb3BlIjoicm9sZXMgYmFzaWMgcHJvZmlsZSBlbWFpbCB3ZWItb3JpZ2lucyBhY3IiLCJhdWRfeCI6ImFjY291bnQifQ.jAR8n5LVdPgshDaOV1qHrUMi3d4QiY0Hxgc1DJoDl2KXUQlxS8QC3f5Gew98FPT6H_qJJCY0GgptAK9qOq_iJQ",
+              "type": "text",
+              "uuid": "00000c80-69d5-44a0-a9dc-75d8ed25dcc2"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "realms",
+            "{{realm}}",
+            "protocol",
+            "openid-connect",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "client_id",
+              "value": "{{clientId}}",
+              "type": "text",
+              "uuid": "80dbdae0-6668-4f0d-ae65-a7cb885d5377"
+            },
+            {
+              "key": "client_secret",
+              "value": "{{clientSecret}}",
+              "type": "text",
+              "uuid": "f3ec2bdd-4bac-49b8-be1a-90ec0a790ae6"
+            },
+            {
+              "key": "refresh_token",
+              "value": "eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2MjU5MGFhZi0zOGU1LTQ0MjMtYTVlMi01ZTdjYjQxNDAzMTIifQ.eyJleHAiOjE3ODM1ODM2MTUsImlhdCI6MTc4MzU4MTgxNSwianRpIjoiOWM3NjkyODEtZGM2NC1kMDVlLTMwOWMtNmJmMDQxZThiOGRjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxL3JlYWxtcy90YXNrLW1hbmFnZW1lbnQtZGVtbyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MS9yZWFsbXMvdGFzay1tYW5hZ2VtZW50LWRlbW8iLCJzdWIiOiJhMmYzNjU4ZC03N2VmLTQ3ZmQtODRiMi1lNGU2ZGU3Njg4NGEiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoidGFzay1tYW5hZ2VtZW50LWFwaSIsInNpZCI6Ikpaa0ZPZjBPNnc5am55X19VTEhVc1JaYyIsInNjb3BlIjoicm9sZXMgYmFzaWMgcHJvZmlsZSBlbWFpbCB3ZWItb3JpZ2lucyBhY3IiLCJhdWRfeCI6ImFjY291bnQifQ.jAR8n5LVdPgshDaOV1qHrUMi3d4QiY0Hxgc1DJoDl2KXUQlxS8QC3f5Gew98FPT6H_qJJCY0GgptAK9qOq_iJQ",
+              "type": "text",
+              "uuid": "00000c80-69d5-44a0-a9dc-75d8ed25dcc2"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/realms/{{realm}}/protocol/openid-connect/logout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "realms",
+            "{{realm}}",
+            "protocol",
+            "openid-connect",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "realm",
+      "value": ""
+    },
+    {
+      "key": "clientId",
+      "value": ""
+    },
+    {
+      "key": "clientSecret",
+      "value": ""
+    },
+    {
+      "key": "username",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    }
+  ]
+}

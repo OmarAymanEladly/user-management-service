@@ -1,0 +1,1 @@
+ALTER TABLE user_types ADD COLUMN role_name VARCHAR(100);
