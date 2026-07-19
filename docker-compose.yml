@@ -22,7 +22,8 @@ services:
       POSTGRES_PASSWORD: keycloak123
 
     volumes:
-      - ./keycloak-data:/var/lib/postgresql/data
+#      - ./keycloak-data:/var/lib/postgresql/data
+      - keycloak_db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak_db"]
       interval: 5s
@@ -48,6 +49,9 @@ services:
     depends_on:
       keycloak-db:
         condition: service_healthy
+    volumes:
+      - ./providers/keycloak-event-listener-1.0-SNAPSHOT.jar:/opt/keycloak/providers/custom-event-listener.jar
 
 volumes:
   app_db_data:      # Separate storage for app
+  keycloak_db_data: # Separate storage for Keycloak
