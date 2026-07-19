@@ -27,16 +27,19 @@ public class UserTypeController {
 
     @GetMapping
     public List<UserTypeResponseDTO> getAllTypes(){
+
         return userTypeService.getAllTypes();
     }
 
     @GetMapping("/roles")
     public List<String> getAvailableRoles(){
+
         return userTypeService.getAvailableRoles();
     }
 
     @GetMapping("/{id}")
     public UserTypeResponseDTO getTypeById(@PathVariable UUID id){
+
         return userTypeService.getTypeById(id);
     }
 
@@ -53,7 +56,8 @@ public class UserTypeController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteType(@PathVariable UUID id){
-       userTypeService.deleteType(id);
+
+        userTypeService.deleteType(id);
     }
 
 }

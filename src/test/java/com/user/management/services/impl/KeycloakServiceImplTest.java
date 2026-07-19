@@ -69,16 +69,20 @@ class KeycloakServiceImplTest {
         UUID id = UUID.randomUUID();
         AdminUserRequestDTO request = new AdminUserRequestDTO();
         request.setUsername("testuser");
-        UserType userType = UserType.builder().roleName("user-role").build();
+        UserType userType = UserType.builder()
+                .roleName("user-role").build();
 
         Response mockResponse = mock(Response.class);
         when(mockResponse.getStatus()).thenReturn(201);
-        when(mockResponse.getLocation()).thenReturn(new URI("http://localhost/users/"+id));
-        when(usersResource.create(any(UserRepresentation.class))).thenReturn(mockResponse);
+        when(mockResponse.getLocation())
+                .thenReturn(new URI("http://localhost/users/"+id));
+        when(usersResource.create(any(UserRepresentation.class)))
+                .thenReturn(mockResponse);
 
         when(realmResource.roles()).thenReturn(rolesResource);
         when(rolesResource.get("user-role")).thenReturn(roleResource);
-        when(roleResource.toRepresentation()).thenReturn(new RoleRepresentation());
+        when(roleResource.toRepresentation())
+                .thenReturn(new RoleRepresentation());
 
         when(usersResource.get(id.toString())).thenReturn(userResource);
         when(userResource.roles()).thenReturn(roleMappingResource);

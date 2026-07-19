@@ -47,6 +47,7 @@ public class UserTypeServiceImpl implements UserTypeService {
 
     @Override
     public List<String> getAvailableRoles() {
+
         return keycloakService.getRealmRoles();
     }
 

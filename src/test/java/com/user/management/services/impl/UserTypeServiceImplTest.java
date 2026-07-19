@@ -5,6 +5,7 @@ import com.user.management.dto.response.UserTypeResponseDTO;
 import com.user.management.entity.UserType;
 import com.user.management.mapper.UserTypeMapper;
 import com.user.management.repository.UserTypeRepository;
+import com.user.management.services.KeycloakService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +28,9 @@ class UserTypeServiceImplTest {
     private UserTypeRepository repository;
 
     @Mock
+    private KeycloakService keycloakService;
+
+    @Mock
     private UserTypeMapper mapper;
 
     @InjectMocks
@@ -34,36 +38,69 @@ class UserTypeServiceImplTest {
 
 
     @Test
-    void createUserType(){
+    void createUserType() {
         UUID testId = UUID.randomUUID();
 
         UserTypeRequestDTO request = new UserTypeRequestDTO();
         request.setType("ADMIN");
         request.setStatus("ACTIVE");
-        request.setDescription(" New User Type");
+        request.setRoleName("admin-role");
+        request.setDescription("New User Type");
 
-        UserType userType =  UserType.builder()
+        UserType userType = UserType.builder()
                 .type("ADMIN")
                 .status("ACTIVE")
-                .description("New User Type").build();
+                .roleName("admin-role")
+                .description("New User Type")
+                .build();
 
         UserTypeResponseDTO response = new UserTypeResponseDTO();
         response.setId(testId);
         response.setType("ADMIN");
-        response.setStatus("ACTIVE");
-        response.setDescription("New User Type");
 
-        when(repository.findByType(request.getType().toLowerCase())).thenReturn(Optional.empty());
-        when(mapper.toEntity(request)).thenReturn(userType);
-        when(mapper.toResponse(userType)).thenReturn(response);
-        when(repository.save(userType)).thenReturn(userType);
+
+        when(repository.findByType("admin")).thenReturn(Optional.empty());
+        when(keycloakService.realmRoleExists("admin-role")).thenReturn(true);
+        when(mapper.toEntity(any(UserTypeRequestDTO.class))).thenReturn(userType);
+        when(repository.save(any(UserType.class))).thenReturn(userType);
+        when(mapper.toResponse(any(UserType.class))).thenReturn(response);
 
         UserTypeResponseDTO result = userTypeService.createType(request);
 
         assertNotNull(result);
-        assertEquals("ADMIN",result.getType());
-        verify(repository).save(userType);
+        assertEquals("ADMIN", result.getType());
+        verify(repository).save(any(UserType.class));
+    }
 
+    @Test
+    void getAvailableRoles(){
+
+        List<String> roles = List.of("ADMIN", "USER");
+        when(keycloakService.getRealmRoles()).thenReturn(roles);
+
+        List<String> result = userTypeService.getAvailableRoles();
+
+        assertEquals(2, result.size());
+        verify(keycloakService).getRealmRoles();
+
+    }
+
+    @Test
+    void createType_ShouldThrowException_WhenRoleDoesNotExistInKeycloak() {
+        UserTypeRequestDTO request = new UserTypeRequestDTO();
+        request.setType("ADMIN");
+        request.setRoleName("non-existent-role");
+
+
+        when(keycloakService.realmRoleExists("non-existent-role")).thenReturn(false);
+
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                userTypeService.createType(request)
+        );
+
+        assertTrue(exception.getMessage().contains("Keycloak role not found"));
+        verify(repository, never()).save(any());
     }
 
     @Test
@@ -154,6 +191,7 @@ class UserTypeServiceImplTest {
         UserTypeRequestDTO request = new UserTypeRequestDTO();
         request.setType("UPDATED ADMIN");
         request.setDescription("UPDATED USER TYPE");
+        request.setRoleName("admin-role");
 
         UserTypeResponseDTO response = new UserTypeResponseDTO();
         response.setId(testId);
@@ -161,6 +199,7 @@ class UserTypeServiceImplTest {
         response.setDescription("New User Type");
 
         when(repository.findById(testId)).thenReturn(Optional.of(existingType));
+        when(keycloakService.realmRoleExists(any())).thenReturn(true);
         when(mapper.toEntity(request)).thenReturn(updatedType);
         when(repository.save(existingType)).thenReturn(existingType);
         when(mapper.toResponse(updatedType)).thenReturn(response);

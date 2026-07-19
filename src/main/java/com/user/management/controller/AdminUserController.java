@@ -40,11 +40,13 @@ public class AdminUserController {
 
     @GetMapping
     public List<AdminUserResponseDTO> getAllUsers() {
+
         return adminUserService.getAllUsers();
     }
 
     @GetMapping("/{id}")
     public AdminUserResponseDTO listUserById(@PathVariable UUID id) {
+
         return adminUserService.getUserById(id);
     }
 
@@ -55,6 +57,7 @@ public class AdminUserController {
 
     @PatchMapping("/{id}/activate")
     public AdminUserResponseDTO activateUser(@PathVariable UUID id) {
+
         return adminUserService.activateUser(id);
     }
 

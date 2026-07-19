@@ -50,15 +50,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         assignRealmRole(keycloakId, userType.getRoleName());
 
-        try {
-            keycloak.realm(realm)
-                    .users()
-                    .get(keycloakId)
-                    .executeActionsEmail(List.of("UPDATE_PASSWORD","VERIFY_EMAIL"));
-        } catch (Exception e) {
-
-            System.err.println("Keycloak is UP, but SMTP is not configured: " + e.getMessage());
-        }
+        sendWelcomeEmail(id);
 
         return keycloakId;
 
@@ -149,7 +141,7 @@ public class KeycloakServiceImpl implements KeycloakService {
                     .get(roleName)
                     .toRepresentation();
             return true;
-        } catch (jakarta.ws.rs.NotFoundException e) {
+        } catch (NotFoundException e) {
             return false;
         }
     }

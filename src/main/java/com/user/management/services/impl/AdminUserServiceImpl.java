@@ -34,6 +34,11 @@ public class AdminUserServiceImpl implements AdminUserService {
             throw new RuntimeException("User already exists in local database");
         }
         UserType userType = getUserType(request.getUserTypeId());
+
+        if (userType.getStatus() == null || !"ACTIVE".equalsIgnoreCase(userType.getStatus())) {
+            throw new RuntimeException("Cannot create user: User Type '" + userType.getType() + "' is currently " + userType.getStatus());
+        }
+
         validateAttributes(userType, request.getAttributes());
 
         UUID localId = UUID.randomUUID();
@@ -63,6 +68,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUserResponseDTO getUserById(UUID id) {
+
         return toResponse(getUser(id));
     }
 
@@ -178,4 +184,6 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         return toResponse(user);
     }*/
+
+
 }

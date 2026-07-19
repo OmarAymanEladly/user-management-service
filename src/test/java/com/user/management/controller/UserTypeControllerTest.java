@@ -28,6 +28,7 @@ class UserTypeControllerTest {
     private UserTypeService userTypeService;
 
 
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private MockMvc mockMvc;
 
@@ -36,6 +37,7 @@ class UserTypeControllerTest {
 
     @BeforeEach
     void setup(){
+
         mockMvc = MockMvcBuilders.standaloneSetup(userTypeController).build();
     }
 
@@ -58,12 +60,26 @@ class UserTypeControllerTest {
     }
 
     @Test
+    void getAvailableRoles_ShouldReturnList() throws Exception {
+        when(userTypeService.getAvailableRoles()).thenReturn(List.of("ADMIN", "USER"));
+
+        mockMvc.perform(get("/api/userTypes/roles"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+
+    @Test
     void getAllTypes() throws Exception {
 
-        UserTypeResponseDTO response = new UserTypeResponseDTO();
-        response.setType("ADMIN");
+        UserTypeResponseDTO response1 = new UserTypeResponseDTO();
+        response1.setType("ADMIN");
 
-        when(userTypeService.getAllTypes()).thenReturn(List.of(response));
+        UserTypeResponseDTO response2 = new UserTypeResponseDTO();
+        response1.setType("USER");
+
+        when(userTypeService.getAllTypes()).thenReturn(List.of(response1));
+        when(userTypeService.getAllTypes()).thenReturn(List.of(response2));
         mockMvc.perform(get("/api/userTypes")).andExpect(status().isOk());
     }
 
