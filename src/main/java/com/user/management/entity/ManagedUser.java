@@ -42,7 +42,6 @@ public class ManagedUser implements Persistable<UUID> {
     @Column(columnDefinition = "jsonb")
     private Map<String, Object> attributes;
 
-    private String syncStatus;
 
     @Transient
     @Builder.Default

@@ -1,15 +1,15 @@
 package com.user.management.repository;
 
-import com.user.management.entity.ManagedUser;
+import com.user.management.entity.OutboxEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ManagedUserRepository extends JpaRepository<ManagedUser, UUID> {
-    Optional<ManagedUser> findByUsername(String username);
+public interface OutboxEventRepository extends JpaRepository<OutboxEvent, UUID> {
+    List<OutboxEvent> findByStatusOrderByCreatedAtAsc(String status);
+
 
 }

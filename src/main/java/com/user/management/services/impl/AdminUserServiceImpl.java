@@ -1,19 +1,24 @@
 package com.user.management.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.dto.response.AdminUserResponseDTO;
 import com.user.management.entity.FieldDefinition;
 import com.user.management.entity.ManagedUser;
+import com.user.management.entity.OutboxEvent;
 import com.user.management.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
+import com.user.management.repository.OutboxEventRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.AdminUserService;
 import com.user.management.services.KeycloakService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -21,13 +26,17 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeRepository userTypeRepository;
+    private final OutboxEventRepository outboxRepository;
+    private final ObjectMapper objectMapper;
     private final KeycloakService keycloakService;
 
     @Override
+    @Transactional
     public AdminUserResponseDTO createUser(AdminUserRequestDTO request) {
 
         if (managedUserRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -42,18 +51,22 @@ public class AdminUserServiceImpl implements AdminUserService {
         validateAttributes(userType, request.getAttributes());
 
         UUID localId = UUID.randomUUID();
-        ManagedUser user = ManagedUser.builder().id(localId)
+        UUID finalUserId = localId;
+        String outboxStatus = "PENDING";
+        try {
+
+            String confirmedIdStr = keycloakService.createKeycloakUser(localId, request, userType);
+            finalUserId = UUID.fromString(confirmedIdStr);
+            outboxStatus = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Using temporary ID for {}. Worker will sync later.", request.getUsername());
+        }
+        ManagedUser user = ManagedUser.builder().id(finalUserId)
         .isNewUser(true)
-        .syncStatus("PENDING_SYNC").build();
+        .build();
         applyRequest(user, request, userType);
 
-        try{
-            String confirmedId = keycloakService.createKeycloakUser(localId, request, userType);
-            user.setId(UUID.fromString(confirmedId));
-            user.setSyncStatus("SYNCED");
-        } catch (Exception e) {
-            System.err.println("Keycloak timeout/error: " + e.getMessage());
-        }
+        createOutboxEvent(finalUserId, "USER_CREATED", request, outboxStatus);
 
         return toResponse(managedUserRepository.save(user));
 
@@ -73,29 +86,55 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
+    @Transactional
     public AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request) {
         ManagedUser user = getUser(id);
         UserType userType = getUserType(request.getUserTypeId());
         validateAttributes(userType, request.getAttributes());
 
-        keycloakService.updateKeycloakUser(id, request);
+        String status = "PENDING";
+        try {
+            keycloakService.updateKeycloakUser(id, request);
+            status = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Fallback to Outbox for update: {}", id);
+        }
+
         applyRequest(user, request, userType);
+        createOutboxEvent(id, "USER_UPDATED", request,status);
         return toResponse(managedUserRepository.save(user));
     }
 
     @Override
+    @Transactional
     public AdminUserResponseDTO activateUser(UUID id) {
-        keycloakService.updateKeycloakStatus(id, true);
         ManagedUser user = getUser(id);
+        String status = "PENDING";
+        try {
+
+            keycloakService.updateKeycloakStatus(id, true);
+            status = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Fallback to Outbox for activation: {}", id);
+        }
         user.setEnabled(true);
+        createOutboxEvent(id, "USER_ACTIVATED", null, status);
         return toResponse(managedUserRepository.save(user));
     }
 
     @Override
+    @Transactional
     public AdminUserResponseDTO deactivateUser(UUID id) {
-        keycloakService.updateKeycloakStatus(id, false);
         ManagedUser user = getUser(id);
+        String status = "PENDING";
+        try {
+            keycloakService.updateKeycloakStatus(id, false);
+            status = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Fallback to Outbox for deactivation: {}", id);
+        }
         user.setEnabled(false);
+        createOutboxEvent(id, "USER_DEACTIVATED", null,status);
         return toResponse(managedUserRepository.save(user));
     }
 
@@ -103,16 +142,25 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public void deleteUser(UUID id) {
-        boolean existsInDb = managedUserRepository.existsById(id);
+        ManagedUser user = managedUserRepository.findById(id).orElse(null);
+
+        String status = "PENDING";
 
         try {
             keycloakService.deleteKeycloakUser(id);
+            status = "PROCESSED";
         } catch (Exception e) {
-            System.err.println("Note: User was already missing from Keycloak or Keycloak is down.");
+            log.warn("Keycloak down. Fallback to Outbox for deletion: {}", id);
         }
-        if (existsInDb) {
+
+
+        if (user!=null) {
+            AdminUserRequestDTO deletePayload = new AdminUserRequestDTO();
+            deletePayload.setUsername(user.getUsername());
+            createOutboxEvent(id, "USER_DELETED", deletePayload,status);
             managedUserRepository.deleteById(id);
         } else {
+            createOutboxEvent(id, "USER_DELETED", null,"PENDING");
             System.out.println("User was not in local DB, but Keycloak cleanup was attempted.");
         }
     }
@@ -168,22 +216,22 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
 
-
-    /*@Override
-    public AdminUserResponseDTO getUserById(UUID id){
-        ManagedUser user = managedUserRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("user not found: " + id));
-
-        try{
-            UserRepresentation kcUser = keycloak.realm("user-management")
-                    .users().get(id.toString()).toRepresentation();
-            user.setEnabled(kcUser.isEnabled());
-        }catch (Exception e){
-
+    private void createOutboxEvent(UUID aggregateId, String eventType, Object payloadObj,String outboxStatus) {
+        try {
+            String payload = payloadObj != null ? objectMapper.writeValueAsString(payloadObj) : "{}";
+            OutboxEvent event = OutboxEvent.builder()
+                    .aggregateId(aggregateId)
+                    .eventType(eventType)
+                    .payload(payload)
+                    .createdAt(LocalDateTime.now())
+                    .status(outboxStatus)
+                    .retryCount(0)
+                    .build();
+            outboxRepository.save(event);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize outbox payload", e);
         }
-
-        return toResponse(user);
-    }*/
+    }
 
 
 }

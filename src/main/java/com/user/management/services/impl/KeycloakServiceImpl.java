@@ -6,6 +6,7 @@ import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.UserResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class KeycloakServiceImpl implements KeycloakService {
 
 
@@ -29,6 +31,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public String createKeycloakUser(UUID id, AdminUserRequestDTO request, UserType userType){
+
 
         UserRepresentation user = new UserRepresentation();
         user.setId(id.toString());
@@ -41,26 +44,24 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         Response response = keycloak.realm(realm).users().create(user);
 
+
+        if (response.getStatus() == 409) {
+            String existingId = findIdByUsername(request.getUsername());
+            sendWelcomeEmail(UUID.fromString(existingId));
+            return id.toString();
+        }
+
         if(response.getStatus()!=201){
             throw new RuntimeException("Keycloak user creation failed with status: " + response.getStatus());
         }
 
         String path = response.getLocation().getPath();
-        String keycloakId = path.substring(path.lastIndexOf('/') + 1);
+        String actualKeycloakId = path.substring(path.lastIndexOf('/') + 1);
 
-        assignRealmRole(keycloakId, userType.getRoleName());
+        assignRealmRole(actualKeycloakId, userType.getRoleName());
+        sendWelcomeEmail(UUID.fromString(actualKeycloakId));
 
-        try {
-            keycloak.realm(realm)
-                    .users()
-                    .get(keycloakId)
-                    .executeActionsEmail(List.of("UPDATE_PASSWORD","VERIFY_EMAIL"));
-        } catch (Exception e) {
-
-            System.err.println("Keycloak is UP, but SMTP is not configured: " + e.getMessage());
-        }
-
-        return keycloakId;
+        return actualKeycloakId;
 
     }
 
