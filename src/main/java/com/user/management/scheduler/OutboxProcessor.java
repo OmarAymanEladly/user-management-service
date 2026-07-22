@@ -2,6 +2,7 @@ package com.user.management.scheduler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.entity.Delegation;
 import com.user.management.entity.ManagedUser;
 import com.user.management.entity.OutboxEvent;
 import com.user.management.entity.UserType;
@@ -45,9 +46,9 @@ public class OutboxProcessor {
                 event.setRetryCount(event.getRetryCount() + 1);
                 event.setLastError(e.getMessage());
 
-                if (event.getRetryCount() >= 5) {
+                /*if (event.getRetryCount() >= 5) {
                     event.setStatus("FAILED");
-                }
+                }*/
                 outboxRepository.save(event);
                 break;
             }
@@ -59,6 +60,8 @@ public class OutboxProcessor {
         if ("USER".equals(event.getAggregateType())) {
             processUserEvent(event);
         } else if ("USER_TYPE".equals(event.getAggregateType())) {
+            processUserTypeEvent(event);
+        } else if("DELEGATION".equals(event.getAggregateType())){
             processUserTypeEvent(event);
         }
     }
@@ -161,6 +164,21 @@ public class OutboxProcessor {
                 }
                 break;
 
+        }
+    }
+
+    private void processDelegationEvent(OutboxEvent event) throws Exception{
+        Delegation delegation = objectMapper.readValue(event.getPayload(),Delegation.class);
+
+        switch (event.getEventType()){
+            case "DELEGATION_CREATED":
+            case "DELEGATION_ACTIVATED":
+                log.info("Outbox: Assigning delegated roles to user {}", delegation.getDelegateeId());
+                keycloakService.assignRolesToUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
+                break;
+            case "DELEGATION_EXPIRED":
+                log.info("Outbox: Removing expired delegated roles from user {}", delegation.getDelegateeId());
+                keycloakService.removeRolesFromUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
         }
     }
 

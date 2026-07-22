@@ -10,6 +10,7 @@ import com.user.management.services.OutboxService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,7 @@ public class DelegationServiceImpl implements DelegationService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        if(request.getStartTime().isBefore(now.minusSeconds(5))){
+        if(request.getStartTime().isBefore(now)){
             throw new IllegalArgumentException("Start time cannot be in the past");
         }
 
@@ -86,5 +87,7 @@ public class DelegationServiceImpl implements DelegationService {
                 .createdAt(saved.getCreatedAt())
                 .build();
     }
+
+
 
 }

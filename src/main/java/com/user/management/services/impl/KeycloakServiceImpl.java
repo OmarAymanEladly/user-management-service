@@ -321,6 +321,22 @@ public class KeycloakServiceImpl implements KeycloakService {
                 .add(rolesToAdd);
     }
 
+    @Override
+    public void removeRolesFromUser(UUID userId,List<String> roleNames){
+        if(roleNames==null || roleNames.isEmpty()) return;
+
+        List<RoleRepresentation> rolesToRemove = roleNames.stream()
+                .map(name-> keycloak.realm(realm).roles().get(name).toRepresentation())
+                .collect(Collectors.toList());
+
+        keycloak.realm(realm).users().get(userId.toString())
+                .roles()
+                .realmLevel()
+                .remove(rolesToRemove);
+
+        log.info("Removed {} roles from user {}",roleNames.size(),userId);
+    }
+
 
 
 }

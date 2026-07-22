@@ -34,11 +34,9 @@ public class Delegation {
     private List<String> delegatedRoles;
 
     @NotNull(message = "Start time is required")
-    @FutureOrPresent(message = "Start time must be today or in the future")
     private LocalDateTime startTime;
 
     @NotNull(message = "End time is required")
-    @Future(message = "End time must be in the future")
     private LocalDateTime endTime;
 
     private String status;

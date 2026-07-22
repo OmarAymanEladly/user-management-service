@@ -20,6 +20,7 @@ public interface KeycloakService {
     void cleanupUserTypeAttributes(String typeName);
     List<String> getUserRoles(UUID userId);
     void assignRolesToUser(UUID userId, List<String> roleNames);
+    void removeRolesFromUser(UUID userId, List<String> roleNames);
 
 
 }
