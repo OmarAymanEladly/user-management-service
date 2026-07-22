@@ -12,6 +12,7 @@ import com.user.management.repository.OutboxEventRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.AdminUserService;
 import com.user.management.services.KeycloakService;
+import com.user.management.services.OutboxService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +32,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeRepository userTypeRepository;
-    private final OutboxEventRepository outboxRepository;
-    private final ObjectMapper objectMapper;
+    private final OutboxService outboxService;
     private final KeycloakService keycloakService;
+
 
     @Override
     @Transactional
@@ -66,7 +67,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         .build();
         applyRequest(user, request, userType);
 
-        createOutboxEvent(finalUserId, "USER_CREATED", request, outboxStatus);
+        outboxService.saveEvent(finalUserId, "USER","USER_CREATED", request, outboxStatus);
 
         return toResponse(managedUserRepository.save(user));
 
@@ -101,7 +102,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         }
 
         applyRequest(user, request, userType);
-        createOutboxEvent(id, "USER_UPDATED", request,status);
+        outboxService.saveEvent(id, "USER","USER_UPDATED", request,status);
         return toResponse(managedUserRepository.save(user));
     }
 
@@ -118,7 +119,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             log.warn("Keycloak down. Fallback to Outbox for activation: {}", id);
         }
         user.setEnabled(true);
-        createOutboxEvent(id, "USER_ACTIVATED", null, status);
+        outboxService.saveEvent(id, "USER","USER_ACTIVATED", null, status);
         return toResponse(managedUserRepository.save(user));
     }
 
@@ -134,7 +135,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             log.warn("Keycloak down. Fallback to Outbox for deactivation: {}", id);
         }
         user.setEnabled(false);
-        createOutboxEvent(id, "USER_DEACTIVATED", null,status);
+       outboxService.saveEvent(id, "USER","USER_DEACTIVATED", null,status);
         return toResponse(managedUserRepository.save(user));
     }
 
@@ -157,10 +158,10 @@ public class AdminUserServiceImpl implements AdminUserService {
         if (user!=null) {
             AdminUserRequestDTO deletePayload = new AdminUserRequestDTO();
             deletePayload.setUsername(user.getUsername());
-            createOutboxEvent(id, "USER_DELETED", deletePayload,status);
+           outboxService.saveEvent(id,"USER", "USER_DELETED", deletePayload,status);
             managedUserRepository.deleteById(id);
         } else {
-            createOutboxEvent(id, "USER_DELETED", null,"PENDING");
+           outboxService.saveEvent(id, "USER","USER_DELETED", null,"PENDING");
             System.out.println("User was not in local DB, but Keycloak cleanup was attempted.");
         }
     }
@@ -216,22 +217,6 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
 
-    private void createOutboxEvent(UUID aggregateId, String eventType, Object payloadObj,String outboxStatus) {
-        try {
-            String payload = payloadObj != null ? objectMapper.writeValueAsString(payloadObj) : "{}";
-            OutboxEvent event = OutboxEvent.builder()
-                    .aggregateId(aggregateId)
-                    .eventType(eventType)
-                    .payload(payload)
-                    .createdAt(LocalDateTime.now())
-                    .status(outboxStatus)
-                    .retryCount(0)
-                    .build();
-            outboxRepository.save(event);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to serialize outbox payload", e);
-        }
-    }
 
 
 }

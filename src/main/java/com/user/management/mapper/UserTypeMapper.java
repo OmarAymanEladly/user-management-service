@@ -50,6 +50,7 @@ public class UserTypeMapper {
                         .displayName(field.getDisplayName())
                         .dataType(field.getDataType())
                         .required(field.isRequired())
+                        .syncToKeycloak(field.isSyncToKeycloak())
                         .validation(field.getValidation())
                         .build()
         ).collect(Collectors.toList());
@@ -63,6 +64,7 @@ public class UserTypeMapper {
             field.setDisplayName(dto.getDisplayName());
             field.setDataType(dto.getDataType());
             field.setRequired(dto.isRequired());
+            field.setSyncToKeycloak(dto.isSyncToKeycloak());
             field.setValidation(dto.getValidation());
             return field;
         }).collect(Collectors.toList());

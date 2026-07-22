@@ -4,10 +4,13 @@ import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
+import com.user.management.services.OutboxService;
 import com.user.management.services.UserTypeService;
 import com.user.management.entity.UserType;
 import com.user.management.mapper.UserTypeMapper;
+import jakarta.transaction.Transactional;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.*;
 
 import java.util.*;
@@ -16,13 +19,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeRepository repository;
     private final UserTypeMapper mapper;
     private final KeycloakService keycloakService;
+    private final OutboxService outboxService;
 
     @Override
+    @Transactional
     public UserTypeResponseDTO createType(UserTypeRequestDTO request){
 
         if(repository.findByType(request.getType().toLowerCase()).isPresent()){
@@ -31,8 +37,17 @@ public class UserTypeServiceImpl implements UserTypeService {
         validateRole(request.getRoleName());
 
         UserType entity = mapper.toEntity(request);
-
         UserType saved = repository.save(entity);
+
+        String status = "PENDING";
+        try {
+            keycloakService.syncUserTypeAttributes(saved);
+            status = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Outbox will sync UserType profile later.");
+        }
+
+        outboxService.saveEvent(saved.getId(),"USER_TYPE","USER_TYPE_CREATED",request,status);
 
         return mapper.toResponse(saved);
     }
@@ -72,7 +87,20 @@ public class UserTypeServiceImpl implements UserTypeService {
         existingEntity.setFields(updatedData.getFields());
         existingEntity.setStatus(updatedData.getStatus());
 
-        return  mapper.toResponse(repository.save(existingEntity));
+        UserType saved = repository.save(existingEntity);
+
+        String status = "PENDING";
+        try {
+            keycloakService.syncUserTypeAttributes(saved);
+            status = "PROCESSED";
+        } catch (Exception e) {
+            log.warn("Keycloak down. Outbox will sync UserType update later: {}", saved.getType());
+        }
+
+        outboxService.saveEvent(saved.getId(), "USER_TYPE", "USER_TYPE_UPDATED", request, status);
+
+
+        return  mapper.toResponse(saved);
     }
 
     @Override
@@ -87,10 +115,14 @@ public class UserTypeServiceImpl implements UserTypeService {
     @Override
     public void deleteType(UUID id){
 
-        if(!repository.existsById(id)){
-            throw new RuntimeException("User Type to delete doesn't exist");
-        }
+        UserType userType = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User Type to delete doesn't exist"));
+
         repository.deleteById(id);
+        String typeName = userType.getType();
+
+        Map<String, String> payload = Map.of("typeName", typeName);
+        outboxService.saveEvent(id, "USER_TYPE", "USER_TYPE_DELETED", payload, "PENDING");
     }
 
     private void validateRole(String roleName) {

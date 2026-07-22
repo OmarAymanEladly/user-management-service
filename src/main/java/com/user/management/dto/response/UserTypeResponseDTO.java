@@ -32,5 +32,6 @@ public class UserTypeResponseDTO {
         private String dataType;
         private boolean required;
         private Map<String, Object> validation;
+        private boolean syncToKeycloak;
     }
 }

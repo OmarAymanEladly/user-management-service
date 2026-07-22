@@ -14,5 +14,6 @@ public class FieldDefinition {
     private String dataType;
     private boolean required;
     private Object defaultValue;
+    private boolean syncToKeycloak;
     private Map<String, Object> validation;
 }

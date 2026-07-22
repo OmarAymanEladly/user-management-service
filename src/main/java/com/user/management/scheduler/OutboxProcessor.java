@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.entity.ManagedUser;
 import com.user.management.entity.OutboxEvent;
+import com.user.management.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.OutboxEventRepository;
+import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Component
@@ -25,6 +28,7 @@ public class OutboxProcessor {
     private final ManagedUserRepository userRepository;
     private final KeycloakService keycloakService;
     private final ObjectMapper objectMapper;
+    private final UserTypeRepository userTypeRepository;
 
     @Scheduled(fixedDelayString = "${app.outbox.fixed-delay-ms}")
     @Transactional
@@ -51,6 +55,16 @@ public class OutboxProcessor {
     }
 
     private void syncToKeycloak(OutboxEvent event) throws Exception {
+
+        if ("USER".equals(event.getAggregateType())) {
+            processUserEvent(event);
+        } else if ("USER_TYPE".equals(event.getAggregateType())) {
+            processUserTypeEvent(event);
+        }
+    }
+
+
+    private void processUserEvent(OutboxEvent event) throws Exception{
         AdminUserRequestDTO request = null;
         if (!"{}".equals(event.getPayload()) && event.getPayload() != null) {
             request = objectMapper.readValue(event.getPayload(), AdminUserRequestDTO.class);
@@ -127,6 +141,29 @@ public class OutboxProcessor {
         }
     }
 
+    private void processUserTypeEvent(OutboxEvent event) throws Exception {
+        UUID id = event.getAggregateId();
+
+
+        switch (event.getEventType()) {
+            case "USER_TYPE_CREATED":
+            case "USER_TYPE_UPDATED":
+                UserType type = userTypeRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("UserType not found for sync: " + id));
+                keycloakService.syncUserTypeAttributes(type);
+                break;
+
+            case "USER_TYPE_DELETED":
+                Map<String, String> data = objectMapper.readValue(event.getPayload(), Map.class);
+                String typeName = data.get("typeName");
+                if (typeName != null) {
+                    keycloakService.cleanupUserTypeAttributes(typeName);
+                }
+                break;
+
+        }
+    }
+
 
     private String resolveKeycloakId(UUID aggregateId, String username) {
         if (username != null && !username.isBlank()) {
@@ -147,4 +184,6 @@ public class OutboxProcessor {
                 .map(ManagedUser::getUsername)
                 .orElse(null);
     }
+
+
 }

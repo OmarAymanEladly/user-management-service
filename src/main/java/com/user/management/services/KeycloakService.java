@@ -16,7 +16,10 @@ public interface KeycloakService {
     boolean realmRoleExists(String roleName);
     void sendWelcomeEmail(UUID id);
     String findIdByUsername(String username);
-
+    void syncUserTypeAttributes(UserType userType);
+    void cleanupUserTypeAttributes(String typeName);
+    List<String> getUserRoles(UUID userId);
+    void assignRolesToUser(UUID userId, List<String> roleNames);
 
 
 }
