@@ -2,10 +2,10 @@ package com.user.management.scheduler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.entity.Delegation;
-import com.user.management.entity.ManagedUser;
-import com.user.management.entity.OutboxEvent;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.Delegation;
+import com.user.management.model.entity.ManagedUser;
+import com.user.management.model.event.OutboxEvent;
+import com.user.management.model.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.OutboxEventRepository;
 import com.user.management.repository.UserTypeRepository;

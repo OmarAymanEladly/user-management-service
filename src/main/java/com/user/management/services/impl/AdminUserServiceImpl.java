@@ -1,14 +1,11 @@
 package com.user.management.services.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.dto.response.AdminUserResponseDTO;
-import com.user.management.entity.FieldDefinition;
-import com.user.management.entity.ManagedUser;
-import com.user.management.entity.OutboxEvent;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.FieldDefinition;
+import com.user.management.model.entity.ManagedUser;
+import com.user.management.model.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
-import com.user.management.repository.OutboxEventRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.AdminUserService;
 import com.user.management.services.KeycloakService;
@@ -19,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

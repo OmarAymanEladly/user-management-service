@@ -1,8 +1,8 @@
 package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.entity.FieldDefinition;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.FieldDefinition;
+import com.user.management.model.entity.UserType;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.NotFoundException;
@@ -10,7 +10,6 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.representations.idm.ClientScopeRepresentation;
 import org.keycloak.representations.userprofile.config.UPAttribute;
 import org.keycloak.representations.userprofile.config.UPAttributePermissions;
 import org.keycloak.representations.userprofile.config.UPConfig;
@@ -20,7 +19,6 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
-import org.keycloak.representations.userprofile.config.UPAttributeSelector;
 
 /*
 import org.keycloak.representations.idm.userprofile.UPConfig;

@@ -1,6 +1,6 @@
 package com.user.management.repository;
 
-import com.user.management.entity.Delegation;
+import com.user.management.model.entity.Delegation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
