@@ -1,6 +1,6 @@
 package com.user.management.scheduler;
 
-import com.user.management.model.entity.Delegation;
+import com.user.management.entity.Delegation;
 import com.user.management.repository.DelegationRepository;
 import com.user.management.services.KeycloakService;
 import com.user.management.services.OutboxService;
@@ -29,7 +29,7 @@ public class DelegationProcessor {
         LocalDateTime now = LocalDateTime.now();
 
         // Flip SCHEDULED -> ACTIVE
-        List<Delegation> toActivate = delegationRepository.findByStatusAndStartTimeBefore("SCHEDULED",now);
+        List<Delegation> toActivate = delegationRepository.findByStatusAndStartTimeLessThanEqual("SCHEDULED",now);
         for(Delegation delegation : toActivate){
 
             log.info("Job: Activating delegation {} for user {} ",delegation.getId(),delegation.getDelegateeId());
@@ -53,7 +53,7 @@ public class DelegationProcessor {
         }
 
         //Flip ACTIVE -> EXPIRED
-        List<Delegation> toExpire = delegationRepository.findByStatusAndEndTimeBefore("ACTIVE",now);
+        List<Delegation> toExpire = delegationRepository.findByStatusAndEndTimeLessThanEqual("ACTIVE",now);
         for(Delegation delegation: toExpire){
 
             log.info("Job: Expiring delegation {} for user {}", delegation.getId(), delegation.getDelegateeId());

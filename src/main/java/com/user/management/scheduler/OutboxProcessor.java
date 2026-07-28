@@ -2,10 +2,11 @@ package com.user.management.scheduler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.model.entity.Delegation;
-import com.user.management.model.entity.ManagedUser;
-import com.user.management.model.event.OutboxEvent;
-import com.user.management.model.entity.UserType;
+import com.user.management.entity.Delegation;
+import com.user.management.entity.ManagedUser;
+import com.user.management.entity.OutboxEvent;
+import com.user.management.entity.UserType;
+import com.user.management.repository.DelegationRepository;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.OutboxEventRepository;
 import com.user.management.repository.UserTypeRepository;
@@ -30,6 +31,7 @@ public class OutboxProcessor {
     private final KeycloakService keycloakService;
     private final ObjectMapper objectMapper;
     private final UserTypeRepository userTypeRepository;
+    private final DelegationRepository delegationRepository;
 
     @Scheduled(fixedDelayString = "${app.outbox.fixed-delay-ms}")
     @Transactional
@@ -50,7 +52,7 @@ public class OutboxProcessor {
                     event.setStatus("FAILED");
                 }*/
                 outboxRepository.save(event);
-                break;
+
             }
         }
     }
@@ -62,7 +64,7 @@ public class OutboxProcessor {
         } else if ("USER_TYPE".equals(event.getAggregateType())) {
             processUserTypeEvent(event);
         } else if("DELEGATION".equals(event.getAggregateType())){
-            processUserTypeEvent(event);
+            processDelegationEvent(event);
         }
     }
 
@@ -170,6 +172,22 @@ public class OutboxProcessor {
     private void processDelegationEvent(OutboxEvent event) throws Exception{
         Delegation delegation = objectMapper.readValue(event.getPayload(),Delegation.class);
 
+
+        if (delegation.getDelegatedRoles() == null || delegation.getDelegatedRoles().isEmpty()) {
+            log.info("Outbox: Roles missing for delegation {}, fetching from Keycloak...", delegation.getId());
+
+            List<String> roles = keycloakService.getUserRoles(delegation.getDelegatorId());
+
+
+            Delegation dbDelegation = delegationRepository.findById(delegation.getId()).orElseThrow();
+            dbDelegation.setDelegatedRoles(roles);
+            delegationRepository.save(dbDelegation);
+
+
+            delegation.setDelegatedRoles(roles);
+        }
+
+
         switch (event.getEventType()){
             case "DELEGATION_CREATED":
             case "DELEGATION_ACTIVATED":
@@ -177,6 +195,7 @@ public class OutboxProcessor {
                 keycloakService.assignRolesToUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
                 break;
             case "DELEGATION_EXPIRED":
+            case "DELEGATION_REVOKED":
                 log.info("Outbox: Removing expired delegated roles from user {}", delegation.getDelegateeId());
                 keycloakService.removeRolesFromUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
         }

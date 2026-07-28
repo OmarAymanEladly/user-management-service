@@ -34,9 +34,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.7.0
     container_name: keycloak_server
-    command:
-      - start-dev
-      - --verbose
+    command: start-dev
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-db
@@ -46,60 +44,14 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin123
       KC_LOG_LEVEL: DEBUG
-
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_USER_EVENTS_TOPIC: user-events
     ports:
       - "8081:8080"
     depends_on:
       keycloak-db:
         condition: service_healthy
-      kafka:
-        condition: service_started
     volumes:
-      - ./providers/keycloak-user-provisioning-1.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-user-provisioning.jar
-
-  kafka:
-    image: apache/kafka:4.1.0
-    container_name: kafka
-    ports:
-      - "9092:9092"
-      - "29092:29092"
-    environment:
-      KAFKA_NODE_ID: 1
-      KAFKA_PROCESS_ROLES: broker,controller
-
-      KAFKA_LISTENERS: PLAINTEXT://:9092,HOST://:29092,CONTROLLER://:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,HOST://localhost:29092
-
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
-
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
-
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-
-#    volumes:
-#      - kafka_data:/var/lib/kafka/data
-
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "8090:8080"
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      - ./providers/keycloak-event-listener-1.0-SNAPSHOT.jar:/opt/keycloak/providers/custom-event-listener.jar
 
 volumes:
   app_db_data:      # Separate storage for app
   keycloak_db_data: # Separate storage for Keycloak
-#  kafka_data:       # Separate storage for Kafka

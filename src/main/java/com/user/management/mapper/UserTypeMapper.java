@@ -2,8 +2,8 @@ package com.user.management.mapper;
 
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
-import com.user.management.model.entity.FieldDefinition;
-import com.user.management.model.entity.UserType;
+import com.user.management.entity.FieldDefinition;
+import com.user.management.entity.UserType;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.model.entity.FieldDefinition;
-import com.user.management.model.entity.UserType;
+import com.user.management.entity.FieldDefinition;
+import com.user.management.entity.UserType;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.NotFoundException;
@@ -20,11 +20,6 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.stereotype.Service;
 
-/*
-import org.keycloak.representations.idm.userprofile.UPConfig;
-import org.keycloak.representations.idm.userprofile.UPAttribute;
-import org.keycloak.representations.idm.userprofile.UPGroup;
-*/
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -264,7 +259,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Override
     public void cleanupUserTypeAttributes(String typeName) {
-        // FIX: Check if the type was recreated before performing cleanup
+
         if (userTypeRepository.findByType(typeName.toUpperCase()).isPresent() ||
                 userTypeRepository.findByType(typeName.toLowerCase()).isPresent()) {
             log.warn("Cleanup skipped for type '{}' because it currently exists in the database (re-creation detected).", typeName);

@@ -1,7 +1,7 @@
 package com.user.management.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.user.management.model.event.OutboxEvent;
+import com.user.management.entity.OutboxEvent;
 import com.user.management.repository.OutboxEventRepository;
 import com.user.management.services.OutboxService;
 import lombok.RequiredArgsConstructor;

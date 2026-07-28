@@ -1,6 +1,6 @@
 package com.user.management.repository;
 
-import com.user.management.model.event.OutboxEvent;
+import com.user.management.entity.OutboxEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

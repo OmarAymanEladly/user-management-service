@@ -1,7 +1,8 @@
 package com.user.management.services.impl;
 
-import com.user.management.model.entity.ManagedUser;
-import com.user.management.model.entity.UserType;
+import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.entity.ManagedUser;
+import com.user.management.entity.UserType;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.services.KeycloakService;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserSyncWorkerImplTest {
