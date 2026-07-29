@@ -42,6 +42,8 @@ public class ManagedUser implements Persistable<UUID> {
     @Column(columnDefinition = "jsonb")
     private Map<String, Object> attributes;
 
+    private String signupApprovalStatus;
+    private String rejectionReason;
 
     @Transient
     @Builder.Default

@@ -86,6 +86,8 @@ public class UserTypeServiceImpl implements UserTypeService {
         existingEntity.setRoleName(updatedData.getRoleName());
         existingEntity.setFields(updatedData.getFields());
         existingEntity.setStatus(updatedData.getStatus());
+        existingEntity.setAllowedToSelfSignup(updatedData.getAllowedToSelfSignup());
+        existingEntity.setRequiresAdminApproval(updatedData.getRequiresAdminApproval());
 
         UserType saved = repository.save(existingEntity);
 

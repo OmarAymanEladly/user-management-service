@@ -28,6 +28,8 @@ public class UserType {
     private String roleName;
 
     private String status;
+    private Boolean allowedToSelfSignup;
+    private Boolean requiresAdminApproval;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")

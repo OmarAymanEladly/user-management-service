@@ -1,6 +1,7 @@
 package com.user.management.controller;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.dto.request.UserApprovalStatusRequestDTO;
 import com.user.management.dto.response.AdminUserResponseDTO;
 import com.user.management.services.AdminUserService;
 import jakarta.validation.Valid;
@@ -39,9 +40,9 @@ public class AdminUserController {
     }
 
     @GetMapping
-    public List<AdminUserResponseDTO> getAllUsers() {
+    public List<AdminUserResponseDTO> getAllUsers(@RequestParam(required = false) String signupApprovalStatus) {
 
-        return adminUserService.getAllUsers();
+        return adminUserService.getAllUsers(signupApprovalStatus);
     }
 
     @GetMapping("/{id}")
@@ -64,6 +65,23 @@ public class AdminUserController {
     @PatchMapping("/{id}/deactivate")
     public AdminUserResponseDTO deactivateUser(@PathVariable UUID id) {
         return adminUserService.deactivateUser(id);
+    }
+
+    @PatchMapping("/{id}/approve-signup")
+    public AdminUserResponseDTO approveSignup(@PathVariable UUID id) {
+        return adminUserService.approveSignup(id);
+    }
+
+    @PatchMapping("/{id}/reject-signup")
+    public AdminUserResponseDTO rejectSignup(@PathVariable UUID id) {
+        return adminUserService.rejectSignup(id);
+    }
+
+    @PatchMapping("/{id}/approval-status")
+    public AdminUserResponseDTO updateApprovalStatus(
+            @PathVariable UUID id,
+            @Valid @RequestBody UserApprovalStatusRequestDTO request) {
+        return adminUserService.updateApprovalStatus(id, request);
     }
 
     @DeleteMapping("/{id}")

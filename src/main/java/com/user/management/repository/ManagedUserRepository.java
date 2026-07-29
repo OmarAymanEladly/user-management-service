@@ -11,5 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ManagedUserRepository extends JpaRepository<ManagedUser, UUID> {
     Optional<ManagedUser> findByUsername(String username);
+    List<ManagedUser> findBySignupApprovalStatusIgnoreCase(String signupApprovalStatus);
 
 }

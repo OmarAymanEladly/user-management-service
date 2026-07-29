@@ -14,6 +14,8 @@ public class UserTypeRequestDTO {
     private String description;
     private String roleName;
     private String status;
+    private Boolean allowedToSelfSignup;
+    private Boolean requiresAdminApproval;
     private List<UserTypeRequestFieldDTO> fields;
 
     @Data

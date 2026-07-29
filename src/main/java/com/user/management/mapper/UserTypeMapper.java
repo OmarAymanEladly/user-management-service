@@ -23,6 +23,8 @@ public class UserTypeMapper {
                 .description(entity.getDescription())
                 .roleName(entity.getRoleName())
                 .status(entity.getStatus())
+                .allowedToSelfSignup(Boolean.TRUE.equals(entity.getAllowedToSelfSignup()))
+                .requiresAdminApproval(Boolean.TRUE.equals(entity.getRequiresAdminApproval()))
                 .fields(mapFieldsToResponseDto(entity.getFields()))
                 .build();
     }
@@ -36,6 +38,8 @@ public class UserTypeMapper {
                 .description(request.getDescription())
                 .roleName(request.getRoleName())
                 .status(request.getStatus())
+                .allowedToSelfSignup(Boolean.TRUE.equals(request.getAllowedToSelfSignup()))
+                .requiresAdminApproval(Boolean.TRUE.equals(request.getRequiresAdminApproval()))
                 .fields(mapFieldsToEntity(request.getFields()))
                 .build();
     }
