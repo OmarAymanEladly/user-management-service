@@ -1,7 +1,7 @@
 package com.user.management.services;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.UserType;
 
 import java.util.List;
 import java.util.UUID;

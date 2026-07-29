@@ -1,8 +1,8 @@
 package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.entity.FieldDefinition;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.FieldDefinition;
+import com.user.management.model.entity.UserType;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
 import jakarta.ws.rs.NotFoundException;

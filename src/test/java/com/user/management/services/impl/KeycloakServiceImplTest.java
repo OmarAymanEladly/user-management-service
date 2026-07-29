@@ -1,7 +1,7 @@
 package com.user.management.services.impl;
 
 import com.user.management.dto.request.AdminUserRequestDTO;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.UserType;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;

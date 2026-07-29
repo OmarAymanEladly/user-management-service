@@ -2,7 +2,7 @@ package com.user.management.services.impl;
 
 import com.user.management.dto.request.DelegationRequestDTO;
 import com.user.management.dto.response.DelegationResponseDTO;
-import com.user.management.entity.Delegation;
+import com.user.management.model.entity.Delegation;
 import com.user.management.repository.DelegationRepository;
 import com.user.management.services.DelegationService;
 import com.user.management.services.KeycloakService;
@@ -10,7 +10,6 @@ import com.user.management.services.OutboxService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
