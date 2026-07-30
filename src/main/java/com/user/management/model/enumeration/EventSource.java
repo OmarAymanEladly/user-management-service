@@ -4,5 +4,5 @@ public enum EventSource {
     ADMIN,
     LDAP,
     SELF,
-    IDP
+    IDENTITY_PROVIDER,
 }
