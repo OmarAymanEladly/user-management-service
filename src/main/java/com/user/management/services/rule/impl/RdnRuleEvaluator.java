@@ -1,26 +1,31 @@
 package com.user.management.services.rule.impl;
 
 import com.user.management.model.entity.UserTypeRule;
+import com.user.management.model.event.RuleEvaluatorType;
 import com.user.management.model.event.UserProvisioningEvent;
 import com.user.management.services.rule.UserTypeRuleEvaluator;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class RdnRuleEvaluator implements UserTypeRuleEvaluator {
-    private final String EVALUATOR_TYPE = "RDN";
 
     @Override
-    public String getEvaluatorType() {
-        return EVALUATOR_TYPE;
+    public RuleEvaluatorType getEvaluatorType() {
+        return RuleEvaluatorType.RDN;
     }
 
     @Override
     public boolean evaluate(UserTypeRule rule, UserProvisioningEvent event) {
-        String dn = event.attributes().get("dn");
-        if (dn == null || dn.isBlank()) return false;
+        List<String> dns = event.attributes().get("dn");
 
+        if (dns == null || dns.isEmpty()) {
+            return false;
+        }
+
+        String dn = dns.get(0);
         String rdnAttr = rule.getMatchKey();     // e.g. "ou", "uid", "cn"
         String expected = rule.getMatchValue();  // e.g. "Contractors"
 

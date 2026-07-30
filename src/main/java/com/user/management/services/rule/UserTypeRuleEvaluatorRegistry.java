@@ -1,5 +1,6 @@
 package com.user.management.services.rule;
 
+import com.user.management.model.event.RuleEvaluatorType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class UserTypeRuleEvaluatorRegistry {
-    private final Map<String, UserTypeRuleEvaluator> evaluators;
+    private final Map<RuleEvaluatorType, UserTypeRuleEvaluator> evaluators;
 
     public UserTypeRuleEvaluatorRegistry(List<UserTypeRuleEvaluator> evaluators) {
         this.evaluators = new HashMap<>();
@@ -35,7 +36,7 @@ public class UserTypeRuleEvaluatorRegistry {
                 this.evaluators.keySet());
     }
 
-    public Optional<UserTypeRuleEvaluator> find(String evaluatorType) {
+    public Optional<UserTypeRuleEvaluator> find(RuleEvaluatorType evaluatorType) {
         return Optional.ofNullable(evaluators.get(evaluatorType));
     }
 }

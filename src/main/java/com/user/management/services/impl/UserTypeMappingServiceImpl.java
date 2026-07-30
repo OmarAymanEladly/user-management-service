@@ -11,6 +11,7 @@ import com.user.management.services.rule.UserTypeRuleEvaluatorRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,12 +19,13 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class UserTypeMappingServiceImpl implements UserTypeMappingService {
 
     private final UserTypeRuleRepository ruleRepository;
     private final UserTypeRuleEvaluatorRegistry registry;
     private final UserTypeRepository userTypeRepository;
-    private final static String DEFAULT_USER_TYPE = "Provisioned";
+    private static final String DEFAULT_USER_TYPE = "Provisioned";
 
     @Override
     public UserType mapUserType(UserProvisioningEvent event) {

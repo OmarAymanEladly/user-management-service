@@ -4,6 +4,7 @@ import com.user.management.model.enumeration.EventSource;
 import com.user.management.model.enumeration.ProvisioningEventType;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 
 public record UserProvisioningEvent(
@@ -15,6 +16,6 @@ public record UserProvisioningEvent(
         String lastName,
         String email,
         String phoneNumber,
-        Map<String, String> attributes,
+        Map<String, List<String>> attributes,
         Instant timestamp
 ) {}

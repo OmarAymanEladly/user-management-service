@@ -43,7 +43,9 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     public void handleUserDeleted(UserProvisioningEvent event) {
         log.info("Handling USER_DELETED [keycloakId={}, source={}]",
                 event.keycloakId(), event.source());
-        managedUserRepository.deleteById(UUID.fromString(event.keycloakId()));
+
+        UUID id = UUID.fromString(event.keycloakId());
+        managedUserRepository.findById(id).ifPresent(managedUserRepository::delete);
     }
 
     private void upsert(UserProvisioningEvent event) {
@@ -58,9 +60,10 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
                     return newUser;
                 });
 
-        user.setSignupApprovalStatus("ACTIVE");
         mapper.update(user, event);
-        user.setUserType(resolvedType);   // always after mapper.update — mapper must not own this field
+
+        user.setSignupApprovalStatus("ACTIVE");
+        user.setUserType(resolvedType);
 
         managedUserRepository.save(user);
 

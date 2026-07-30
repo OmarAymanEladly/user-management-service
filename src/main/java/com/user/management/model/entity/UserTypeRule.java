@@ -2,6 +2,7 @@ package com.user.management.model.entity;
 
 
 import com.user.management.model.enumeration.EventSource;
+import com.user.management.model.event.RuleEvaluatorType;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -16,8 +17,8 @@ public class UserTypeRule {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false)
-    private String evaluatorType;
+    @Enumerated(EnumType.STRING)
+    private RuleEvaluatorType evaluatorType;
 
     @Column(nullable = false)
     private String matchKey;
