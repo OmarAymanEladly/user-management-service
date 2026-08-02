@@ -1,6 +1,6 @@
 package com.user.management.repository;
 
-import com.user.management.entity.KeycloakRoleComposite;
+import com.user.management.model.entity.KeycloakRoleComposite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

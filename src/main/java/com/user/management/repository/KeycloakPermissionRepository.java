@@ -1,7 +1,6 @@
 package com.user.management.repository;
 
-import com.user.management.entity.KeycloakPermission;
-import com.user.management.entity.KeycloakRole;
+import com.user.management.model.entity.KeycloakPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
