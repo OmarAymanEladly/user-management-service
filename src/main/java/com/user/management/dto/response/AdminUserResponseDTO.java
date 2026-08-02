@@ -20,5 +20,7 @@ public class AdminUserResponseDTO {
     private UUID userTypeId;
     private String roleName;
     private Boolean enabled;
+    private String signupApprovalStatus;
+    private String rejectionReason;
     private Map<String, Object> attributes;
 }

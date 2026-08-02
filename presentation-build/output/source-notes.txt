@@ -1,0 +1,4 @@
+Deck sources:
+- user-management-service application.properties and SecurityConfig discussed in workspace.
+- task-management-api application.yaml and SecurityConfig inspected from local project.
+- Keycloak broker setup discussed in conversation: local realm task-management-demo, provider alias cloud-iam, Cloud-IAM realm user-management-dev.

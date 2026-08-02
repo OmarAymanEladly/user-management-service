@@ -2,7 +2,7 @@ package com.user.management.services.impl;
 
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.UserType;
 import com.user.management.mapper.UserTypeMapper;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;

@@ -1,0 +1,701 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/9bnxb3",
+    "id": "9bnxb3",
+    "slide": 4,
+    "layoutId": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wz6d0nit",
+      "id": "1",
+      "bbox": [
+        56,
+        42,
+        930,
+        64
+      ],
+      "geometry": "rect",
+      "text": "Spring Boot integrates with the broker using OIDC",
+      "textPreview": "Spring Boot integrates with the broker using OIDC",
+      "resolvedFontSize": 37,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 37,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Spring Boot integrates with the broker using OIDC"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Spring Boot integrates with the broker using OIDC",
+          "resolvedTextStyle": {
+            "fontSize": 37,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Spring Boot integrates with the broker using OIDC",
+              "fontSize": 37,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vexc7218",
+      "id": "2",
+      "bbox": [
+        58,
+        105,
+        820,
+        36
+      ],
+      "geometry": "rect",
+      "text": "The API validates the issuer and roles from local Keycloak tokens.",
+      "textPreview": "The API validates the issuer and roles from local Keycloak tokens.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The API validates the issuer and roles from local Keycloak tokens."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The API validates the issuer and roles from local Keycloak tokens.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The API validates the issuer and roles from local Keycloak tokens.",
+              "fontSize": 17,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/adovyx0n",
+      "id": "3",
+      "bbox": [
+        56,
+        152,
+        1168,
+        1.5
+      ],
+      "geometry": "rect",
+      "fillColor": "#B8BCC4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9cfu5sj2",
+      "id": "4",
+      "bbox": [
+        1166,
+        666,
+        58,
+        24
+      ],
+      "geometry": "rect",
+      "text": "04",
+      "textPreview": "04",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "04"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "04",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#555B63",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "04",
+              "fontSize": 13,
+              "color": "#555B63",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8b6dwnih",
+      "id": "5",
+      "bbox": [
+        70,
+        210,
+        540,
+        220
+      ],
+      "geometry": "rect",
+      "fillColor": "#F1F3F5",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/naxc3i1w",
+      "id": "6",
+      "bbox": [
+        100,
+        236,
+        260,
+        28
+      ],
+      "geometry": "rect",
+      "text": "application.yaml",
+      "textPreview": "application.yaml",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "application.yaml"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "application.yaml",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "application.yaml",
+              "fontSize": 24,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/m94vud0r",
+      "id": "7",
+      "bbox": [
+        100,
+        292,
+        470,
+        82
+      ],
+      "geometry": "rect",
+      "text": "spring.security.oauth2.resourceserver.jwt.issuer-uri:\nhttp://localhost:8081/realms/task-management-demo",
+      "textPreview": "spring.security.oauth2.resourceserver.jwt.issuer-uri: | http://localhost:8081/realms/task-management-demo",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "spring.security.oauth2.resourceserver.jwt.issuer-uri:"
+          },
+          {
+            "index": 2,
+            "text": "http://localhost:8081/realms/task-management-demo"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "spring.security.oauth2.resourceserver.jwt.issuer-uri:",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "spring.security.oauth2.resourceserver.jwt.issuer-uri:",
+              "fontSize": 20,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "http://localhost:8081/realms/task-management-demo",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "http://localhost:8081/realms/task-management-demo",
+              "fontSize": 20,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/t8zehcj6",
+      "id": "8",
+      "bbox": [
+        690,
+        210,
+        520,
+        220
+      ],
+      "geometry": "rect",
+      "fillColor": "#F1F3F5",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/s7qd8ri1",
+      "id": "9",
+      "bbox": [
+        720,
+        236,
+        260,
+        28
+      ],
+      "geometry": "rect",
+      "text": "SecurityConfig",
+      "textPreview": "SecurityConfig",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SecurityConfig"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SecurityConfig",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SecurityConfig",
+              "fontSize": 24,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qlcru94j",
+      "id": "10",
+      "bbox": [
+        720,
+        290,
+        430,
+        100
+      ],
+      "geometry": "rect",
+      "text": "Every request is authenticated.\nJWT roles are read from realm_access.roles.\nSpring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.",
+      "textPreview": "Every request is authenticated. | JWT roles are read from realm_access.roles. | Spring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 4,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Every request is authenticated."
+          },
+          {
+            "index": 2,
+            "text": "JWT roles are read from realm_access.roles."
+          },
+          {
+            "index": 3,
+            "text": "Spring sees PORTAL_ADMIN as"
+          },
+          {
+            "index": 4,
+            "text": "ROLE_PORTAL_ADMIN."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Every request is authenticated.",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Every request is authenticated.",
+              "fontSize": 20,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "JWT roles are read from realm_access.roles.",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "JWT roles are read from realm_access.roles.",
+              "fontSize": 20,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 3,
+          "text": "Spring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Spring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.",
+              "fontSize": 20,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rmlsnel4",
+      "id": "11",
+      "bbox": [
+        82,
+        510,
+        980,
+        60
+      ],
+      "geometry": "rect",
+      "text": "Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.",
+      "textPreview": "Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued"
+          },
+          {
+            "index": 2,
+            "text": "by the local broker realm."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.",
+              "fontSize": 26,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

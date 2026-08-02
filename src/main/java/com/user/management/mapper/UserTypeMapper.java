@@ -2,8 +2,8 @@ package com.user.management.mapper;
 
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
-import com.user.management.entity.FieldDefinition;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.FieldDefinition;
+import com.user.management.model.entity.UserType;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ public class UserTypeMapper {
                 .description(entity.getDescription())
                 .roleName(entity.getRoleName())
                 .status(entity.getStatus())
+                .allowedToSelfSignup(Boolean.TRUE.equals(entity.getAllowedToSelfSignup()))
+                .requiresAdminApproval(Boolean.TRUE.equals(entity.getRequiresAdminApproval()))
                 .fields(mapFieldsToResponseDto(entity.getFields()))
                 .build();
     }
@@ -36,6 +38,8 @@ public class UserTypeMapper {
                 .description(request.getDescription())
                 .roleName(request.getRoleName())
                 .status(request.getStatus())
+                .allowedToSelfSignup(Boolean.TRUE.equals(request.getAllowedToSelfSignup()))
+                .requiresAdminApproval(Boolean.TRUE.equals(request.getRequiresAdminApproval()))
                 .fields(mapFieldsToEntity(request.getFields()))
                 .build();
     }

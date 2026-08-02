@@ -1,0 +1,939 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/k26y7y",
+    "id": "k26y7y",
+    "slide": 2,
+    "layoutId": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ydwvmlwn",
+      "id": "1",
+      "bbox": [
+        56,
+        42,
+        930,
+        64
+      ],
+      "geometry": "rect",
+      "text": "The system has three moving parts",
+      "textPreview": "The system has three moving parts",
+      "resolvedFontSize": 37,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 37,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The system has three moving parts"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The system has three moving parts",
+          "resolvedTextStyle": {
+            "fontSize": 37,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The system has three moving parts",
+              "fontSize": 37,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/lg7ex0ve",
+      "id": "2",
+      "bbox": [
+        58,
+        105,
+        820,
+        36
+      ],
+      "geometry": "rect",
+      "text": "Each part has one clear security responsibility.",
+      "textPreview": "Each part has one clear security responsibility.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Each part has one clear security responsibility."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Each part has one clear security responsibility.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Each part has one clear security responsibility.",
+              "fontSize": 17,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kfyxovet",
+      "id": "3",
+      "bbox": [
+        56,
+        152,
+        1168,
+        1.5
+      ],
+      "geometry": "rect",
+      "fillColor": "#B8BCC4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7ipwzqdk",
+      "id": "4",
+      "bbox": [
+        1166,
+        666,
+        58,
+        24
+      ],
+      "geometry": "rect",
+      "text": "02",
+      "textPreview": "02",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "02"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "02",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#555B63",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "02",
+              "fontSize": 13,
+              "color": "#555B63",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6hgfq5wz",
+      "id": "5",
+      "bbox": [
+        74,
+        212,
+        330,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tk7e10va",
+      "id": "6",
+      "bbox": [
+        74,
+        212,
+        8,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#111111",
+      "lineColor": "#111111",
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8jyxsvep",
+      "id": "7",
+      "bbox": [
+        100,
+        232,
+        286,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Spring Boot app",
+      "textPreview": "Spring Boot app",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Spring Boot app"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Spring Boot app",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Spring Boot app",
+              "fontSize": 23,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vm9w3adg",
+      "id": "8",
+      "bbox": [
+        100,
+        270,
+        286,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Resource server. It does not log users in; it validates JWT access tokens.",
+      "textPreview": "Resource server. It does not log users in; it validates JWT access tokens.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 15,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Resource server. It does not log users in; it"
+          },
+          {
+            "index": 2,
+            "text": "validates JWT access tokens."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Resource server. It does not log users in; it validates JWT access tokens.",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Resource server. It does not log users in; it validates JWT access tokens.",
+              "fontSize": 15,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ulgfu5wv",
+      "id": "9",
+      "bbox": [
+        475,
+        212,
+        330,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/kf2lgrud",
+      "id": "10",
+      "bbox": [
+        475,
+        212,
+        8,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#3D8DFF",
+      "lineColor": "#3D8DFF",
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5gvmpwvy",
+      "id": "11",
+      "bbox": [
+        501,
+        232,
+        286,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Identity broker",
+      "textPreview": "Identity broker",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Identity broker"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Identity broker",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Identity broker",
+              "fontSize": 23,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/idk3ehc7",
+      "id": "12",
+      "bbox": [
+        501,
+        270,
+        286,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.",
+      "textPreview": "Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 15,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Local Keycloak. It owns the realm trusted by"
+          },
+          {
+            "index": 2,
+            "text": "the API and can redirect login to external"
+          },
+          {
+            "index": 3,
+            "text": "providers."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.",
+              "fontSize": 15,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/jet4nmds",
+      "id": "13",
+      "bbox": [
+        876,
+        212,
+        330,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#FFFFFF",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sjm5kru9",
+      "id": "14",
+      "bbox": [
+        876,
+        212,
+        8,
+        118
+      ],
+      "geometry": "rect",
+      "fillColor": "#6DCBF4",
+      "lineColor": "#6DCBF4",
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tkvmtwvu",
+      "id": "15",
+      "bbox": [
+        902,
+        232,
+        286,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Identity provider",
+      "textPreview": "Identity provider",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Identity provider"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Identity provider",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Identity provider",
+              "fontSize": 23,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6h43i1cj",
+      "id": "16",
+      "bbox": [
+        902,
+        270,
+        286,
+        44
+      ],
+      "geometry": "rect",
+      "text": "Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.",
+      "textPreview": "Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.",
+      "resolvedFontSize": 15,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 15,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Cloud-IAM Keycloak. It authenticates the"
+          },
+          {
+            "index": 2,
+            "text": "external user and sends identity claims"
+          },
+          {
+            "index": 3,
+            "text": "back to the broker."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.",
+          "resolvedTextStyle": {
+            "fontSize": 15,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.",
+              "fontSize": 15,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 17,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rid4rmdo",
+      "id": "17",
+      "bbox": [
+        410,
+        252,
+        52,
+        40
+      ],
+      "geometry": "rightArrow",
+      "fillColor": "#E8EBEF",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 18,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gnm5obul",
+      "id": "18",
+      "bbox": [
+        811,
+        252,
+        52,
+        40
+      ],
+      "geometry": "rightArrow",
+      "fillColor": "#E8EBEF",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 19,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/18fmxgv6",
+      "id": "19",
+      "bbox": [
+        76,
+        514,
+        560,
+        34
+      ],
+      "geometry": "rect",
+      "text": "The API accepts tokens from the broker only.",
+      "textPreview": "The API accepts tokens from the broker only.",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The API accepts tokens from the broker only."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The API accepts tokens from the broker only.",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The API accepts tokens from the broker only.",
+              "fontSize": 26,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 20,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/p4bm1wna",
+      "id": "20",
+      "bbox": [
+        76,
+        560,
+        830,
+        52
+      ],
+      "geometry": "rect",
+      "text": "That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.",
+      "textPreview": "That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.",
+      "resolvedFontSize": 20,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 20,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "That keeps authorization centralized in the local realm even when the user originally signs in"
+          },
+          {
+            "index": 2,
+            "text": "through Cloud-IAM."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.",
+          "resolvedTextStyle": {
+            "fontSize": 20,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.",
+              "fontSize": 20,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

@@ -6,7 +6,7 @@ import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
 import com.user.management.services.OutboxService;
 import com.user.management.services.UserTypeService;
-import com.user.management.entity.UserType;
+import com.user.management.model.entity.UserType;
 import com.user.management.mapper.UserTypeMapper;
 import jakarta.transaction.Transactional;
 import lombok.*;
@@ -86,6 +86,8 @@ public class UserTypeServiceImpl implements UserTypeService {
         existingEntity.setRoleName(updatedData.getRoleName());
         existingEntity.setFields(updatedData.getFields());
         existingEntity.setStatus(updatedData.getStatus());
+        existingEntity.setAllowedToSelfSignup(updatedData.getAllowedToSelfSignup());
+        existingEntity.setRequiresAdminApproval(updatedData.getRequiresAdminApproval());
 
         UserType saved = repository.save(existingEntity);
 

@@ -62,7 +62,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"type\": \"employee-{{$timestamp}}\",\n  \"description\": \"Employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {}\n    }\n  ]\n}"
+              "raw": "{\n  \"type\": \"employee-{{$timestamp}}\",\n  \"description\": \"Employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"allowedToSelfSignup\": true,\n  \"requiresAdminApproval\": true,\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {},\n      \"syncToKeycloak\": true\n    }\n  ]\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/userTypes", "host": ["{{baseUrl}}"], "path": ["api", "userTypes"] }
           }
@@ -93,7 +93,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"type\": \"employee-updated-{{$timestamp}}\",\n  \"description\": \"Updated employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {}\n    }\n  ]\n}"
+              "raw": "{\n  \"type\": \"employee-updated-{{$timestamp}}\",\n  \"description\": \"Updated employee user type\",\n  \"roleName\": \"{{roleName}}\",\n  \"status\": \"ACTIVE\",\n  \"allowedToSelfSignup\": true,\n  \"requiresAdminApproval\": true,\n  \"fields\": [\n    {\n      \"fieldName\": \"department\",\n      \"displayName\": \"Department\",\n      \"dataType\": \"string\",\n      \"required\": true,\n      \"validation\": {},\n      \"syncToKeycloak\": true\n    }\n  ]\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/userTypes/{{userTypeId}}", "host": ["{{baseUrl}}"], "path": ["api", "userTypes", "{{userTypeId}}"] }
           }

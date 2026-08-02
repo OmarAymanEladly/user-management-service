@@ -1,6 +1,6 @@
 package com.user.management.scheduler;
 
-import com.user.management.entity.Delegation;
+import com.user.management.model.entity.Delegation;
 import com.user.management.repository.DelegationRepository;
 import com.user.management.services.KeycloakService;
 import com.user.management.services.OutboxService;

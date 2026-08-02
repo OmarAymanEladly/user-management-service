@@ -1,0 +1,768 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/kcyfmh",
+    "id": "kcyfmh",
+    "slide": 8,
+    "layoutId": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "+mn-lt"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "8cf7fde6-c1de-451d-9eed-d467315cb5c3",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "8e4dcac6-6bd7-436c-bf50-0182fdc79378",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/id03apon",
+      "id": "1",
+      "bbox": [
+        56,
+        42,
+        930,
+        64
+      ],
+      "geometry": "rect",
+      "text": "Token testing proves which Keycloak the API trusts",
+      "textPreview": "Token testing proves which Keycloak the API trusts",
+      "resolvedFontSize": 37,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 37,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Token testing proves which Keycloak the API trusts"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Token testing proves which Keycloak the API trusts",
+          "resolvedTextStyle": {
+            "fontSize": 37,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Token testing proves which Keycloak the API trusts",
+              "fontSize": 37,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5gbml4ny",
+      "id": "2",
+      "bbox": [
+        58,
+        105,
+        820,
+        36
+      ],
+      "geometry": "rect",
+      "text": "The issuer claim is the fastest way to explain success or failure.",
+      "textPreview": "The issuer claim is the fastest way to explain success or failure.",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 17,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The issuer claim is the fastest way to explain success or failure."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The issuer claim is the fastest way to explain success or failure.",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The issuer claim is the fastest way to explain success or failure.",
+              "fontSize": 17,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4f2lczmd",
+      "id": "3",
+      "bbox": [
+        56,
+        152,
+        1168,
+        1.5
+      ],
+      "geometry": "rect",
+      "fillColor": "#B8BCC4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/va94fu5w",
+      "id": "4",
+      "bbox": [
+        1166,
+        666,
+        58,
+        24
+      ],
+      "geometry": "rect",
+      "text": "08",
+      "textPreview": "08",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "08"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "08",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "color": "#555B63",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "08",
+              "fontSize": 13,
+              "color": "#555B63",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/u9036pob",
+      "id": "5",
+      "bbox": [
+        70,
+        190,
+        520,
+        300
+      ],
+      "geometry": "rect",
+      "fillColor": "#F1F3F5",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hcrmhkn2",
+      "id": "6",
+      "bbox": [
+        104,
+        226,
+        390,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Accepted by task-management-api",
+      "textPreview": "Accepted by task-management-api",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "+mn-lt",
+        "color": "#1F8A5B",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Accepted by task-management-api"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Accepted by task-management-api",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "color": "#1F8A5B",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Accepted by task-management-api",
+              "fontSize": 24,
+              "color": "#1F8A5B",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wbil8z6h",
+      "id": "7",
+      "bbox": [
+        104,
+        292,
+        430,
+        58
+      ],
+      "geometry": "rect",
+      "text": "iss = http://localhost:8081/realms/task-management-demo",
+      "textPreview": "iss = http://localhost:8081/realms/task-management-demo",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "iss ="
+          },
+          {
+            "index": 2,
+            "text": "http://localhost:8081/realms/task-manageme"
+          },
+          {
+            "index": 3,
+            "text": "nt-demo"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "iss = http://localhost:8081/realms/task-management-demo",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "iss = http://localhost:8081/realms/task-management-demo",
+              "fontSize": 22,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/f6d4re50",
+      "id": "8",
+      "bbox": [
+        104,
+        390,
+        390,
+        34
+      ],
+      "geometry": "rect",
+      "text": "This token comes from the local broker realm.",
+      "textPreview": "This token comes from the local broker realm.",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "This token comes from the local broker realm."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "This token comes from the local broker realm.",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "This token comes from the local broker realm.",
+              "fontSize": 19,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/e54ni94v",
+      "id": "9",
+      "bbox": [
+        690,
+        190,
+        520,
+        300
+      ],
+      "geometry": "rect",
+      "fillColor": "#F1F3F5",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4fapgby5",
+      "id": "10",
+      "bbox": [
+        724,
+        226,
+        390,
+        30
+      ],
+      "geometry": "rect",
+      "text": "Rejected directly by the API",
+      "textPreview": "Rejected directly by the API",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "+mn-lt",
+        "color": "#B36B00",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Rejected directly by the API"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Rejected directly by the API",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "color": "#B36B00",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Rejected directly by the API",
+              "fontSize": 24,
+              "color": "#B36B00",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5gjqpgfq",
+      "id": "11",
+      "bbox": [
+        724,
+        292,
+        430,
+        82
+      ],
+      "geometry": "rect",
+      "text": "iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev",
+      "textPreview": "iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "iss ="
+          },
+          {
+            "index": 2,
+            "text": "https://lemur-2.cloud-iam.com/auth/realms/"
+          },
+          {
+            "index": 3,
+            "text": "user-management-dev"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev",
+              "fontSize": 22,
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ids7e1gz",
+      "id": "12",
+      "bbox": [
+        724,
+        410,
+        390,
+        34
+      ],
+      "geometry": "rect",
+      "text": "This token comes from the provider, not the broker.",
+      "textPreview": "This token comes from the provider, not the broker.",
+      "resolvedFontSize": 19,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 19,
+        "typeface": "+mn-lt",
+        "color": "#555B63",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "This token comes from the provider, not the"
+          },
+          {
+            "index": 2,
+            "text": "broker."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "This token comes from the provider, not the broker.",
+          "resolvedTextStyle": {
+            "fontSize": 19,
+            "color": "#555B63",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "This token comes from the provider, not the broker.",
+              "fontSize": 19,
+              "color": "#555B63",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3e1on6xk",
+      "id": "13",
+      "bbox": [
+        82,
+        560,
+        1000,
+        34
+      ],
+      "geometry": "rect",
+      "text": "Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.",
+      "textPreview": "Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "+mn-lt",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.",
+              "fontSize": 25,
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}
