@@ -33,7 +33,7 @@ public class OutboxProcessor {
     private final UserTypeRepository userTypeRepository;
     private final DelegationRepository delegationRepository;
 
-    @Scheduled(fixedDelayString = "${app.outbox.fixed-delay-ms}")
+    @Scheduled(fixedDelayString = "${app.fixed-delay-ms}")
     @Transactional
     public void processPendingEvents() {
         List<OutboxEvent> pendingEvents = outboxRepository.findByStatusOrderByCreatedAtAsc("PENDING");

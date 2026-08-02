@@ -10,10 +10,8 @@ import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.representations.userprofile.config.UPAttribute;
-import org.keycloak.representations.userprofile.config.UPAttributePermissions;
-import org.keycloak.representations.userprofile.config.UPConfig;
-import org.keycloak.representations.userprofile.config.UPGroup;
+import org.keycloak.representations.idm.ClientScopeRepresentation;
+import org.keycloak.representations.userprofile.config.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -35,6 +33,9 @@ public class KeycloakServiceImpl implements KeycloakService {
 
     @Value("${keycloak.realm}")
     private String realm;
+
+    @Value("${keycloak.client-id}")
+    private String appClientId;
 
 
 
@@ -193,9 +194,18 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         String typeName = userType.getType().toUpperCase().trim();
         String groupName = userType.getType().toLowerCase() + "-group";
+        String visibilityScopeName = "view-" + typeName + "-details";
 
 
-        attributesList.removeIf(attr -> groupName.equals(attr.getGroup()));
+        UPAttribute typeAttr = new UPAttribute();
+        typeAttr.setName("user_type");
+        typeAttr.setDisplayName("Account Type");
+        UPAttributePermissions typePermissions = new UPAttributePermissions();
+        typePermissions.setView(Set.of("admin", "user"));
+        typePermissions.setEdit(Set.of("admin"));
+        typeAttr.setPermissions(typePermissions);
+        attributesList.removeIf(a -> a.getName().equals("user_type"));
+        attributesList.add(typeAttr);
 
 
         groupsList.removeIf(g -> g.getName().equals(groupName));
@@ -220,17 +230,21 @@ public class KeycloakServiceImpl implements KeycloakService {
 
             UPAttributePermissions permissions = new UPAttributePermissions();
             permissions.setView(Set.of("admin", "user"));
-            permissions.setEdit(Set.of("admin"));
+            permissions.setEdit(Set.of("admin","user"));
             attribute.setPermissions(permissions);
 
+
+            UPAttributeSelector selector = new UPAttributeSelector();
+            selector.setScopes(Set.of(visibilityScopeName));
+            attribute.setSelector(selector);
+
+            attributesList.removeIf(a -> a.getName().equals(attrKey));
             attributesList.add(attribute);
         }
 
         config.setAttributes(attributesList);
         keycloak.realm(realm).users().userProfile().update(config);
     }
-
-
 
 
     private Map<String, List<String>> mapToKeycloakAttributes(Map<String, Object> attributes, UserType userType) {
@@ -328,6 +342,44 @@ public class KeycloakServiceImpl implements KeycloakService {
                 .remove(rolesToRemove);
 
         log.info("Removed {} roles from user {}",roleNames.size(),userId);
+    }
+
+    @Override
+    public void createRealmRole(String roleName){
+
+        if(realmRoleExists(roleName)) return;
+
+        RoleRepresentation role = new RoleRepresentation();
+        role.setName(roleName);
+        keycloak.realm(realm).roles().create(role);
+    }
+
+    @Override
+    public void createClientRole(String roleName){
+
+        String clientId = keycloak.realm(realm).clients().findByClientId(appClientId).get(0).getId();
+
+        try {
+            keycloak.realm(realm).clients().get(clientId).roles().get(roleName).toRepresentation();
+        }catch (Exception e){
+            RoleRepresentation role = new RoleRepresentation();
+            role.setName(roleName);
+            keycloak.realm(realm).clients().get(clientId).roles().create(role);
+        }
+    }
+
+    @Override
+    public void addClientRoleToRealmRole(String realmRoleName,String clientRoleName){
+
+        String clientId = keycloak.realm(realm).clients().findByClientId(appClientId).get(0).getId();
+
+
+        RoleRepresentation clientRole = keycloak.realm(realm).clients().get(clientId)
+                .roles().get(clientRoleName).toRepresentation();
+
+        keycloak.realm(realm).roles().get(realmRoleName).addComposites(List.of(clientRole));
+
+        log.info("Successfully linked client role '{}' to realm role '{}'", clientRoleName, realmRoleName);
     }
 
 

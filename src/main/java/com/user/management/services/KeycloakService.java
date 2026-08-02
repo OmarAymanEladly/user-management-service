@@ -21,6 +21,9 @@ public interface KeycloakService {
     List<String> getUserRoles(UUID userId);
     void assignRolesToUser(UUID userId, List<String> roleNames);
     void removeRolesFromUser(UUID userId, List<String> roleNames);
+    void createRealmRole(String roleName);
+    void createClientRole(String roleName);
+    void addClientRoleToRealmRole(String realmRoleName, String clientRoleName);
 
 
 }
