@@ -60,6 +60,7 @@ services:
       - ./providers/keycloak-user-provisioning-1.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-user-provisioning.jar
       - ./providers/keycloak-event-listener-1.0-SNAPSHOT.jar:/opt/keycloak/providers/custom-logging-listener.jar
 
+  # 4. Kafka and Kafka UI
   kafka:
     image: apache/kafka:4.1.0
     container_name: kafka
@@ -97,6 +98,49 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
 
+  # 5. OpenLDAP Server
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    restart: unless-stopped
+
+    environment:
+      LDAP_ORGANISATION: "LinkDev"
+      LDAP_DOMAIN: "linkdev.local"
+
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: admin123
+
+      LDAP_CONFIG_PASSWORD: config123
+
+      LDAP_BASE_DN: dc=linkdev,dc=local
+
+      LDAP_TLS: "false"
+
+    ports:
+      - "389:389"
+
+    volumes:
+      - openldap_data:/var/lib/ldap
+      - openldap_config:/etc/ldap/slapd.d
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: phpldapadmin
+    restart: unless-stopped
+
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: "false"
+
+    ports:
+      - "8082:80"
+
+    depends_on:
+      - openldap
+
 volumes:
   app_db_data:      # Separate storage for app
   keycloak_db_data: # Separate storage for Keycloak
+  openldap_data:    # Separate storage for OpenLDAP
+  openldap_config:  # Separate storage for OpenLDAP configuration
