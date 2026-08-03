@@ -43,8 +43,13 @@ public class UserTypeServiceImpl implements UserTypeService {
         try {
             keycloakService.syncUserTypeAttributes(saved);
             status = "PROCESSED";
+        } catch (jakarta.ws.rs.BadRequestException e) {
+            String errorBody = e.getResponse().readEntity(String.class);
+            log.error("Keycloak rejected the request. Reason: {}", errorBody);
+            throw new RuntimeException("Keycloak Error: " + errorBody);
         } catch (Exception e) {
-            log.warn("Keycloak down. Outbox will sync UserType profile later.");
+
+            log.warn("Keycloak communication failed. Outbox will sync later.");
         }
 
         outboxService.saveEvent(saved.getId(),"USER_TYPE","USER_TYPE_CREATED",request,status);
@@ -129,7 +134,7 @@ public class UserTypeServiceImpl implements UserTypeService {
 
     private void validateRole(String roleName) {
         if (!keycloakService.realmRoleExists(roleName)) {
-            throw new RuntimeException("Keycloak role not found: " + roleName);
+            throw new IllegalArgumentException("Keycloak role not found: " + roleName);
         }
     }
 

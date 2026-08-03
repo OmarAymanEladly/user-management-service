@@ -194,7 +194,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         String typeName = userType.getType().toUpperCase().trim();
         String groupName = userType.getType().toLowerCase() + "-group";
-        String visibilityScopeName = "view-" + typeName + "-details";
+
 
 
         UPAttribute typeAttr = new UPAttribute();
@@ -235,7 +235,6 @@ public class KeycloakServiceImpl implements KeycloakService {
 
 
             UPAttributeSelector selector = new UPAttributeSelector();
-            selector.setScopes(Set.of(visibilityScopeName));
             attribute.setSelector(selector);
 
             attributesList.removeIf(a -> a.getName().equals(attrKey));

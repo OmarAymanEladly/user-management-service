@@ -59,6 +59,7 @@ services:
     volumes:
       - ./providers/keycloak-user-provisioning-1.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-user-provisioning.jar
       - ./providers/keycloak-event-listener-1.0-SNAPSHOT.jar:/opt/keycloak/providers/custom-logging-listener.jar
+      - ./src/main/resources/themes/my-portal-theme:/opt/keycloak/themes/my-portal-theme
 
   kafka:
     image: apache/kafka:4.1.0
