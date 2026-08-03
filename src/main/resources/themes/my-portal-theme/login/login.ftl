@@ -4,6 +4,11 @@
         <#-- Title is handled inside the card below -->
     <#elseif section = "form">
         <div class="login-card">
+            <#if message?has_content && message.type != 'warning'>
+                <div class="alert-banner alert-${message.type}" style="background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; border: 1px solid #fecaca;">
+                    <span class="kc-feedback-text">${kcSanitize(message.summary)?no_esc}</span>
+                </div>
+            </#if>
             <h1 class="login-title">Sign In</h1>
             <p class="login-subtitle">Enter your credentials to access your account.</p>
 

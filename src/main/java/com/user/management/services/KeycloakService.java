@@ -24,6 +24,8 @@ public interface KeycloakService {
     void createRealmRole(String roleName);
     void createClientRole(String roleName);
     void addClientRoleToRealmRole(String realmRoleName, String clientRoleName);
+    Boolean isUserBlocked(UUID id);
+    Boolean isUserEnabledInKeycloak(UUID userId);
 
 
 }

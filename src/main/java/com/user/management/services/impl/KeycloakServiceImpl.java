@@ -60,12 +60,13 @@ public class KeycloakServiceImpl implements KeycloakService {
         if (response.getStatus() == 409) {
             String existingId = findIdByUsername(request.getUsername());
             sendWelcomeEmail(UUID.fromString(existingId));
-            return id.toString();
+            return existingId;
         }
 
         if(response.getStatus()!=201){
             throw new RuntimeException("Keycloak user creation failed with status: " + response.getStatus());
         }
+
 
         String path = response.getLocation().getPath();
         String actualKeycloakId = path.substring(path.lastIndexOf('/') + 1);
@@ -379,6 +380,31 @@ public class KeycloakServiceImpl implements KeycloakService {
         keycloak.realm(realm).roles().get(realmRoleName).addComposites(List.of(clientRole));
 
         log.info("Successfully linked client role '{}' to realm role '{}'", clientRoleName, realmRoleName);
+    }
+
+    @Override
+    public Boolean isUserBlocked(UUID userId){
+        try{
+            Map<String, Object> status = keycloak.realm(realm).attackDetection().bruteForceUserStatus(userId.toString());
+            return status != null && Boolean.TRUE.equals(status.get("disabled"));
+        }catch (Exception e){
+            log.error("Failed to check block status for user {}: {}",userId,e.getMessage());
+            return false;
+        }
+
+
+
+    }
+
+    @Override
+    public Boolean isUserEnabledInKeycloak(UUID userId) {
+        try {
+            return keycloak.realm(realm).users().get(userId.toString())
+                    .toRepresentation()
+                    .isEnabled();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 

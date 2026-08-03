@@ -100,10 +100,13 @@ public class OutboxProcessor {
                             .email(localUser.getEmail())
                             .firstName(localUser.getFirstName())
                             .lastName(localUser.getLastName())
+                            .phoneNumber(localUser.getPhoneNumber())
                             .userType(localUser.getUserType())
                             .attributes(localUser.getAttributes())
                             .enabled(localUser.getEnabled())
-                            .isNewUser(true)
+                            .signupApprovalStatus(localUser.getSignupApprovalStatus())
+                            .rejectionReason(localUser.getRejectionReason())
+                            .isNewUser(false)
                             .build();
 
                     userRepository.save(fixedUser);
