@@ -2,7 +2,7 @@ package com.user.management.model.entity;
 
 
 import com.user.management.model.enumeration.EventSource;
-import com.user.management.model.event.RuleEvaluatorType;
+import com.user.management.model.enumeration.RuleEvaluatorType;
 import jakarta.persistence.*;
 import lombok.Getter;
 

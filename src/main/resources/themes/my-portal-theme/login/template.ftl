@@ -51,7 +51,7 @@
                 </div>
 
                 <footer class="sidebar-footer">
-                    © 2024 Link Development<br>All rights reserved.
+                    © 2026 Link Development<br>All rights reserved.
                 </footer>
             </div>
         </aside>

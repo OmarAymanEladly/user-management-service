@@ -125,21 +125,6 @@ services:
       - openldap_data:/var/lib/ldap
       - openldap_config:/etc/ldap/slapd.d
 
-  phpldapadmin:
-    image: osixia/phpldapadmin:0.9.0
-    container_name: phpldapadmin
-    restart: unless-stopped
-
-    environment:
-      PHPLDAPADMIN_LDAP_HOSTS: openldap
-      PHPLDAPADMIN_HTTPS: "false"
-
-    ports:
-      - "8082:80"
-
-    depends_on:
-      - openldap
-
 volumes:
   app_db_data:      # Separate storage for app
   keycloak_db_data: # Separate storage for Keycloak
