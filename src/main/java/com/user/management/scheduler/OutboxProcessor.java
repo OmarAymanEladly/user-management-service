@@ -39,12 +39,17 @@ public class OutboxProcessor {
         List<OutboxEvent> pendingEvents = outboxRepository.findByStatusOrderByCreatedAtAsc("PENDING");
 
         for (OutboxEvent event : pendingEvents) {
+            log.info("Processing outbox event: aggregateType={}, eventType={}, aggregateId={}",
+                    event.getAggregateType(),
+                    event.getEventType(),
+                    event.getAggregateId());
+
             try {
                 syncToKeycloak(event);
                 event.setStatus("PROCESSED");
                 outboxRepository.save(event);
             } catch (Exception e) {
-                log.error("Failed to sync event {} to Keycloak: {}", event.getId(), e.getMessage());
+                log.error("Failed to sync event {} to Keycloak: {}", event.getId(), e);
                 event.setRetryCount(event.getRetryCount() + 1);
                 event.setLastError(e.getMessage());
 
@@ -58,6 +63,9 @@ public class OutboxProcessor {
     }
 
     private void syncToKeycloak(OutboxEvent event) throws Exception {
+        log.info("Routing event: aggregateType={}, eventType={}",
+                event.getAggregateType(),
+                event.getEventType());
 
         if ("USER".equals(event.getAggregateType())) {
             processUserEvent(event);
@@ -70,6 +78,8 @@ public class OutboxProcessor {
 
 
     private void processUserEvent(OutboxEvent event) throws Exception{
+        log.info("Entered processUserEvent: {}", event.getEventType());
+
         AdminUserRequestDTO request = null;
         if (!"{}".equals(event.getPayload()) && event.getPayload() != null) {
             request = objectMapper.readValue(event.getPayload(), AdminUserRequestDTO.class);
@@ -77,6 +87,7 @@ public class OutboxProcessor {
 
         UUID aggregateId = event.getAggregateId();
 
+        log.info("Switching on event type: {}", event.getEventType());
         switch (event.getEventType()) {
             case "USER_CREATED":
                 log.info("Syncing creation for user: {}", aggregateId);

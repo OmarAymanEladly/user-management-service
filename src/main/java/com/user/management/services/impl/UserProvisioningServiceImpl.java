@@ -3,9 +3,10 @@ package com.user.management.services.impl;
 import com.user.management.mapper.UserProvisioningMapper;
 import com.user.management.model.entity.ManagedUser;
 import com.user.management.model.entity.UserType;
+import com.user.management.model.enumeration.EventSource;
 import com.user.management.model.event.UserProvisioningEvent;
 import com.user.management.repository.ManagedUserRepository;
-import com.user.management.repository.UserTypeRepository;
+import com.user.management.services.OutboxService;
 import com.user.management.services.UserProvisioningService;
 import com.user.management.services.UserTypeMappingService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,8 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeMappingService userTypeMappingService;
-    private final UserProvisioningMapper mapper;
+    private final UserProvisioningMapper userProvisioningMapper;
+    private final OutboxService outboxService;
 
     @Override
     public void handleUserCreated(UserProvisioningEvent event) {
@@ -55,12 +57,16 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
         ManagedUser user = managedUserRepository.findById(userId)
                 .orElseGet(() -> {
-                    ManagedUser newUser = mapper.toEntity(event);
+                    ManagedUser newUser = userProvisioningMapper.toEntity(event);
                     newUser.setEnabled(true);
                     return newUser;
                 });
 
-        mapper.update(user, event);
+        boolean userTypeChanged =
+                user.getUserType() == null ||
+                        !user.getUserType().getType().equals(resolvedType.getType());
+
+        userProvisioningMapper.update(user, event);
 
         user.setSignupApprovalStatus("ACTIVE");
         user.setUserType(resolvedType);
@@ -69,5 +75,10 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
         log.info("Upserted user [keycloakId={}, username={}, userType={}]",
                 event.keycloakId(), event.username(), resolvedType.getType());
+
+        // Sync userType back to Keycloak
+        if (userTypeChanged && event.source().equals(EventSource.LDAP)) {
+            outboxService.saveEvent(user.getId(), "USER", "USER_UPDATED", userProvisioningMapper.toAdminRequest(user), "PENDING");
+        }
     }
 }
