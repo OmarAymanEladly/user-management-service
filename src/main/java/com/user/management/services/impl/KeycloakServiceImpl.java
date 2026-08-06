@@ -191,6 +191,7 @@ public class KeycloakServiceImpl implements KeycloakService {
     @Override
     public void syncUserTypeAttributes(UserType userType) {
 
+
         List<String> allDbTypes = userTypeRepository.findAll().stream()
                 .map(t -> t.getType().toUpperCase().trim())
                 .distinct()
@@ -211,9 +212,12 @@ public class KeycloakServiceImpl implements KeycloakService {
         }
 
 
+
         UPConfig config = keycloak.realm(realm).users().userProfile().getConfiguration();
         List<UPAttribute> attributesList = config.getAttributes() == null ? new ArrayList<>() : new ArrayList<>(config.getAttributes());
         List<UPGroup> groupsList = config.getGroups() == null ? new ArrayList<>() : new ArrayList<>(config.getGroups());
+
+
 
 
         String typeName = userType.getType().toUpperCase().trim();
@@ -231,8 +235,6 @@ public class KeycloakServiceImpl implements KeycloakService {
         typeAttr.setPermissions(typePermissions);
 
 
-
-        
         attributesList.removeIf(a -> a.getName().equals("user_type"));
         attributesList.add(typeAttr);
 
@@ -257,6 +259,7 @@ public class KeycloakServiceImpl implements KeycloakService {
             attribute.setDisplayName(field.getDisplayName());
             attribute.setGroup(groupName);
 
+
             Map<String, Map<String, Object>> validations = new HashMap<>();
 
 
@@ -267,11 +270,11 @@ public class KeycloakServiceImpl implements KeycloakService {
 
             attribute.setValidations(validations);
 
+
             UPAttributePermissions permissions = new UPAttributePermissions();
             permissions.setView(Set.of("admin", "user"));
             permissions.setEdit(Set.of("admin","user"));
             attribute.setPermissions(permissions);
-
 
 
 

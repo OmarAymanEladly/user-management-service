@@ -59,7 +59,10 @@ services:
     volumes:
       - ./providers/keycloak-user-provisioning-1.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-user-provisioning.jar
       - ./providers/keycloak-event-listener-1.0-SNAPSHOT.jar:/opt/keycloak/providers/custom-logging-listener.jar
+<<<<<<< HEAD
       - ./providers/keycloak-field-validator-1.0.0.jar:/opt/keycloak/providers/keycloak-field-validator.jar
+=======
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
       - ./src/main/resources/themes/my-portal-theme:/opt/keycloak/themes/my-portal-theme
 
   # 4. Kafka and Kafka UI
@@ -126,6 +129,7 @@ services:
       - openldap_data:/var/lib/ldap
       - openldap_config:/etc/ldap/slapd.d
 
+<<<<<<< HEAD
   phpldapadmin:
     image: osixia/phpldapadmin:0.9.0
     container_name: phpldapadmin
@@ -141,6 +145,8 @@ services:
     depends_on:
       - openldap
 
+=======
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
 volumes:
   app_db_data:      # Separate storage for app
   keycloak_db_data: # Separate storage for Keycloak

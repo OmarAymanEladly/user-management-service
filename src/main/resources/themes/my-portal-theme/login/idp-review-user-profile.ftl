@@ -1,6 +1,6 @@
 <#import "template.ftl" as layout>
 <@layout.registrationLayout displayMessage=true; section>
-   <#if section = "header">
+    <#if section = "header">
         <h1 class="design-title">Complete Your Profile</h1>
     <#elseif section = "form">
         <div class="setup-card" style="width: 600px; flex-direction: column; align-items: stretch; cursor: default; padding: 40px;">
@@ -35,10 +35,7 @@
                     <label>Account Type</label>
                     <select id="user_type_selector" name="user_type" class="modern-control" onchange="syncUI()">
                         <option value="">-- Select Your Role --</option>
-
-
                         <#assign roleListString = (realm.attributes['user_type_list']!"")>
-
                         <#if roleListString?has_content>
                             <#list roleListString?split(",") as type>
                                 <#assign isSelected = false>
@@ -57,7 +54,6 @@
 
                 <#-- 3. DYNAMIC GROUP RENDERING -->
                 <#if profile?? && profile.attributes??>
-                <#-- First, identify which groups actually exist on this page -->
                     <#assign foundGroups = []>
                     <#list profile.attributes as attr>
                         <#if attr.group?? && attr.group.name?contains("-group") && !foundGroups?seq_contains(attr.group.name)>
@@ -65,16 +61,14 @@
                         </#if>
                     </#list>
 
-                <#-- Render a section for every group found -->
                     <#list foundGroups as gName>
                         <div id="group-section-${gName?lower_case}" class="role-specific-section" style="display: none; border-top: 1px dashed #cbd5e1; margin-top: 20px; padding-top: 10px;">
                             <h3 style="color: #1e293b; margin-bottom: 15px;">${gName?replace("-group", "")?upper_case} Details</h3>
-
                             <#list profile.attributes as attr>
                                 <#if attr.group?? && attr.group.name == gName>
                                     <div class="pc-input-group">
                                         <label>${attr.displayName!attr.name}</label>
-                                        <input type="text" name="${attr.name}" value="${(attr.values?first!'')}" class="modern-control" />
+                                        <input type="text" name="${attr.name}" value="${(attr.values![])?first!''}" class="modern-control" />
                                     </div>
                                 </#if>
                             </#list>
@@ -90,24 +84,17 @@
             function syncUI() {
                 const selector = document.getElementById('user_type_selector');
                 if(!selector) return;
-
                 const selectedValue = selector.value.toLowerCase();
-
                 document.querySelectorAll('.role-specific-section').forEach(section => {
                     section.style.display = 'none';
-                    section.querySelectorAll('input').forEach(input => {
-                        input.disabled = true;
-                    });
+                    section.querySelectorAll('input').forEach(input => { input.disabled = true; });
                 });
-
                 if (selectedValue) {
                     const targetId = 'group-section-' + selectedValue + '-group';
                     const targetSection = document.getElementById(targetId);
                     if (targetSection) {
                         targetSection.style.display = 'block';
-                        targetSection.querySelectorAll('input').forEach(input => {
-                            input.disabled = false;
-                        });
+                        targetSection.querySelectorAll('input').forEach(input => { input.disabled = false; });
                     }
                 }
             }

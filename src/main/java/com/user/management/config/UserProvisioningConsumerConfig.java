@@ -1,5 +1,6 @@
 package com.user.management.config;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.user.management.model.event.KeycloakEvent;
 import com.user.management.model.event.UserProvisioningEvent;
@@ -13,15 +14,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 
 import java.util.UUID;
+=======
+import com.user.management.model.event.UserProvisioningEvent;
+import com.user.management.services.UserProvisioningService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
 import java.util.function.Consumer;
 
 @Configuration
 @RequiredArgsConstructor
+<<<<<<< HEAD
 @Slf4j
 public class UserProvisioningConsumerConfig {
 
     private final UserProvisioningService provisioningService;
     private final ObjectMapper objectMapper;
+=======
+public class UserProvisioningConsumerConfig {
+
+    private final UserProvisioningService provisioningService;
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
 
     @Bean
     public Consumer<UserProvisioningEvent> userProvisioningConsumer() {
@@ -34,6 +49,7 @@ public class UserProvisioningConsumerConfig {
             System.out.println("Processed event: " + event);
         };
     }
+<<<<<<< HEAD
 
     @Bean
     public Consumer<Message<String>> userStatusConsumer() {
@@ -56,4 +72,6 @@ public class UserProvisioningConsumerConfig {
         };
     }
 
+=======
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
 }

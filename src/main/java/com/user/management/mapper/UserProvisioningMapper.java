@@ -1,5 +1,9 @@
 package com.user.management.mapper;
 
+<<<<<<< HEAD
+=======
+import com.user.management.dto.request.AdminUserRequestDTO;
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
 import com.user.management.model.entity.ManagedUser;
 import com.user.management.model.event.UserProvisioningEvent;
 import org.springframework.stereotype.Component;
@@ -21,6 +25,25 @@ public class UserProvisioningMapper {
                 .build();
     }
 
+<<<<<<< HEAD
+=======
+    public AdminUserRequestDTO toAdminRequest(ManagedUser user) {
+        AdminUserRequestDTO dto = new AdminUserRequestDTO();
+
+        dto.setUsername(user.getUsername());
+        dto.setEmail(user.getEmail());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setEnabled(user.getEnabled());
+
+        dto.setUserTypeId(user.getUserType().getId());
+        dto.setAttributes(user.getAttributes());
+
+        return dto;
+    }
+
+>>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
     public void update(ManagedUser user, UserProvisioningEvent event) {
         user.setUsername(event.username());
         user.setFirstName(event.firstName());
