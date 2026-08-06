@@ -3,11 +3,10 @@ package com.user.management.controller;
 
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
-<<<<<<< HEAD
+
 import com.user.management.model.entity.UserType;
 import com.user.management.repository.UserTypeRepository;
-=======
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 import com.user.management.services.UserTypeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +22,8 @@ import java.util.UUID;
 public class UserTypeController {
 
     private final UserTypeService userTypeService;
-<<<<<<< HEAD
     private final UserTypeRepository userTypeRepository;
-=======
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,7 +66,7 @@ public class UserTypeController {
         userTypeService.deleteType(id);
     }
 
-<<<<<<< HEAD
+
     @GetMapping("/public/user-types")
     @CrossOrigin(origins = "http://localhost:8081")
     public List<String> getPublicUserTypes() {
@@ -78,6 +75,5 @@ public class UserTypeController {
                 .toList();
     }
 
-=======
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 }

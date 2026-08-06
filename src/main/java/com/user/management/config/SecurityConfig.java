@@ -43,15 +43,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-<<<<<<< HEAD
+
                         .requestMatchers("/api/user-types/public/**").permitAll()
                         .requestMatchers("/api/userTypes", "/api/userTypes/**","/api/admin/users/**").hasRole("PORTAL_ADMIN")
                         .requestMatchers("/api/**")
                         .authenticated()
-=======
+
                         .requestMatchers("/api/userTypes", "/api/userTypes/**","/api/admin/users/**").hasRole("PORTAL_ADMIN")
                         .requestMatchers("/api/**").authenticated()
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->

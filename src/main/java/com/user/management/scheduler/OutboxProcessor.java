@@ -39,24 +39,23 @@ public class OutboxProcessor {
         List<OutboxEvent> pendingEvents = outboxRepository.findByStatusOrderByCreatedAtAsc("PENDING");
 
         for (OutboxEvent event : pendingEvents) {
-<<<<<<< HEAD
-=======
+
             log.info("Processing outbox event: aggregateType={}, eventType={}, aggregateId={}",
                     event.getAggregateType(),
                     event.getEventType(),
                     event.getAggregateId());
 
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
             try {
                 syncToKeycloak(event);
                 event.setStatus("PROCESSED");
                 outboxRepository.save(event);
             } catch (Exception e) {
-<<<<<<< HEAD
+
                 log.error("Failed to sync event {} to Keycloak: {}", event.getId(), e.getMessage());
-=======
+
                 log.error("Failed to sync event {} to Keycloak: {}", event.getId(), e);
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
                 event.setRetryCount(event.getRetryCount() + 1);
                 event.setLastError(e.getMessage());
 
@@ -70,12 +69,11 @@ public class OutboxProcessor {
     }
 
     private void syncToKeycloak(OutboxEvent event) throws Exception {
-<<<<<<< HEAD
-=======
+
         log.info("Routing event: aggregateType={}, eventType={}",
                 event.getAggregateType(),
                 event.getEventType());
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 
         if ("USER".equals(event.getAggregateType())) {
             processUserEvent(event);
@@ -88,11 +86,10 @@ public class OutboxProcessor {
 
 
     private void processUserEvent(OutboxEvent event) throws Exception{
-<<<<<<< HEAD
-=======
+
         log.info("Entered processUserEvent: {}", event.getEventType());
 
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
         AdminUserRequestDTO request = null;
         if (!"{}".equals(event.getPayload()) && event.getPayload() != null) {
             request = objectMapper.readValue(event.getPayload(), AdminUserRequestDTO.class);
@@ -100,10 +97,9 @@ public class OutboxProcessor {
 
         UUID aggregateId = event.getAggregateId();
 
-<<<<<<< HEAD
-=======
+
         log.info("Switching on event type: {}", event.getEventType());
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
         switch (event.getEventType()) {
             case "USER_CREATED":
                 log.info("Syncing creation for user: {}", aggregateId);

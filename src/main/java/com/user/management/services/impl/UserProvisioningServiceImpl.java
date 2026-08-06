@@ -3,18 +3,18 @@ package com.user.management.services.impl;
 import com.user.management.mapper.UserProvisioningMapper;
 import com.user.management.model.entity.ManagedUser;
 import com.user.management.model.entity.UserType;
-<<<<<<< HEAD
+
 import com.user.management.model.event.KeycloakEvent;
 import com.user.management.model.event.UserProvisioningEvent;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.repository.UserTypeRepository;
 import com.user.management.services.KeycloakService;
-=======
+
 import com.user.management.model.enumeration.EventSource;
 import com.user.management.model.event.UserProvisioningEvent;
 import com.user.management.repository.ManagedUserRepository;
 import com.user.management.services.OutboxService;
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 import com.user.management.services.UserProvisioningService;
 import com.user.management.services.UserTypeMappingService;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
     private final ManagedUserRepository managedUserRepository;
     private final UserTypeMappingService userTypeMappingService;
-<<<<<<< HEAD
-    private final UserProvisioningMapper mapper;
+
+
     private final KeycloakService keycloakService;
-=======
+
     private final UserProvisioningMapper userProvisioningMapper;
     private final OutboxService outboxService;
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 
     @Override
     public void handleUserCreated(UserProvisioningEvent event) {
@@ -70,33 +70,38 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
         ManagedUser user = managedUserRepository.findById(userId)
                 .orElseGet(() -> {
-<<<<<<< HEAD
-                    ManagedUser newUser = mapper.toEntity(event);
-=======
+
+
+
                     ManagedUser newUser = userProvisioningMapper.toEntity(event);
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
                     newUser.setEnabled(true);
                     return newUser;
                 });
 
-<<<<<<< HEAD
-        mapper.update(user, event);
-=======
+
+       userProvisioningMapper.update(user, event);
+
         boolean userTypeChanged =
                 user.getUserType() == null ||
                         !user.getUserType().getType().equals(resolvedType.getType());
 
         userProvisioningMapper.update(user, event);
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
+
 
         user.setSignupApprovalStatus("ACTIVE");
         user.setUserType(resolvedType);
 
         managedUserRepository.save(user);
 
+        if (userTypeChanged && event.source().equals(EventSource.LDAP)) {
+            outboxService.saveEvent(user.getId(), "USER", "USER_UPDATED", userProvisioningMapper.toAdminRequest(user), "PENDING");
+
+        }
+
         log.info("Upserted user [keycloakId={}, username={}, userType={}]",
                 event.keycloakId(), event.username(), resolvedType.getType());
-<<<<<<< HEAD
+
     }
 
     @Override
@@ -110,7 +115,9 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
         UUID userId = UUID.fromString(event.getUserId());
 
-        if ("LOGIN_ERROR".equals(event.getEventType()) || "USER_DISABLED_BY_TEMPORARY_LOCKOUT".equals(event.getEventType())) {
+        if ("LOGIN_ERROR".equals(event.getEventType()) ||
+                "USER_DISABLED_BY_TEMPORARY_LOCKOUT".equals(event.getEventType()) ||
+                "USER_BLOCKED".equals(event.getEventType())) {
             log.info("==> SERVICE: Potential block detected. Checking Keycloak API for block status...");
 
             boolean isBlocked = keycloakService.isUserBlocked(userId);
@@ -127,8 +134,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
                     }
                 }, () -> log.error("==> SERVICE: Block event for user {} but user not found in local DB!", userId));
             }
-        }
-        else if ("LOGIN".equals(event.getEventType())) {
+        } else if ("LOGIN".equals(event.getEventType()) || "USER_UNBLOCKED".equals(event.getEventType())) {
             log.info("==> SERVICE: Successful login. Re-enabling user if needed...");
             managedUserRepository.findById(userId).ifPresent(user -> {
                 if (!user.getEnabled()) {
@@ -137,14 +143,6 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
                     log.info("==> SERVICE: USER {} IS NOW RE-ENABLED IN LOCAL DB.", user.getUsername());
                 }
             });
-        } else {
-            log.debug("==> SERVICE: Ignoring event type: {}", event.getEventType());
-=======
-
-        // Sync userType back to Keycloak
-        if (userTypeChanged && event.source().equals(EventSource.LDAP)) {
-            outboxService.saveEvent(user.getId(), "USER", "USER_UPDATED", userProvisioningMapper.toAdminRequest(user), "PENDING");
->>>>>>> 9082cad52326dd5df1a5ed89e2b8aec65a0d54c2
         }
     }
 }
