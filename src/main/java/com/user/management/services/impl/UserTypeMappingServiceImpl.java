@@ -24,8 +24,6 @@ public class UserTypeMappingServiceImpl implements UserTypeMappingService {
 
     private final UserTypeRuleRepository ruleRepository;
     private final UserTypeRuleEvaluatorRegistry registry;
-    private final UserTypeRepository userTypeRepository;
-    private static final String DEFAULT_USER_TYPE = "Provisioned";
 
     @Override
     public UserType mapUserType(UserProvisioningEvent event) {
@@ -53,11 +51,12 @@ public class UserTypeMappingServiceImpl implements UserTypeMappingService {
             }
         }
 
-        log.warn("No rule matched for user [{}] from source [{}], falling back to '{}'",
-                event.username(), event.source(), DEFAULT_USER_TYPE);
-
-        return userTypeRepository.findByType(DEFAULT_USER_TYPE)
-                .orElseThrow(() -> new IllegalStateException(
-                        "'" + DEFAULT_USER_TYPE + "' UserType not found — check your seed data"));
+        throw new IllegalStateException(
+                String.format(
+                        "No matching UserType rule found for source '%s'. " +
+                                "Ensure a FALLBACK rule exists and is active.",
+                        event.source()
+                )
+        );
     }
 }
