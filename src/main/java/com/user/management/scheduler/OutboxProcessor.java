@@ -1,0 +1,229 @@
+package com.user.management.scheduler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.model.entity.Delegation;
+import com.user.management.model.entity.ManagedUser;
+import com.user.management.model.event.OutboxEvent;
+import com.user.management.model.entity.UserType;
+import com.user.management.repository.DelegationRepository;
+import com.user.management.repository.ManagedUserRepository;
+import com.user.management.repository.OutboxEventRepository;
+import com.user.management.repository.UserTypeRepository;
+import com.user.management.services.KeycloakService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class OutboxProcessor {
+
+    private final OutboxEventRepository outboxRepository;
+    private final ManagedUserRepository userRepository;
+    private final KeycloakService keycloakService;
+    private final ObjectMapper objectMapper;
+    private final UserTypeRepository userTypeRepository;
+    private final DelegationRepository delegationRepository;
+
+    @Scheduled(fixedDelayString = "${app.fixed-delay-ms}")
+    @Transactional
+    public void processPendingEvents() {
+        List<OutboxEvent> pendingEvents = outboxRepository.findByStatusOrderByCreatedAtAsc("PENDING");
+
+        for (OutboxEvent event : pendingEvents) {
+            try {
+                syncToKeycloak(event);
+                event.setStatus("PROCESSED");
+                outboxRepository.save(event);
+            } catch (Exception e) {
+                log.error("Failed to sync event {} to Keycloak: {}", event.getId(), e.getMessage());
+                event.setRetryCount(event.getRetryCount() + 1);
+                event.setLastError(e.getMessage());
+
+                /*if (event.getRetryCount() >= 5) {
+                    event.setStatus("FAILED");
+                }*/
+                outboxRepository.save(event);
+
+            }
+        }
+    }
+
+    private void syncToKeycloak(OutboxEvent event) throws Exception {
+
+        if ("USER".equals(event.getAggregateType())) {
+            processUserEvent(event);
+        } else if ("USER_TYPE".equals(event.getAggregateType())) {
+            processUserTypeEvent(event);
+        } else if("DELEGATION".equals(event.getAggregateType())){
+            processDelegationEvent(event);
+        }
+    }
+
+
+    private void processUserEvent(OutboxEvent event) throws Exception{
+        AdminUserRequestDTO request = null;
+        if (!"{}".equals(event.getPayload()) && event.getPayload() != null) {
+            request = objectMapper.readValue(event.getPayload(), AdminUserRequestDTO.class);
+        }
+
+        UUID aggregateId = event.getAggregateId();
+
+        switch (event.getEventType()) {
+            case "USER_CREATED":
+                log.info("Syncing creation for user: {}", aggregateId);
+                ManagedUser localUser = userRepository.findById(aggregateId)
+                        .orElseThrow(() -> new RuntimeException("Local user not found"));
+
+
+                String realIdStr = keycloakService.createKeycloakUser(aggregateId, request, localUser.getUserType());
+                UUID realId = UUID.fromString(realIdStr);
+
+
+                if (!aggregateId.equals(realId)) {
+                    log.warn("Healing ID Mismatch. Deleting {} and creating {}.", aggregateId, realId);
+
+                    userRepository.delete(localUser);
+                    userRepository.flush(); // Clear the username immediately
+
+                    ManagedUser fixedUser = ManagedUser.builder()
+                            .id(realId)
+                            .username(localUser.getUsername())
+                            .email(localUser.getEmail())
+                            .firstName(localUser.getFirstName())
+                            .lastName(localUser.getLastName())
+                            .phoneNumber(localUser.getPhoneNumber())
+                            .userType(localUser.getUserType())
+                            .attributes(localUser.getAttributes())
+                            .enabled(localUser.getEnabled())
+                            .signupApprovalStatus(localUser.getSignupApprovalStatus())
+                            .rejectionReason(localUser.getRejectionReason())
+                            .isNewUser(false)
+                            .build();
+
+                    userRepository.save(fixedUser);
+                }
+                break;
+
+            case "USER_UPDATED":
+                if (request != null) {
+                    String targetId = resolveKeycloakId(aggregateId, request.getUsername());
+                    log.info("Syncing update for user: {}", targetId);
+
+                    keycloakService.updateKeycloakUser(UUID.fromString(targetId), request);
+                }
+                break;
+
+            case "USER_DEACTIVATED":
+                String deactivateId = resolveKeycloakId(aggregateId, getUsernameFromPayload(request, aggregateId));
+                log.info("Syncing deactivation for user: {}", deactivateId);
+
+                keycloakService.updateKeycloakStatus(UUID.fromString(deactivateId), false);
+                break;
+
+            case "USER_ACTIVATED":
+                String activateId = resolveKeycloakId(aggregateId, getUsernameFromPayload(request, aggregateId));
+                log.info("Syncing activation for user: {}", activateId);
+
+                keycloakService.updateKeycloakStatus(UUID.fromString(activateId), true);
+                break;
+
+            case "USER_DELETED":
+                String deleteUsername = request != null ? request.getUsername() : null;
+                String deleteId = resolveKeycloakId(aggregateId, deleteUsername);
+                log.info("Syncing deletion for user: {}", deleteId);
+
+                keycloakService.deleteKeycloakUser(UUID.fromString(deleteId));
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unknown event type: " + event.getEventType());
+        }
+    }
+
+    private void processUserTypeEvent(OutboxEvent event) throws Exception {
+        UUID id = event.getAggregateId();
+
+
+        switch (event.getEventType()) {
+            case "USER_TYPE_CREATED":
+            case "USER_TYPE_UPDATED":
+                UserType type = userTypeRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("UserType not found for sync: " + id));
+                keycloakService.syncUserTypeAttributes(type);
+                break;
+
+            case "USER_TYPE_DELETED":
+                Map<String, String> data = objectMapper.readValue(event.getPayload(), Map.class);
+                String typeName = data.get("typeName");
+                if (typeName != null) {
+                    keycloakService.cleanupUserTypeAttributes(typeName);
+                }
+                break;
+
+        }
+    }
+
+    private void processDelegationEvent(OutboxEvent event) throws Exception{
+        Delegation delegation = objectMapper.readValue(event.getPayload(),Delegation.class);
+
+
+        if (delegation.getDelegatedRoles() == null || delegation.getDelegatedRoles().isEmpty()) {
+            log.info("Outbox: Roles missing for delegation {}, fetching from Keycloak...", delegation.getId());
+
+            List<String> roles = keycloakService.getUserRoles(delegation.getDelegatorId());
+
+
+            Delegation dbDelegation = delegationRepository.findById(delegation.getId()).orElseThrow();
+            dbDelegation.setDelegatedRoles(roles);
+            delegationRepository.save(dbDelegation);
+
+
+            delegation.setDelegatedRoles(roles);
+        }
+
+
+        switch (event.getEventType()){
+            case "DELEGATION_CREATED":
+            case "DELEGATION_ACTIVATED":
+                log.info("Outbox: Assigning delegated roles to user {}", delegation.getDelegateeId());
+                keycloakService.assignRolesToUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
+                break;
+            case "DELEGATION_EXPIRED":
+            case "DELEGATION_REVOKED":
+                log.info("Outbox: Removing expired delegated roles from user {}", delegation.getDelegateeId());
+                keycloakService.removeRolesFromUser(delegation.getDelegateeId(),delegation.getDelegatedRoles());
+        }
+    }
+
+
+    private String resolveKeycloakId(UUID aggregateId, String username) {
+        if (username != null && !username.isBlank()) {
+            String keycloakId = keycloakService.findIdByUsername(username);
+            if (keycloakId != null) {
+                return keycloakId;
+            }
+        }
+
+        return aggregateId.toString();
+    }
+
+    private String getUsernameFromPayload(AdminUserRequestDTO request, UUID aggregateId) {
+        if (request != null && request.getUsername() != null) {
+            return request.getUsername();
+        }
+        return userRepository.findById(aggregateId)
+                .map(ManagedUser::getUsername)
+                .orElse(null);
+    }
+
+
+}

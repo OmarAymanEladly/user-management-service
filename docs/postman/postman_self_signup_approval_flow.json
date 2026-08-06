@@ -1,0 +1,240 @@
+{
+  "info": {
+    "_postman_id": "3a471575-approval-flow",
+    "name": "Self Signup Approval Flow",
+    "description": "Tests the self-signup flow where admin filters pending users, approves or rejects them, approval syncs to Keycloak, and login is tested after the user sets a password from the Keycloak email.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:9090" },
+    { "key": "keycloakUrl", "value": "http://localhost:8081" },
+    { "key": "realm", "value": "user-management-dev" },
+    { "key": "clientId", "value": "admin-cli" },
+    { "key": "adminUsername", "value": "admin-user" },
+    { "key": "adminPassword", "value": "admin123" },
+    { "key": "adminAccessToken", "value": "" },
+    { "key": "userTypeId", "value": "PUT_ACTIVE_USER_TYPE_ID_HERE" },
+    { "key": "pendingUserId", "value": "" },
+    { "key": "signupUsername", "value": "pending-user-{{$timestamp}}" },
+    { "key": "signupEmail", "value": "pending-user-{{$timestamp}}@example.com" },
+    { "key": "signupPassword", "value": "SET_AFTER_KEYCLOAK_EMAIL" }
+  ],
+  "item": [
+    {
+      "name": "01 - Get Admin Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('admin token returned', function () { pm.response.to.have.status(200); });",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('adminAccessToken', json.access_token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "grant_type", "value": "password", "type": "text" },
+            { "key": "client_id", "value": "{{clientId}}", "type": "text" },
+            { "key": "username", "value": "{{adminUsername}}", "type": "text" },
+            { "key": "password", "value": "{{adminPassword}}", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+          "host": ["{{keycloakUrl}}"],
+          "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+        }
+      }
+    },
+    {
+      "name": "01B - Create Signup User Type",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('user type created', function () { pm.response.to.have.status(201); });",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('userTypeId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{adminAccessToken}}", "type": "string" }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"self-signup-{{$timestamp}}\",\n  \"description\": \"Self signup type that requires admin approval\",\n  \"roleName\": \"PORTAL_ADMIN\",\n  \"status\": \"ACTIVE\",\n  \"allowedToSelfSignup\": true,\n  \"requiresAdminApproval\": true,\n  \"fields\": []\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/userTypes",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "userTypes"]
+        }
+      }
+    },
+    {
+      "name": "02 - Self Signup Pending Approval",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('signup created as pending approval', function () { pm.response.to.have.status(201); });",
+              "const json = pm.response.json();",
+              "pm.expect(json.signupApprovalStatus).to.eql('PENDING_APPROVAL');",
+              "pm.collectionVariables.set('pendingUserId', json.id);",
+              "pm.collectionVariables.set('signupUsername', json.username);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"{{signupUsername}}\",\n  \"email\": \"{{signupEmail}}\",\n  \"firstName\": \"Pending\",\n  \"lastName\": \"User\",\n  \"phoneNumber\": \"+201000000000\",\n  \"userTypeId\": \"{{userTypeId}}\",\n  \"attributes\": {}\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/signup/approval-required",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "signup", "approval-required"]
+        }
+      }
+    },
+    {
+      "name": "03 - Admin List Pending Approval Users",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{adminAccessToken}}", "type": "string" }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users?signupApprovalStatus=PENDING_APPROVAL",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users"],
+          "query": [
+            { "key": "signupApprovalStatus", "value": "PENDING_APPROVAL" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "04A - Admin Approve User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('user approved', function () { pm.response.to.have.status(200); });",
+              "const json = pm.response.json();",
+              "pm.expect(json.signupApprovalStatus).to.eql('ACTIVE');",
+              "pm.expect(json.enabled).to.eql(true);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{adminAccessToken}}", "type": "string" }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"APPROVED\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users/{{pendingUserId}}/approval-status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users", "{{pendingUserId}}", "approval-status"]
+        }
+      }
+    },
+    {
+      "name": "04B - Admin Reject User",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            { "key": "token", "value": "{{adminAccessToken}}", "type": "string" }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"REJECTED\",\n  \"rejectReason\": \"Submitted information could not be verified.\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/users/{{pendingUserId}}/approval-status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "users", "{{pendingUserId}}", "approval-status"]
+        }
+      }
+    },
+    {
+      "name": "05 - Test Approved User Login",
+      "request": {
+        "auth": { "type": "noauth" },
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "grant_type", "value": "password", "type": "text" },
+            { "key": "client_id", "value": "{{clientId}}", "type": "text" },
+            { "key": "username", "value": "{{signupUsername}}", "type": "text" },
+            { "key": "password", "value": "{{signupPassword}}", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{keycloakUrl}}/realms/{{realm}}/protocol/openid-connect/token",
+          "host": ["{{keycloakUrl}}"],
+          "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+        },
+        "description": "Run this only after approving the user and setting the user's password from the Keycloak email action, or manually in Keycloak admin."
+      }
+    }
+  ]
+}

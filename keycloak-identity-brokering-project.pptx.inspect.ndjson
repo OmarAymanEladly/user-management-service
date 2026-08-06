@@ -1,0 +1,213 @@
+{"kind":"deck","id":"pr/1o1g5s","name":"Deck"}
+{"kind":"layout","layoutId":"8e4dcac6-6bd7-436c-bf50-0182fdc79378","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"8cf7fde6-c1de-451d-9eed-d467315cb5c3","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/i3jkhv","slide":1,"title":"Keycloak Identity Brokering","textShapes":9}
+{"kind":"textbox","id":"sh/hwjm9sjy","slide":1,"text":"Keycloak Identity Brokering","textPreview":"Keycloak Identity Brokering","textChars":27,"textLines":1,"bbox":[56,88,700,80]}
+{"kind":"textbox","id":"sh/utsnyxkn","slide":1,"text":"How the task-management API uses a local Keycloak broker with Cloud-IAM as the external identity provider","textPreview":"How the task-management API uses a local Keycloak broker with Cloud-IAM as the external identity provider","textChars":105,"textLines":1,"bbox":[58,190,760,86]}
+{"kind":"shape","id":"sh/vu14721s","slide":1,"bbox":[820,86,350,430]}
+{"kind":"shape","id":"sh/87q5wn2h","slide":1,"bbox":[856,132,278,118]}
+{"kind":"shape","id":"sh/t8zm5sj2","slide":1,"bbox":[856,132,8,118]}
+{"kind":"textbox","id":"sh/658nudkb","slide":1,"text":"Spring Boot API","textPreview":"Spring Boot API","textChars":15,"textLines":1,"bbox":[882,152,234,30]}
+{"kind":"textbox","id":"sh/76h43i1w","slide":1,"text":"localhost:18080","textPreview":"localhost:18080","textChars":15,"textLines":1,"bbox":[882,190,234,44]}
+{"kind":"shape","id":"sh/k3q5sn25","slide":1,"bbox":[856,282,278,118]}
+{"kind":"shape","id":"sh/l4zm18jq","slide":1,"bbox":[856,282,8,118]}
+{"kind":"textbox","id":"sh/d07218rm","slide":1,"text":"Identity Broker","textPreview":"Identity Broker","textChars":15,"textLines":1,"bbox":[882,302,234,30]}
+{"kind":"textbox","id":"sh/czy1s3a1","slide":1,"text":"Local Keycloak on localhost:8081","textPreview":"Local Keycloak on localhost:8081","textChars":32,"textLines":1,"bbox":[882,340,234,44]}
+{"kind":"shape","id":"sh/ry5kzy9g","slide":1,"bbox":[856,432,278,118]}
+{"kind":"shape","id":"sh/qxwjqtsb","slide":1,"bbox":[856,432,8,118]}
+{"kind":"textbox","id":"sh/pwn2xorq","slide":1,"text":"Identity Provider","textPreview":"Identity Provider","textChars":17,"textLines":1,"bbox":[882,452,234,30]}
+{"kind":"textbox","id":"sh/4be1oja5","slide":1,"text":"Cloud-IAM Keycloak realm user-management-dev","textPreview":"Cloud-IAM Keycloak realm user-management-dev","textChars":44,"textLines":1,"bbox":[882,490,234,44]}
+{"kind":"textbox","id":"sh/3a5kve9k","slide":1,"text":"Presentation goal: make the flow repeatable, testable, and easy to explain.","textPreview":"Presentation goal: make the flow repeatable, testable, and easy to explain.","textChars":75,"textLines":1,"bbox":[58,610,820,34]}
+{"kind":"notes","id":"nt/i3jkhv","slide":1,"text":"Open by saying this is not just a Keycloak feature demo. It explains which system issues tokens, which system authenticates external users, and how the Spring Boot app validates the result.\nThe main distinction: Cloud-IAM authenticates, but the local Keycloak broker issues the API token.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/k26y7y","slide":2,"title":"The system has three moving parts","textShapes":11}
+{"kind":"textbox","id":"sh/ydwvmlwn","slide":2,"text":"The system has three moving parts","textPreview":"The system has three moving parts","textChars":33,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/lg7ex0ve","slide":2,"text":"Each part has one clear security responsibility.","textPreview":"Each part has one clear security responsibility.","textChars":48,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/kfyxovet","slide":2,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/7ipwzqdk","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/6hgfq5wz","slide":2,"bbox":[74,212,330,118]}
+{"kind":"shape","id":"sh/tk7e10va","slide":2,"bbox":[74,212,8,118]}
+{"kind":"textbox","id":"sh/8jyxsvep","slide":2,"text":"Spring Boot app","textPreview":"Spring Boot app","textChars":15,"textLines":1,"bbox":[100,232,286,30]}
+{"kind":"textbox","id":"sh/vm9w3adg","slide":2,"text":"Resource server. It does not log users in; it validates JWT access tokens.","textPreview":"Resource server. It does not log users in; it validates JWT access tokens.","textChars":74,"textLines":1,"bbox":[100,270,286,44]}
+{"kind":"shape","id":"sh/ulgfu5wv","slide":2,"bbox":[475,212,330,118]}
+{"kind":"shape","id":"sh/kf2lgrud","slide":2,"bbox":[475,212,8,118]}
+{"kind":"textbox","id":"sh/5gvmpwvy","slide":2,"text":"Identity broker","textPreview":"Identity broker","textChars":15,"textLines":1,"bbox":[501,232,286,30]}
+{"kind":"textbox","id":"sh/idk3ehc7","slide":2,"text":"Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.","textPreview":"Local Keycloak. It owns the realm trusted by the API and can redirect login to external providers.","textChars":98,"textLines":1,"bbox":[501,270,286,44]}
+{"kind":"shape","id":"sh/jet4nmds","slide":2,"bbox":[876,212,330,118]}
+{"kind":"shape","id":"sh/sjm5kru9","slide":2,"bbox":[876,212,8,118]}
+{"kind":"textbox","id":"sh/tkvmtwvu","slide":2,"text":"Identity provider","textPreview":"Identity provider","textChars":17,"textLines":1,"bbox":[902,232,286,30]}
+{"kind":"textbox","id":"sh/6h43i1cj","slide":2,"text":"Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.","textPreview":"Cloud-IAM Keycloak. It authenticates the external user and sends identity claims back to the broker.","textChars":100,"textLines":1,"bbox":[902,270,286,44]}
+{"kind":"shape","id":"sh/rid4rmdo","slide":2,"bbox":[410,252,52,40]}
+{"kind":"shape","id":"sh/gnm5obul","slide":2,"bbox":[811,252,52,40]}
+{"kind":"textbox","id":"sh/18fmxgv6","slide":2,"text":"The API accepts tokens from the broker only.","textPreview":"The API accepts tokens from the broker only.","textChars":44,"textLines":1,"bbox":[76,514,560,34]}
+{"kind":"textbox","id":"sh/p4bm1wna","slide":2,"text":"That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.","textPreview":"That keeps authorization centralized in the local realm even when the user originally signs in through Cloud-IAM.","textChars":113,"textLines":1,"bbox":[76,560,830,52]}
+{"kind":"notes","id":"nt/k26y7y","slide":2,"text":"Explain the vocabulary first: resource server, broker, provider.\nThe broker is the middle Keycloak. It starts the login, delegates authentication, receives the callback, creates or links a local user, and issues the final local token.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/vry8ki","slide":3,"title":"Environment setup uses localhost for the app and broker","textShapes":13}
+{"kind":"textbox","id":"sh/9obapkrm","slide":3,"text":"Environment setup uses localhost for the app and broker","textPreview":"Environment setup uses localhost for the app and broker","textChars":55,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/m10bu5sb","slide":3,"text":"This is the concrete development topology we configured.","textPreview":"This is the concrete development topology we configured.","textChars":56,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/729sna9w","slide":3,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/wr2tkzad","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/hsbut4ry","slide":3,"bbox":[64,188,530,330]}
+{"kind":"textbox","id":"sh/upkbyps7","slide":3,"text":"Local services","textPreview":"Local services","textChars":14,"textLines":1,"bbox":[92,216,250,32]}
+{"kind":"shape","id":"sh/vqtcru9s","slide":3,"bbox":[96,282,8,8]}
+{"kind":"textbox","id":"sh/4vmtoza9","slide":3,"text":"task-management-api: http://localhost:18080","textPreview":"task-management-api: http://localhost:18080","textChars":43,"textLines":1,"bbox":[118,274,428,44]}
+{"kind":"shape","id":"sh/5wvux4ru","slide":3,"bbox":[96,326,8,8]}
+{"kind":"textbox","id":"sh/pwvy9k7m","slide":3,"text":"Local Keycloak broker: http://localhost:8081","textPreview":"Local Keycloak broker: http://localhost:8081","textChars":44,"textLines":1,"bbox":[118,318,428,44]}
+{"kind":"shape","id":"sh/ovmxgfq1","slide":3,"bbox":[96,370,8,8]}
+{"kind":"textbox","id":"sh/3udw7apg","slide":3,"text":"Local broker realm: task-management-demo","textPreview":"Local broker realm: task-management-demo","textChars":40,"textLines":1,"bbox":[118,362,428,44]}
+{"kind":"shape","id":"sh/2t4fe58v","slide":3,"bbox":[96,414,8,8]}
+{"kind":"textbox","id":"sh/dkfyd47i","slide":3,"text":"Local broker client: task-management-client","textPreview":"Local broker client: task-management-client","textChars":43,"textLines":1,"bbox":[118,406,428,44]}
+{"kind":"shape","id":"sh/cjmxkzqd","slide":3,"bbox":[666,188,530,330]}
+{"kind":"textbox","id":"sh/bidgbups","slide":3,"text":"External provider","textPreview":"External provider","textChars":17,"textLines":1,"bbox":[694,216,300,32]}
+{"kind":"shape","id":"sh/qx4fip87","slide":3,"bbox":[698,282,8,8]}
+{"kind":"textbox","id":"sh/tobe10re","slide":3,"text":"Cloud-IAM base: https://lemur-2.cloud-iam.com/auth","textPreview":"Cloud-IAM base: https://lemur-2.cloud-iam.com/auth","textChars":50,"textLines":1,"bbox":[720,274,424,44]}
+{"kind":"shape","id":"sh/sn2x8vqt","slide":3,"bbox":[698,326,8,8]}
+{"kind":"textbox","id":"sh/4jqp4z21","slide":3,"text":"Provider realm: user-management-dev","textPreview":"Provider realm: user-management-dev","textChars":35,"textLines":1,"bbox":[720,318,424,44]}
+{"kind":"shape","id":"sh/5kz6d43m","slide":3,"bbox":[698,370,8,8]}
+{"kind":"textbox","id":"sh/iho72pkv","slide":3,"text":"Broker callback alias: cloud-iam","textPreview":"Broker callback alias: cloud-iam","textChars":32,"textLines":1,"bbox":[720,362,424,44]}
+{"kind":"shape","id":"sh/jixobulg","slide":3,"bbox":[698,414,8,8]}
+{"kind":"textbox","id":"sh/snqp8z2x","slide":3,"text":"Callback URL ends with /broker/cloud-iam/endpoint","textPreview":"Callback URL ends with /broker/cloud-iam/endpoint","textChars":49,"textLines":1,"bbox":[720,406,424,44]}
+{"kind":"notes","id":"nt/vry8ki","slide":3,"text":"This is the setup slide your team lead will care about. The app and the broker are local, while the external identity provider is Cloud-IAM.\nIf the alias changes, the callback URL changes. That was one of the key troubleshooting points.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/9bnxb3","slide":4,"title":"Spring Boot integrates with the broker using OIDC","textShapes":8}
+{"kind":"textbox","id":"sh/wz6d0nit","slide":4,"text":"Spring Boot integrates with the broker using OIDC","textPreview":"Spring Boot integrates with the broker using OIDC","textChars":49,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/vexc7218","slide":4,"text":"The API validates the issuer and roles from local Keycloak tokens.","textPreview":"The API validates the issuer and roles from local Keycloak tokens.","textChars":66,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/adovyx0n","slide":4,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/9cfu5sj2","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/8b6dwnih","slide":4,"bbox":[70,210,540,220]}
+{"kind":"textbox","id":"sh/naxc3i1w","slide":4,"text":"application.yaml","textPreview":"application.yaml","textChars":16,"textLines":1,"bbox":[100,236,260,28]}
+{"kind":"textbox","id":"sh/m94vud0r","slide":4,"text":"spring.security.oauth2.resourceserver.jwt.issuer-uri:\nhttp://localhost:8081/realms/task-management-demo","textPreview":"spring.security.oauth2.resourceserver.jwt.issuer-uri: | http://localhost:8081/realms/task-management-demo","textChars":103,"textLines":2,"bbox":[100,292,470,82]}
+{"kind":"shape","id":"sh/t8zehcj6","slide":4,"bbox":[690,210,520,220]}
+{"kind":"textbox","id":"sh/s7qd8ri1","slide":4,"text":"SecurityConfig","textPreview":"SecurityConfig","textChars":14,"textLines":1,"bbox":[720,236,260,28]}
+{"kind":"textbox","id":"sh/qlcru94j","slide":4,"text":"Every request is authenticated.\nJWT roles are read from realm_access.roles.\nSpring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.","textPreview":"Every request is authenticated. | JWT roles are read from realm_access.roles. | Spring sees PORTAL_ADMIN as ROLE_PORTAL_ADMIN.","textChars":122,"textLines":3,"bbox":[720,290,430,100]}
+{"kind":"textbox","id":"sh/rmlsnel4","slide":4,"text":"Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.","textPreview":"Meaning: Cloud-IAM tokens are not accepted directly. The app trusts only tokens issued by the local broker realm.","textChars":113,"textLines":1,"bbox":[82,510,980,60]}
+{"kind":"notes","id":"nt/9bnxb3","slide":4,"text":"The API is a resource server. It is not configured with Cloud-IAM as issuer. It is configured with the local Keycloak issuer.\nThat is why the final JWT must have iss equal to http://localhost:8081/realms/task-management-demo.\n\n[Sources]\n- Local task-management-api application.yaml and SecurityConfig inspected from C:/Users/HP/Desktop/task-management-api."}
+{"kind":"slide","id":"sl/vgnoj3","slide":5,"title":"The broker integrates with Cloud-IAM as an OIDC identity provider","textShapes":17}
+{"kind":"textbox","id":"sh/vmd47etw","slide":5,"text":"The broker integrates with Cloud-IAM as an OIDC identity provider","textPreview":"The broker integrates with Cloud-IAM as an OIDC identity provider","textChars":65,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/gnml0jah","slide":5,"text":"Local Keycloak uses a confidential client created in Cloud-IAM.","textPreview":"Local Keycloak uses a confidential client created in Cloud-IAM.","textChars":63,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/hovm9ob2","slide":5,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/6xk3u9cf","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/7itk3ut0","slide":5,"bbox":[70,198,540,116]}
+{"kind":"textbox","id":"sh/8jmlwzal","slide":5,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[88,212,46,40]}
+{"kind":"textbox","id":"sh/tkvm54b6","slide":5,"text":"Create client in Cloud-IAM","textPreview":"Create client in Cloud-IAM","textChars":26,"textLines":1,"bbox":[144,214,446,30]}
+{"kind":"textbox","id":"sh/qto36tsj","slide":5,"text":"Client ID local-keycloak-broker, client authentication ON, standard flow ON.","textPreview":"Client ID local-keycloak-broker, client authentication ON, standard flow ON.","textChars":76,"textLines":1,"bbox":[144,250,446,48]}
+{"kind":"shape","id":"sh/rex4fyt4","slide":5,"bbox":[70,342,540,116]}
+{"kind":"textbox","id":"sh/z2pk7qpg","slide":5,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[88,356,46,40]}
+{"kind":"textbox","id":"sh/y1gjel8v","slide":5,"text":"Add redirect URI","textPreview":"Add redirect URI","textChars":16,"textLines":1,"bbox":[144,358,446,30]}
+{"kind":"textbox","id":"sh/l4r29g7m","slide":5,"text":"http://localhost:8081/realms/task-management-demo/broker/cloud-iam/endpoint","textPreview":"http://localhost:8081/realms/task-management-demo/broker/cloud-iam/endpoint","textChars":75,"textLines":1,"bbox":[144,394,446,48]}
+{"kind":"shape","id":"sh/k3y1gvq1","slide":5,"bbox":[670,198,540,116]}
+{"kind":"textbox","id":"sh/769kbqps","slide":5,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[688,212,46,40]}
+{"kind":"textbox","id":"sh/m50jil87","slide":5,"text":"Create identity provider locally","textPreview":"Create identity provider locally","textChars":32,"textLines":1,"bbox":[744,214,446,30]}
+{"kind":"textbox","id":"sh/98r2d07i","slide":5,"text":"Provider type OpenID Connect v1.0, alias cloud-iam, discovery endpoint from Cloud-IAM.","textPreview":"Provider type OpenID Connect v1.0, alias cloud-iam, discovery endpoint from Cloud-IAM.","textChars":86,"textLines":1,"bbox":[744,250,446,48]}
+{"kind":"shape","id":"sh/87i1kvqx","slide":5,"bbox":[670,342,540,116]}
+{"kind":"textbox","id":"sh/vu9kfapo","slide":5,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[688,356,46,40]}
+{"kind":"textbox","id":"sh/u90jm583","slide":5,"text":"Paste client secret","textPreview":"Paste client secret","textChars":19,"textLines":1,"bbox":[744,358,446,30]}
+{"kind":"textbox","id":"sh/qp4ne9sb","slide":5,"text":"Local Keycloak uses the Cloud-IAM client ID and secret to complete the OIDC code exchange.","textPreview":"Local Keycloak uses the Cloud-IAM client ID and secret to complete the OIDC code exchange.","textChars":90,"textLines":1,"bbox":[744,394,446,48]}
+{"kind":"textbox","id":"sh/rqd47e9w","slide":5,"text":"Discovery endpoint","textPreview":"Discovery endpoint","textChars":18,"textLines":1,"bbox":[78,542,220,26]}
+{"kind":"textbox","id":"sh/srm5gjah","slide":5,"text":"https://lemur-2.cloud-iam.com/auth/realms/user-management-dev/.well-known/openid-configuration","textPreview":"https://lemur-2.cloud-iam.com/auth/realms/user-management-dev/.well-known/openid-configuration","textChars":94,"textLines":1,"bbox":[78,582,1040,32]}
+{"kind":"notes","id":"nt/vgnoj3","slide":5,"text":"Walk through this as a handshake. Cloud-IAM needs to know where to return the user. Local Keycloak needs to know Cloud-IAM's auth, token, userinfo, and JWKS endpoints.\nThe discovery URL fills most of the endpoint fields automatically.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/vcurog","slide":6,"title":"Mappers decide what the broker imports or assigns","textShapes":19}
+{"kind":"textbox","id":"sh/03y98fih","slide":6,"text":"Mappers decide what the broker imports or assigns","textPreview":"Mappers decide what the broker imports or assigns","textChars":49,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/fipszahw","slide":6,"text":"Without mappers, the user may log in but miss useful local attributes or roles.","textPreview":"Without mappers, the user may log in but miss useful local attributes or roles.","textChars":79,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/ehgr650b","slide":6,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/p8ra5kzy","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/o7itcfyd","slide":6,"bbox":[70,190,1120,340]}
+{"kind":"textbox","id":"sh/n69s3ahs","slide":6,"text":"Mapper type","textPreview":"Mapper type","textChars":11,"textLines":1,"bbox":[104,224,270,26]}
+{"kind":"textbox","id":"sh/250ba50n","slide":6,"text":"Input","textPreview":"Input","textChars":5,"textLines":1,"bbox":[430,224,320,26]}
+{"kind":"textbox","id":"sh/xcra9kza","slide":6,"text":"Result in local Keycloak","textPreview":"Result in local Keycloak","textChars":24,"textLines":1,"bbox":[800,224,300,26]}
+{"kind":"shape","id":"sh/cbitgzyp","slide":6,"bbox":[100,264,1040,1]}
+{"kind":"textbox","id":"sh/ylsfy5kj","slide":6,"text":"Username Template Importer","textPreview":"Username Template Importer","textChars":26,"textLines":1,"bbox":[104,278,270,28]}
+{"kind":"textbox","id":"sh/jm1gra14","slide":6,"text":"${CLAIM.preferred_username}","textPreview":"${CLAIM.preferred_username}","textChars":27,"textLines":1,"bbox":[430,278,330,28]}
+{"kind":"textbox","id":"sh/knax0f2p","slide":6,"text":"Local username","textPreview":"Local username","textChars":14,"textLines":1,"bbox":[800,278,320,28]}
+{"kind":"shape","id":"sh/lojytkja","slide":6,"bbox":[100,322,1040,1]}
+{"kind":"textbox","id":"sh/6psf25kv","slide":6,"text":"Attribute Importer","textPreview":"Attribute Importer","textChars":18,"textLines":1,"bbox":[104,336,270,28]}
+{"kind":"textbox","id":"sh/7a1gva1g","slide":6,"text":"email","textPreview":"email","textChars":5,"textLines":1,"bbox":[430,336,330,28]}
+{"kind":"textbox","id":"sh/sbax4fil","slide":6,"text":"Local email attribute","textPreview":"Local email attribute","textChars":21,"textLines":1,"bbox":[800,336,320,28]}
+{"kind":"shape","id":"sh/tcjyxkj6","slide":6,"bbox":[100,380,1040,1]}
+{"kind":"textbox","id":"sh/mtofqlkb","slide":6,"text":"Attribute Importer","textPreview":"Attribute Importer","textChars":18,"textLines":1,"bbox":[104,394,270,28]}
+{"kind":"textbox","id":"sh/nehwjq1w","slide":6,"text":"given_name / family_name","textPreview":"given_name / family_name","textChars":24,"textLines":1,"bbox":[430,394,330,28]}
+{"kind":"textbox","id":"sh/rydcrmho","slide":6,"text":"First and last name","textPreview":"First and last name","textChars":19,"textLines":1,"bbox":[800,394,320,28]}
+{"kind":"shape","id":"sh/qx4vyh03","slide":6,"bbox":[100,438,1040,1]}
+{"kind":"textbox","id":"sh/d0vutwzu","slide":6,"text":"Hardcoded Role","textPreview":"Hardcoded Role","textChars":14,"textLines":1,"bbox":[104,452,270,28]}
+{"kind":"textbox","id":"sh/czmd0ri9","slide":6,"text":"PORTAL_ADMIN","textPreview":"PORTAL_ADMIN","textChars":12,"textLines":1,"bbox":[430,452,330,28]}
+{"kind":"textbox","id":"sh/3utcn2hs","slide":6,"text":"Local authorization role","textPreview":"Local authorization role","textChars":24,"textLines":1,"bbox":[800,452,320,28]}
+{"kind":"textbox","id":"sh/2tkbuh07","slide":6,"text":"For production, replace hardcoded admin role with group or claim-based mapping.","textPreview":"For production, replace hardcoded admin role with group or claim-based mapping.","textChars":79,"textLines":1,"bbox":[82,580,930,34]}
+{"kind":"notes","id":"nt/vcurog","slide":6,"text":"Explain that the hardcoded role is useful for proving the flow, but not a final production authorization model.\nA safer production setup maps a specific Cloud-IAM group or claim to a local role.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/znhkzs","slide":7,"title":"Login has two redirects, but one final trusted token","textShapes":12}
+{"kind":"textbox","id":"sh/obilsny9","slide":7,"text":"Login has two redirects, but one final trusted token","textPreview":"Login has two redirects, but one final trusted token","textChars":52,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/3a9kziho","slide":7,"text":"This is the manual flow to demonstrate in the browser.","textPreview":"This is the manual flow to demonstrate in the browser.","textChars":54,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/2903qdgj","slide":7,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/dgbm5sz6","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/cfilwnyl","slide":7,"bbox":[70,212,300,118]}
+{"kind":"shape","id":"sh/be9432h0","slide":7,"bbox":[70,212,8,118]}
+{"kind":"textbox","id":"sh/qd03uxgf","slide":7,"text":"1. Start at local Keycloak","textPreview":"1. Start at local Keycloak","textChars":26,"textLines":1,"bbox":[96,232,256,30]}
+{"kind":"textbox","id":"sh/tk72t8zm","slide":7,"text":"http://localhost:8081/realms/task-management-demo/account","textPreview":"http://localhost:8081/realms/task-management-demo/account","textChars":57,"textLines":1,"bbox":[96,270,256,44]}
+{"kind":"shape","id":"sh/sjylk3i1","slide":7,"bbox":[394,212,260,118]}
+{"kind":"shape","id":"sh/2hkfm54v","slide":7,"bbox":[394,212,8,118]}
+{"kind":"textbox","id":"sh/nidgfa5g","slide":7,"text":"2. Choose Cloud-IAM","textPreview":"2. Choose Cloud-IAM","textChars":19,"textLines":1,"bbox":[420,232,216,30]}
+{"kind":"textbox","id":"sh/ojmxofm1","slide":7,"text":"The login page redirects to the external provider.","textPreview":"The login page redirects to the external provider.","textChars":50,"textLines":1,"bbox":[420,270,216,44]}
+{"kind":"shape","id":"sh/9kvyhknm","slide":7,"bbox":[678,212,260,118]}
+{"kind":"shape","id":"sh/al4fqp47","slide":7,"bbox":[678,212,8,118]}
+{"kind":"textbox","id":"sh/bmdgju5s","slide":7,"text":"3. Authenticate externally","textPreview":"3. Authenticate externally","textChars":26,"textLines":1,"bbox":[704,232,216,30]}
+{"kind":"textbox","id":"sh/wnmhszmd","slide":7,"text":"Cloud-IAM validates the username, password, MFA, or external session.","textPreview":"Cloud-IAM validates the username, password, MFA, or external session.","textChars":69,"textLines":1,"bbox":[704,270,216,44]}
+{"kind":"shape","id":"sh/xovyl4ni","slide":7,"bbox":[962,212,250,118]}
+{"kind":"shape","id":"sh/ypozu943","slide":7,"bbox":[962,212,8,118]}
+{"kind":"textbox","id":"sh/jaxgnu5o","slide":7,"text":"4. Return to local realm","textPreview":"4. Return to local realm","textChars":24,"textLines":1,"bbox":[988,232,206,30]}
+{"kind":"textbox","id":"sh/vexwbelw","slide":7,"text":"Local Keycloak links/imports the user and issues its own token.","textPreview":"Local Keycloak links/imports the user and issues its own token.","textChars":63,"textLines":1,"bbox":[988,270,206,44]}
+{"kind":"shape","id":"sh/udof29kb","slide":7,"bbox":[373,250,17,42]}
+{"kind":"shape","id":"sh/hgfyd4j2","slide":7,"bbox":[657,250,17,42]}
+{"kind":"shape","id":"sh/gf6x4z2h","slide":7,"bbox":[941,250,17,42]}
+{"kind":"textbox","id":"sh/7qxw7ulk","slide":7,"text":"The success condition is not just a Cloud-IAM login. It is landing back in the local realm.","textPreview":"The success condition is not just a Cloud-IAM login. It is landing back in the local realm.","textChars":91,"textLines":1,"bbox":[82,520,960,62]}
+{"kind":"notes","id":"nt/znhkzs","slide":7,"text":"This is the demo slide. Start from the local account URL. Do not start from Cloud-IAM directly, because then you are not testing the broker.\nAfter login, show the local Keycloak Users page and the imported user.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/kcyfmh","slide":8,"title":"Token testing proves which Keycloak the API trusts","textShapes":10}
+{"kind":"textbox","id":"sh/id03apon","slide":8,"text":"Token testing proves which Keycloak the API trusts","textPreview":"Token testing proves which Keycloak the API trusts","textChars":50,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/5gbml4ny","slide":8,"text":"The issuer claim is the fastest way to explain success or failure.","textPreview":"The issuer claim is the fastest way to explain success or failure.","textChars":66,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/4f2lczmd","slide":8,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/va94fu5w","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/u9036pob","slide":8,"bbox":[70,190,520,300]}
+{"kind":"textbox","id":"sh/hcrmhkn2","slide":8,"text":"Accepted by task-management-api","textPreview":"Accepted by task-management-api","textChars":31,"textLines":1,"bbox":[104,226,390,30]}
+{"kind":"textbox","id":"sh/wbil8z6h","slide":8,"text":"iss = http://localhost:8081/realms/task-management-demo","textPreview":"iss = http://localhost:8081/realms/task-management-demo","textChars":55,"textLines":1,"bbox":[104,292,430,58]}
+{"kind":"textbox","id":"sh/f6d4re50","slide":8,"text":"This token comes from the local broker realm.","textPreview":"This token comes from the local broker realm.","textChars":45,"textLines":1,"bbox":[104,390,390,34]}
+{"kind":"shape","id":"sh/e54ni94v","slide":8,"bbox":[690,190,520,300]}
+{"kind":"textbox","id":"sh/4fapgby5","slide":8,"text":"Rejected directly by the API","textPreview":"Rejected directly by the API","textChars":28,"textLines":1,"bbox":[724,226,390,30]}
+{"kind":"textbox","id":"sh/5gjqpgfq","slide":8,"text":"iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev","textPreview":"iss = https://lemur-2.cloud-iam.com/auth/realms/user-management-dev","textChars":67,"textLines":1,"bbox":[724,292,430,82]}
+{"kind":"textbox","id":"sh/ids7e1gz","slide":8,"text":"This token comes from the provider, not the broker.","textPreview":"This token comes from the provider, not the broker.","textChars":51,"textLines":1,"bbox":[724,410,390,34]}
+{"kind":"textbox","id":"sh/3e1on6xk","slide":8,"text":"Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.","textPreview":"Rule of thumb: the Spring Boot issuer-uri must match the JWT iss claim exactly.","textChars":79,"textLines":1,"bbox":[82,560,1000,34]}
+{"kind":"notes","id":"nt/kcyfmh","slide":8,"text":"In Postman or jwt.io, decode the token and point to the iss claim. This avoids long explanations.\nIf the issuer does not match the Spring Boot issuer-uri, the resource server rejects the request.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/akhlfw","slide":9,"title":"Manual Keycloak test checklist","textShapes":16}
+{"kind":"textbox","id":"sh/bidszq1k","slide":9,"text":"Manual Keycloak test checklist","textPreview":"Manual Keycloak test checklist","textChars":30,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/wjm98vi5","slide":9,"text":"Use this as the live demo path after configuration.","textPreview":"Use this as the live demo path after configuration.","textChars":51,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/xkva10jq","slide":9,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/2tkr2l03","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/nutsvq1o","slide":9,"bbox":[70,190,540,116]}
+{"kind":"textbox","id":"sh/of294bi9","slide":9,"text":"A","textPreview":"A","textChars":1,"textLines":1,"bbox":[88,204,46,40]}
+{"kind":"textbox","id":"sh/pgbaxgju","slide":9,"text":"Open local account page","textPreview":"Open local account page","textChars":23,"textLines":1,"bbox":[144,206,446,30]}
+{"kind":"textbox","id":"sh/6p4re507","slide":9,"text":"http://localhost:8081/realms/task-management-demo/account","textPreview":"http://localhost:8081/realms/task-management-demo/account","textChars":57,"textLines":1,"bbox":[144,242,446,48]}
+{"kind":"shape","id":"sh/7qxs7a1s","slide":9,"bbox":[70,334,540,116]}
+{"kind":"textbox","id":"sh/j29kvylo","slide":9,"text":"B","textPreview":"B","textChars":1,"textLines":1,"bbox":[88,348,46,40]}
+{"kind":"textbox","id":"sh/yh0jmtk3","slide":9,"text":"Click Cloud-IAM on the login page","textPreview":"Click Cloud-IAM on the login page","textChars":33,"textLines":1,"bbox":[144,350,446,30]}
+{"kind":"textbox","id":"sh/l4r2x8ju","slide":9,"text":"This confirms the identity provider is enabled and visible.","textPreview":"This confirms the identity provider is enabled and visible.","textChars":59,"textLines":1,"bbox":[144,386,446,48]}
+{"kind":"shape","id":"sh/k3i1o329","slide":9,"bbox":[670,190,540,116]}
+{"kind":"textbox","id":"sh/769kzi1k","slide":9,"text":"C","textPreview":"C","textChars":1,"textLines":1,"bbox":[688,204,46,40]}
+{"kind":"textbox","id":"sh/650jqdkz","slide":9,"text":"Login with Cloud-IAM user","textPreview":"Login with Cloud-IAM user","textChars":25,"textLines":1,"bbox":[744,206,446,30]}
+{"kind":"textbox","id":"sh/t8b21sjq","slide":9,"text":"The browser should return to the local Keycloak account page.","textPreview":"The browser should return to the local Keycloak account page.","textChars":61,"textLines":1,"bbox":[744,242,446,48]}
+{"kind":"shape","id":"sh/s7i1sn25","slide":9,"bbox":[670,334,540,116]}
+{"kind":"textbox","id":"sh/fatk3i1w","slide":9,"text":"D","textPreview":"D","textChars":1,"textLines":1,"bbox":[688,348,46,40]}
+{"kind":"textbox","id":"sh/u9kjudkb","slide":9,"text":"Verify imported user","textPreview":"Verify imported user","textChars":20,"textLines":1,"bbox":[744,350,446,30]}
+{"kind":"textbox","id":"sh/q54nmh4j","slide":9,"text":"Local admin console -> task-management-demo -> Users -> Federated identity cloud-iam.","textPreview":"Local admin console -> task-management-demo -> Users -> Federated identity cloud-iam.","textChars":85,"textLines":1,"bbox":[744,386,446,48]}
+{"kind":"textbox","id":"sh/r6d4vml4","slide":9,"text":"If it does not return, check redirect URI, alias, client secret, and provider endpoint first.","textPreview":"If it does not return, check redirect URI, alias, client secret, and provider endpoint first.","textChars":93,"textLines":1,"bbox":[82,565,1000,34]}
+{"kind":"notes","id":"nt/akhlfw","slide":9,"text":"This slide is your live demo checklist. The last verification is inside the local Keycloak admin console.\nWhen the user is imported, open the user and show Federated identity. Then show Role mapping if the hardcoded role mapper was used.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}
+{"kind":"slide","id":"sl/av2mq0","slide":10,"title":"The setup is successful when these four checks pass","textShapes":9}
+{"kind":"textbox","id":"sh/vq9o3ilc","slide":10,"text":"The setup is successful when these four checks pass","textPreview":"The setup is successful when these four checks pass","textChars":51,"textLines":1,"bbox":[56,42,930,64]}
+{"kind":"textbox","id":"sh/wripwnmx","slide":10,"text":"These are the acceptance criteria for the team.","textPreview":"These are the acceptance criteria for the team.","textChars":47,"textLines":1,"bbox":[58,105,820,36]}
+{"kind":"shape","id":"sh/xsr65s3i","slide":10,"bbox":[56,152,1168,1.5]}
+{"kind":"textbox","id":"sh/it07yx43","slide":10,"text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1166,666,58,24]}
+{"kind":"shape","id":"sh/ju9872lo","slide":10,"bbox":[110,218,8,8]}
+{"kind":"textbox","id":"sh/kv2p0nmt","slide":10,"text":"Local Keycloak shows Cloud-IAM as a login option.","textPreview":"Local Keycloak shows Cloud-IAM as a login option.","textChars":49,"textLines":1,"bbox":[132,210,878,60]}
+{"kind":"shape","id":"sh/5wbq9s3e","slide":10,"bbox":[110,278,8,8]}
+{"kind":"textbox","id":"sh/yxg7mt4j","slide":10,"text":"Cloud-IAM login returns back to the local realm.","textPreview":"Cloud-IAM login returns back to the local realm.","textChars":48,"textLines":1,"bbox":[132,270,878,60]}
+{"kind":"shape","id":"sh/zypovy54","slide":10,"bbox":[110,338,8,8]}
+{"kind":"textbox","id":"sh/z6pw3ex0","slide":10,"text":"The user appears in local Keycloak with federated identity cloud-iam.","textPreview":"The user appears in local Keycloak with federated identity cloud-iam.","textChars":69,"textLines":1,"bbox":[132,330,878,60]}
+{"kind":"shape","id":"sh/y5gva9wf","slide":10,"bbox":[110,398,8,8]}
+{"kind":"textbox","id":"sh/l8re5of6","slide":10,"text":"task-management-api accepts local Keycloak tokens and rejects direct Cloud-IAM tokens.","textPreview":"task-management-api accepts local Keycloak tokens and rejects direct Cloud-IAM tokens.","textChars":86,"textLines":1,"bbox":[132,390,878,60]}
+{"kind":"textbox","id":"sh/07idcjel","slide":10,"text":"Final message","textPreview":"Final message","textChars":13,"textLines":1,"bbox":[110,520,260,30]}
+{"kind":"textbox","id":"sh/bipczexo","slide":10,"text":"Cloud-IAM authenticates the user; local Keycloak brokers the login and issues the token the API trusts.","textPreview":"Cloud-IAM authenticates the user; local Keycloak brokers the login and issues the token the API trusts.","textChars":103,"textLines":1,"bbox":[110,565,900,60]}
+{"kind":"notes","id":"nt/av2mq0","slide":10,"text":"Close with the crisp summary: provider authenticates, broker issues, API validates.\nMention the future production step: replace hardcoded role mapper with claim or group-based role mapping.\n\n[Sources]\n- Based on the local project configuration and Keycloak setup discussed in this workspace."}

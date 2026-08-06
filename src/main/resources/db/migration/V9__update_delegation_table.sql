@@ -1,0 +1,1 @@
+ALTER TABLE delegations ALTER COLUMN delegated_roles DROP NOT NULL;

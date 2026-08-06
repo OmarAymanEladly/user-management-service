@@ -1,0 +1,31 @@
+package com.user.management.services;
+
+import com.user.management.dto.request.AdminUserRequestDTO;
+import com.user.management.model.entity.UserType;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface KeycloakService {
+
+    String createKeycloakUser(UUID id, AdminUserRequestDTO request, UserType userType);
+    void updateKeycloakStatus(UUID id,boolean enabled);
+    void updateKeycloakUser(UUID id,AdminUserRequestDTO request);
+    void deleteKeycloakUser(UUID id);
+    List<String> getRealmRoles();
+    boolean realmRoleExists(String roleName);
+    void sendWelcomeEmail(UUID id);
+    String findIdByUsername(String username);
+    void syncUserTypeAttributes(UserType userType);
+    void cleanupUserTypeAttributes(String typeName);
+    List<String> getUserRoles(UUID userId);
+    void assignRolesToUser(UUID userId, List<String> roleNames);
+    void removeRolesFromUser(UUID userId, List<String> roleNames);
+    void createRealmRole(String roleName);
+    void createClientRole(String roleName);
+    void addClientRoleToRealmRole(String realmRoleName, String clientRoleName);
+    Boolean isUserBlocked(UUID id);
+    Boolean isUserEnabledInKeycloak(UUID userId);
+
+
+}

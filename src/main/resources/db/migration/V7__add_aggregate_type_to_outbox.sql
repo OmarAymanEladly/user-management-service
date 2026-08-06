@@ -1,0 +1,1 @@
+ALTER TABLE outbox_events ADD COLUMN aggregate_type VARCHAR(50) NOT NULL DEFAULT 'USER';
