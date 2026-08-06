@@ -14,6 +14,8 @@ public class KeycloakPermission {
     @Id
     private UUID id;
     private String name;
+    @Column(name = "client_id", nullable = false)
+    private String clientId;
     private String syncStatus;
 }
 

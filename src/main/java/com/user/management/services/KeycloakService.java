@@ -22,8 +22,8 @@ public interface KeycloakService {
     void assignRolesToUser(UUID userId, List<String> roleNames);
     void removeRolesFromUser(UUID userId, List<String> roleNames);
     void createRealmRole(String roleName);
-    void createClientRole(String roleName);
-    void addClientRoleToRealmRole(String realmRoleName, String clientRoleName);
+    void createClientRole(String clientId, String roleName);
+    void addClientRoleToRealmRole(String realmRoleName, String clientId, String clientRoleName);
     Boolean isUserBlocked(UUID id);
     Boolean isUserEnabledInKeycloak(UUID userId);
 

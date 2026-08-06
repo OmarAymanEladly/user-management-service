@@ -399,24 +399,38 @@ public class KeycloakServiceImpl implements KeycloakService {
     }
 
     @Override
-    public void createClientRole(String roleName){
+    public void createClientRole(String clientName, String roleName){
 
-        String clientId = keycloak.realm(realm).clients().findByClientId(appClientId).get(0).getId();
+        var clients = keycloak.realm(realm).clients().findByClientId(clientName);
+
+        if (clients == null || clients.isEmpty()) {
+            String msg = String.format("Client with name '%s' not found in Keycloak.", clientName);
+            log.error(msg);
+            throw new RuntimeException(msg);
+        }
+
+        String clientId = clients.get(0).getId();
 
         try {
             keycloak.realm(realm).clients().get(clientId).roles().get(roleName).toRepresentation();
-        }catch (Exception e){
+            log.info("Client role '{}' already exists for client '{}'", roleName, clientName);
+        }catch (NotFoundException e){
             RoleRepresentation role = new RoleRepresentation();
             role.setName(roleName);
             keycloak.realm(realm).clients().get(clientId).roles().create(role);
+            log.info("Successfully created client role '{}' for client '{}'", roleName, clientName);
+        } catch (Exception e) {
+            log.error("Error creating role '{}' for client '{}': {}", roleName, clientName, e.getMessage());
         }
     }
 
     @Override
-    public void addClientRoleToRealmRole(String realmRoleName,String clientRoleName){
+    public void addClientRoleToRealmRole(String realmRoleName, String clientName, String clientRoleName){
 
-        String clientId = keycloak.realm(realm).clients().findByClientId(appClientId).get(0).getId();
+        var clients = keycloak.realm(realm).clients().findByClientId(clientName);
+        if (clients.isEmpty()) return;
 
+        String clientId = clients.get(0).getId();
 
         RoleRepresentation clientRole = keycloak.realm(realm).clients().get(clientId)
                 .roles().get(clientRoleName).toRepresentation();

@@ -40,7 +40,7 @@ public class RoleSyncProcessor {
 
         permRepo.findBySyncStatus("PENDING").forEach(perm->{
             try {
-                keycloakService.createClientRole(perm.getName());
+                keycloakService.createClientRole(perm.getClientId(),perm.getName());
                 perm.setSyncStatus("SYNCED");
                 permRepo.saveAndFlush(perm);
             }catch (Exception e){
@@ -55,6 +55,7 @@ public class RoleSyncProcessor {
                     try {
                         keycloakService.addClientRoleToRealmRole(
                                 link.getRole().getName(),
+                                link.getPermission().getClientId(),
                                 link.getPermission().getName()
                         );
 
