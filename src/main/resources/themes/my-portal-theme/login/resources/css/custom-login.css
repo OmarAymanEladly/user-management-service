@@ -22,7 +22,31 @@ body, html { margin: 0; padding: 0; height: 100vh; width: 100vw; font-family: 'I
 .main-area { flex: 1; background: #ffffff; display: flex; flex-direction: column; }
 .top-nav { display: flex; justify-content: space-between; padding: 30px 60px; align-items: center; }
 .nav-logo { height: 45px !important; width: auto !important; }
-.nav-links a { margin-left: 25px; color: #64748b; text-decoration: none; font-size: 15px; font-weight: 500; }
+.nav-links a {
+    margin-left: 25px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+.forgot-link {
+    color: #0056d2;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.forgot-link:hover {
+    color: #0045ad;
+    text-decoration: underline;
+}
+
+.nav-links a:hover {
+    color: #0056d2;
+}
+
 .content-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 80px; }
 
 /* --- SETUP CARDS (IMAGE 1) --- */
@@ -76,11 +100,211 @@ body, html { margin: 0; padding: 0; height: 100vh; width: 100vw; font-family: 'I
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 12px;
+
+    width: 100%;
+    height: 48px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+
+    color: #334155;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.google-style-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+    text-decoration: none;
 }
 
 .google-style-btn img {
-    width: 20px !important;
-    height: 20px !important;
-    margin-right: 12px;
+    width: 28px !important;
+    height: 28px !important;
+    margin-right: 0;
     object-fit: contain;
+    flex-shrink: 0;
+}
+
+.oidc-logo {
+    width: 34px !important;
+    height: 34px !important;
+    object-fit: contain !important;
+    flex-shrink: 0;
+}
+
+
+
+.forgot-password-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.forgot-password-card {
+    width: 480px;
+    max-width: 100%;
+    background: #ffffff;
+    padding: 45px 50px;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.forgot-password-icon {
+    width: 58px;
+    height: 58px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 24px;
+}
+
+.forgot-password-icon span {
+    font-size: 27px;
+}
+
+.forgot-password-title {
+    margin: 0;
+    color: #1e293b;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.forgot-password-subtitle {
+    margin: 12px 0 30px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.forgot-input-group {
+    margin-bottom: 22px;
+}
+
+.forgot-input-group label {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.forgot-input-group input {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 15px;
+    box-sizing: border-box;
+
+    background: #f8fafc;
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+
+    color: #1e293b;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+}
+
+.forgot-input-group input::placeholder {
+    color: #94a3b8;
+}
+
+.forgot-input-group input:focus {
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.forgot-submit-button {
+    width: 100%;
+    height: 52px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #0056d2;
+    color: #ffffff;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background-color 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.forgot-submit-button:hover {
+    background: #0047b3;
+    box-shadow: 0 6px 15px rgba(0, 86, 210, 0.20);
+    transform: translateY(-1px);
+}
+
+.forgot-submit-button:active {
+    transform: translateY(0);
+}
+
+.forgot-back-link {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.forgot-back-link a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.forgot-back-link a:hover {
+    text-decoration: underline;
+}
+
+.forgot-password-message {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    border-radius: 10px;
+
+    color: #1e40af;
+    font-size: 13px;
+    line-height: 1.5;
 }

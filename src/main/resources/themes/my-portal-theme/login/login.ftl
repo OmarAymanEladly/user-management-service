@@ -43,17 +43,34 @@
                 </button>
             </form>
 
-            <#-- GOOGLE LOGIN -->
+
             <#if social.providers??>
                 <div class="social-divider">
                     <span>Or sign in with</span>
                 </div>
+
                 <div class="social-btn-container">
                     <#list social.providers as p>
+
                         <a href="${p.loginUrl}" class="google-style-btn">
-                             <img src="${url.resourcesPath}/images/google-logo.jpg" alt="Google">
+
+                            <#if p.alias == "google">
+                                <img
+                                        src="${url.resourcesPath}/images/google-logo.jpg"
+                                        alt="Google"
+                                >
+                            <#else>
+                                <img
+                                        src="${url.resourcesPath}/images/oidc-logo.png"
+                                        alt="OpenID Connect"
+                                        class="oidc-logo"
+                                >
+                            </#if>
+
                             Continue with ${p.displayName}
+
                         </a>
+
                     </#list>
                 </div>
             </#if>

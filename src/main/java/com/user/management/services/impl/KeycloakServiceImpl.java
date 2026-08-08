@@ -342,6 +342,25 @@ public class KeycloakServiceImpl implements KeycloakService {
         } catch (Exception e) {
             log.error("Failed to update User Profile schema during cleanup: {}", e.getMessage());
         }
+
+        List<String> remainingDbTypes = userTypeRepository.findAll().stream()
+                .map(t -> t.getType().toUpperCase().trim())
+                .distinct()
+                .toList();
+        String updatedCommaSeparatedTypes = String.join(",", remainingDbTypes);
+
+
+        try {
+            RealmRepresentation patch = new RealmRepresentation();
+            Map<String, String> attr = new HashMap<>();
+            attr.put("user_type_list", updatedCommaSeparatedTypes);
+            patch.setAttributes(attr);
+
+            keycloak.realm(realm).update(patch);
+            log.info("Successfully updated Realm Attributes user_type_list to: {}", updatedCommaSeparatedTypes);
+        } catch (Exception e) {
+            log.error("Failed to update user_type_list in Realm: {}", e.getMessage());
+        }
     }
 
     @Override
