@@ -1,5 +1,8 @@
 package com.user.management.services.impl;
 
+import com.user.management.audit.annotation.PublishAuditEvent;
+import com.user.management.audit.enumeration.ActionType;
+import com.user.management.audit.enumeration.ResourceType;
 import com.user.management.mapper.UserProvisioningMapper;
 import com.user.management.model.entity.ManagedUser;
 import com.user.management.model.entity.UserType;
@@ -41,6 +44,18 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
 
     @Override
+    @PublishAuditEvent(
+            actionTypeSpEL = """
+            {'LDAP':              'USER_LDAP_PROVISION',
+             'ADMIN':             'USER_ADMIN_PROVISION',
+             'IDENTITY_PROVIDER': 'USER_IDENTITY_PROVIDER_PROVISION'}[#event.source().name()]
+            """,
+            resourceType   = ResourceType.USER,
+            resourceIdSpEL = "#event.keycloakId()",
+            metadataSpEL   = "{'username': #event.username(), 'source': #event.source().name()}",
+            actorId        = "provisioning-service",
+            actorUsername  = "system"
+    )
     public void handleUserCreated(UserProvisioningEvent event) {
         log.info("Handling USER_CREATED [keycloakId={}, username={}, source={}]",
                 event.keycloakId(), event.username(), event.source());
@@ -48,6 +63,18 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionTypeSpEL = """
+            {'LDAP':              'USER_LDAP_PROVISION',
+             'ADMIN':             'USER_ADMIN_PROVISION',
+             'IDENTITY_PROVIDER': 'USER_IDENTITY_PROVIDER_PROVISION'}[#event.source().name()]
+            """,
+            resourceType   = ResourceType.USER,
+            resourceIdSpEL = "#event.keycloakId()",
+            metadataSpEL   = "{'username': #event.username(), 'source': #event.source().name()}",
+            actorId        = "provisioning-service",
+            actorUsername  = "system"
+    )
     public void handleUserUpdated(UserProvisioningEvent event) {
         log.info("Handling USER_UPDATED [keycloakId={}, username={}, source={}]",
                 event.keycloakId(), event.username(), event.source());
@@ -55,6 +82,14 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_DELETE,
+            resourceType   = ResourceType.USER,
+            resourceIdSpEL = "#event.keycloakId()",
+            metadataSpEL   = "{'source': #event.source().name()}",
+            actorId        = "provisioning-service",
+            actorUsername  = "system"
+    )
     public void handleUserDeleted(UserProvisioningEvent event) {
         log.info("Handling USER_DELETED [keycloakId={}, source={}]",
                 event.keycloakId(), event.source());

@@ -48,7 +48,7 @@ services:
       KC_LOG_LEVEL: DEBUG
 
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_USER_EVENTS_TOPIC: user-events
+      KAFKA_USER_EVENTS_TOPIC: user-provisioning-events
     ports:
       - "8081:8080"
     depends_on:

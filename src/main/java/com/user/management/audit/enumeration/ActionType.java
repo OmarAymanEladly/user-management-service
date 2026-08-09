@@ -1,0 +1,25 @@
+package com.user.management.audit.enumeration;
+
+public enum ActionType {
+    // User
+    USER_CREATE, USER_UPDATE, USER_DELETE,
+    USER_ACTIVATE, USER_DEACTIVATE,
+
+    // User Type
+    USER_TYPE_CREATE, USER_TYPE_UPDATE,
+
+    // Auth
+    TOKEN_VALIDATION_FAILURE,
+
+    // Delegation
+    DELEGATION_CREATE, DELEGATION_REVOKE, DELEGATION_EXPIRE,
+
+    // Signup
+    USER_SIGNUP_REQUEST, USER_SIGNUP_APPROVE, USER_SIGNUP_REJECT,
+
+    // Provisioning
+    USER_LDAP_PROVISION, USER_ADMIN_PROVISION, USER_IDENTITY_PROVIDER_PROVISION,
+
+    // Default
+    NONE
+}
