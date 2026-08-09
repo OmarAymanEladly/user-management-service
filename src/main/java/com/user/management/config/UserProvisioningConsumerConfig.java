@@ -44,11 +44,11 @@ public class UserProvisioningConsumerConfig {
 
 
 
-                if (root.has("userId") || (root.has("eventType") && root.get("eventType").isTextual())) {
-                    KeycloakEvent statusEvent = objectMapper.readValue(json, KeycloakEvent.class);
-                    log.info("Processing Status Event: {}", statusEvent.getEventType());
-                    provisioningService.handleKeycloakEvent(statusEvent);
-                } else {
+//                if (root.has("userId") || (root.has("eventType") && root.get("eventType").isTextual())) {
+//                    KeycloakEvent statusEvent = objectMapper.readValue(json, KeycloakEvent.class);
+//                    log.info("Processing Status Event: {}", statusEvent.getEventType());
+//                    provisioningService.handleKeycloakEvent(statusEvent);
+//                } else {
                     UserProvisioningEvent provEvent = objectMapper.readValue(json, UserProvisioningEvent.class);
                     log.info("Processing Provisioning Event: {}", provEvent.eventType());
                     switch (provEvent.eventType()) {
@@ -56,7 +56,7 @@ public class UserProvisioningConsumerConfig {
                         case USER_UPDATED -> provisioningService.handleUserUpdated(provEvent);
                         case USER_DELETED -> provisioningService.handleUserDeleted(provEvent);
                     }
-                }
+//                }
             } catch (Exception e) {
                 log.error("Failed to process message: {}", e.getMessage());
             }

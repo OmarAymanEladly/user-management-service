@@ -5,5 +5,6 @@ public enum ResourceType {
     USER_TYPE,
     DELEGATION,
     SIGNUP,
-    TOKEN
+    TOKEN,
+    NONE // will be inferred
 }

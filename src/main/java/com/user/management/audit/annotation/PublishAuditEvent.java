@@ -23,7 +23,7 @@ public @interface PublishAuditEvent {
      */
     String actionTypeSpEL() default "";
 
-    ResourceType resourceType();
+    ResourceType resourceType() default ResourceType.NONE;
 
     /**
      * SpEL to extract the resource ID.

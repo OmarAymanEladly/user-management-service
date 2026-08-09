@@ -1,10 +1,13 @@
 package com.user.management.audit.aspect;
 
+import com.user.management.audit.annotation.AuditActor;
+import com.user.management.audit.annotation.AuditResource;
 import com.user.management.audit.annotation.PublishAuditEvent;
 import com.user.management.audit.dto.Actor;
 import com.user.management.audit.dto.AuditEvent;
 import com.user.management.audit.dto.AuditEventData;
 import com.user.management.audit.dto.Resource;
+import com.user.management.audit.enumeration.ResourceType;
 import com.user.management.audit.publisher.AuditEventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,19 +37,23 @@ import java.util.UUID;
 @Aspect
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class AuditEventAspect {
 
     private final AuditEventPublisher publisher;
-    private final SpelExpressionParser spelParser      = new SpelExpressionParser();
+    private final SpelExpressionParser    spelParser     = new SpelExpressionParser();
     private final ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
     @Value("${audit.source-service:user-management-service}")
     private String sourceService;
 
+    public AuditEventAspect(AuditEventPublisher publisher) {
+        this.publisher = publisher;
+    }
+
     @Around("@annotation(annotation)")
     public Object intercept(ProceedingJoinPoint pjp, PublishAuditEvent annotation) throws Throwable {
         log.info("Audit aspect triggered for method [{}]", pjp.getSignature().getName());
+
         String outcome = "SUCCESS";
         String reason  = null;
         Object result  = null;
@@ -54,29 +61,30 @@ public class AuditEventAspect {
         try {
             result = pjp.proceed();
             return result;
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
             outcome = "FAILURE";
             reason  = ex.getMessage();
             throw ex;
-        } finally {
+        }
+        finally {
             if (!"FAILURE".equals(outcome) || annotation.publishOnFailure()) {
                 tryPublish(pjp, annotation, result, outcome, reason);
             }
         }
     }
 
-    // -------------------------------------------------------------------------
-
     private void tryPublish(ProceedingJoinPoint pjp, PublishAuditEvent annotation,
                             Object result, String outcome, String reason) {
         try {
-            EvaluationContext ctx = buildSpelContext(pjp, result);
+            EvaluationContext ctx         = buildSpelContext(pjp, result);
+            Class<?>          targetClass = pjp.getTarget().getClass();
 
-            String             actionType = resolveActionType(annotation, ctx);
-            String             resourceId = evalSpel(annotation.resourceIdSpEL(), ctx, String.class);
-            Map<String, Object> metadata  = resolveMetadata(annotation, ctx);
-            Actor actor      = resolveActor(annotation);
-            String             corrId     = Optional.ofNullable(MDC.get("correlationId"))
+            String              actionType   = resolveActionType(annotation, ctx);
+            Resource resource = resolveResource(annotation, targetClass, pjp, ctx);
+            Map<String, Object> metadata     = resolveMetadata(annotation, ctx);
+            Actor               actor        = resolveActor(annotation, targetClass);
+            String              corrId       = Optional.ofNullable(MDC.get("correlationId"))
                     .orElseGet(() -> UUID.randomUUID().toString());
 
             AuditEvent event = AuditEvent.builder()
@@ -87,7 +95,7 @@ public class AuditEventAspect {
                     .data(AuditEventData.builder()
                             .actionType(actionType)
                             .actor(actor)
-                            .resource(new Resource(resourceId, annotation.resourceType().name()))
+                            .resource(resource)
                             .outcome(outcome)
                             .reason(reason)
                             .correlationId(corrId)
@@ -97,25 +105,13 @@ public class AuditEventAspect {
 
             publisher.publish(event);
 
-        } catch (Exception e) {
-            // Publishing must never break business logic
-//            log.error("Failed to publish audit event for action [{}]: {}",
-//                    annotation.actionType(), e.getMessage(), e);
-            log.error("Audit publish failed: {}", e.getMessage(), e);
+        }
+        catch (Exception e) {
+            log.error("Failed to publish audit event for action [{}]: {}",
+                    annotation.actionType(), e.getMessage(), e);
         }
     }
 
-    private EvaluationContext buildSpelContext(ProceedingJoinPoint pjp, Object result) {
-        MethodSignature sig    = (MethodSignature) pjp.getSignature();
-        Method method = sig.getMethod();
-        Object[]        args   = pjp.getArgs();
-
-        MethodBasedEvaluationContext ctx = new MethodBasedEvaluationContext(
-                result, method, args, nameDiscoverer
-        );
-        ctx.setVariable("result", result); // explicit #result for consistency
-        return ctx;
-    }
 
     private String resolveActionType(PublishAuditEvent annotation, EvaluationContext ctx) {
         if (!annotation.actionTypeSpEL().isBlank()) {
@@ -124,24 +120,79 @@ public class AuditEventAspect {
         return annotation.actionType().name();
     }
 
-    private Actor resolveActor(PublishAuditEvent annotation) {
+    private Resource resolveResource(PublishAuditEvent annotation, Class<?> targetClass,
+                                     ProceedingJoinPoint pjp, EvaluationContext context) {
+
+        // 1. @PublishAuditEvent on method
+        if (annotation.resourceType() != ResourceType.NONE) {
+            String resourceId = evalSpel(annotation.resourceIdSpEL(), context, String.class);
+            return new Resource(annotation.resourceType().name(), resourceId);
+        }
+
+        // 2. @AuditResource on class
+        AuditResource auditResource =
+                targetClass.getAnnotation(AuditResource.class);
+
+        if (auditResource != null) {
+            String resourceId = evalSpel(auditResource.idSpEL(), context, String.class);
+            return new Resource(auditResource.type().name(), resourceId);
+        }
+
+        // Missing configuration: neither @PublishAuditEvent nor @AuditResource provided resource info
+        throw new IllegalStateException(
+                "No resource configuration found for method [" +
+                        targetClass.getName() + "." +
+                        pjp.getSignature().getName() +
+                        "]. Configure resourceType/resourceIdSpEL on " +
+                        "@PublishAuditEvent or @AuditResource on the class."
+        );
+    }
+
+    private Actor resolveActor(PublishAuditEvent annotation, Class<?> targetClass) {
+
+        // 1. @PublishAuditEvent on method
         if (!annotation.actorId().isBlank()) {
             return new Actor(annotation.actorId(), annotation.actorUsername());
         }
+
+        // 2. @AuditResource on class
+        AuditActor classActor = targetClass.getAnnotation(AuditActor.class);
+        if (classActor != null) {
+            return new Actor(classActor.id(), classActor.name());
+        }
+
+        // 3. JWT from SecurityContext
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
             return new Actor(jwt.getSubject(), jwt.getClaimAsString("preferred_username"));
         }
+
+        // 4. SYSTEM fallback
         return new Actor("SYSTEM", "system");
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, Object> resolveMetadata(PublishAuditEvent annotation, EvaluationContext ctx) {
+    private Map<String, Object> resolveMetadata(PublishAuditEvent annotation,
+                                                EvaluationContext ctx) {
         Map<?, ?> raw = evalSpel(annotation.metadataSpEL(), ctx, Map.class);
         if (raw == null) return Map.of();
         Map<String, Object> result = new LinkedHashMap<>();
         raw.forEach((k, v) -> result.put(String.valueOf(k), v));
         return result;
+    }
+
+    // SpEL helpers
+
+    private EvaluationContext buildSpelContext(ProceedingJoinPoint pjp, Object result) {
+        MethodSignature sig    = (MethodSignature) pjp.getSignature();
+        Method          method = sig.getMethod();
+        Object[]        args   = pjp.getArgs();
+
+        MethodBasedEvaluationContext ctx = new MethodBasedEvaluationContext(
+                result, method, args, nameDiscoverer
+        );
+        ctx.setVariable("result", result);
+        return ctx;
     }
 
     private <T> T evalSpel(String expression, EvaluationContext ctx, Class<T> type) {
