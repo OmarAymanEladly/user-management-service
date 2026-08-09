@@ -41,12 +41,16 @@ public class UserTypeServiceImpl implements UserTypeService {
     )
     public UserTypeResponseDTO createType(UserTypeRequestDTO request){
 
-        if(repository.findByType(request.getType().toLowerCase()).isPresent()){
+        String normalizedType = request.getType().trim().toUpperCase();
+
+        if(repository.findByType(normalizedType).isPresent()){
             throw new RuntimeException("User Type: "+request.getType()+" already exist");
         }
         validateRole(request.getRoleName());
 
         UserType entity = mapper.toEntity(request);
+
+        entity.setType(normalizedType);
         UserType saved = repository.save(entity);
 
         String status = "PENDING";
@@ -144,8 +148,19 @@ public class UserTypeServiceImpl implements UserTypeService {
         repository.deleteById(id);
         String typeName = userType.getType();
 
+        String status = "PENDING";
+        try {
+
+            keycloakService.cleanupUserTypeAttributes(typeName);
+            status = "PROCESSED";
+            log.info("Successfully cleaned up UserType '{}' from Keycloak immediately.", typeName);
+        } catch (Exception e) {
+            log.warn("Keycloak cleanup failed for '{}' (Keycloak might be down). Outbox will retry later.", typeName);
+        }
+
+
         Map<String, String> payload = Map.of("typeName", typeName);
-        outboxService.saveEvent(id, "USER_TYPE", "USER_TYPE_DELETED", payload, "PENDING");
+        outboxService.saveEvent(id, "USER_TYPE", "USER_TYPE_DELETED", payload, status);
     }
 
     private void validateRole(String roleName) {
