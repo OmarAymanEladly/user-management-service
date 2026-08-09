@@ -1,5 +1,9 @@
 package com.user.management.services.impl;
 
+import com.user.management.audit.annotation.AuditResource;
+import com.user.management.audit.annotation.PublishAuditEvent;
+import com.user.management.audit.enumeration.ActionType;
+import com.user.management.audit.enumeration.ResourceType;
 import com.user.management.dto.request.UserTypeRequestDTO;
 import com.user.management.dto.response.UserTypeResponseDTO;
 import com.user.management.repository.UserTypeRepository;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@AuditResource(type = ResourceType.USER_TYPE, idSpEL = "#id.toString()")
 public class UserTypeServiceImpl implements UserTypeService {
 
     private final UserTypeRepository repository;
@@ -29,6 +34,11 @@ public class UserTypeServiceImpl implements UserTypeService {
 
     @Override
     @Transactional
+    @PublishAuditEvent(
+            actionType     = ActionType.USER_TYPE_CREATE,
+            resourceIdSpEL = "#result.id.toString()",
+            metadataSpEL = "{'typeName': #request.type, 'role': #request.roleName}"
+    )
     public UserTypeResponseDTO createType(UserTypeRequestDTO request){
 
         if(repository.findByType(request.getType().toLowerCase()).isPresent()){
@@ -80,6 +90,10 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_TYPE_UPDATE,
+            metadataSpEL = "{'typeName': #request.type, 'status': #request.status}"
+    )
     public UserTypeResponseDTO updateType(UUID id, UserTypeRequestDTO request){
         UserType existingEntity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
@@ -111,6 +125,7 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
+    @PublishAuditEvent(actionType = ActionType.USER_TYPE_DEACTIVATE)
     public UserTypeResponseDTO deactivateType(UUID id) {
         UserType existingEntity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User Type not found with id: " + id));
@@ -120,6 +135,7 @@ public class UserTypeServiceImpl implements UserTypeService {
     }
 
     @Override
+    @PublishAuditEvent(actionType = ActionType.USER_TYPE_DELETE)
     public void deleteType(UUID id){
 
         UserType userType = repository.findById(id)

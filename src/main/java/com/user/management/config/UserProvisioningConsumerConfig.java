@@ -39,26 +39,30 @@ public class UserProvisioningConsumerConfig {
         return message -> {
             try {
                 String json = new String(message.getPayload());
-
                 var root = objectMapper.readTree(json);
 
+                if (!root.has("eventType")) return;
+                String typeStr = root.get("eventType").asText();
 
 
-//                if (root.has("userId") || (root.has("eventType") && root.get("eventType").isTextual())) {
-//                    KeycloakEvent statusEvent = objectMapper.readValue(json, KeycloakEvent.class);
-//                    log.info("Processing Status Event: {}", statusEvent.getEventType());
-//                    provisioningService.handleKeycloakEvent(statusEvent);
-//                } else {
+                if (typeStr.contains("BLOCKED")) {
+                    KeycloakEvent statusEvent = objectMapper.readValue(json, KeycloakEvent.class);
+                    log.info(">>>> KAFKA: Routing to Status Handler: {}", typeStr);
+                    provisioningService.handleKeycloakEvent(statusEvent);
+                }
+
+                else {
                     UserProvisioningEvent provEvent = objectMapper.readValue(json, UserProvisioningEvent.class);
-                    log.info("Processing Provisioning Event: {}", provEvent.eventType());
+                    log.info(">>>> KAFKA: Routing to Provisioning Handler: {}", provEvent.eventType());
+
                     switch (provEvent.eventType()) {
                         case USER_CREATED -> provisioningService.handleUserCreated(provEvent);
                         case USER_UPDATED -> provisioningService.handleUserUpdated(provEvent);
                         case USER_DELETED -> provisioningService.handleUserDeleted(provEvent);
                     }
-//                }
+                }
             } catch (Exception e) {
-                log.error("Failed to process message: {}", e.getMessage());
+                log.error("!!!! KAFKA Error: {}", e.getMessage());
             }
         };
     }

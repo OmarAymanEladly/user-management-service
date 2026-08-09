@@ -126,7 +126,7 @@ public class AuditEventAspect {
         // 1. @PublishAuditEvent on method
         if (annotation.resourceType() != ResourceType.NONE) {
             String resourceId = evalSpel(annotation.resourceIdSpEL(), context, String.class);
-            return new Resource(annotation.resourceType().name(), resourceId);
+            return new Resource(resourceId,annotation.resourceType().name());
         }
 
         // 2. @AuditResource on class

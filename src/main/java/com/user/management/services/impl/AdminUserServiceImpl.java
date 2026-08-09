@@ -1,5 +1,9 @@
 package com.user.management.services.impl;
 
+import com.user.management.audit.annotation.AuditResource;
+import com.user.management.audit.annotation.PublishAuditEvent;
+import com.user.management.audit.enumeration.ActionType;
+import com.user.management.audit.enumeration.ResourceType;
 import com.user.management.dto.request.AdminUserRequestDTO;
 import com.user.management.dto.request.UserApprovalStatusRequestDTO;
 import com.user.management.dto.response.AdminUserResponseDTO;
@@ -25,6 +29,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@AuditResource(type = ResourceType.USER, idSpEL = "#id?.toString()")
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final ManagedUserRepository managedUserRepository;
@@ -33,6 +38,11 @@ public class AdminUserServiceImpl implements AdminUserService {
     private final OutboxService outboxService;
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_CREATE,
+            resourceIdSpEL = "#result.id.toString()",
+            metadataSpEL = "{'username': #request.username, 'email': #request.email, 'typeId': #request.userTypeId}"
+    )
     public AdminUserResponseDTO createUser(AdminUserRequestDTO request) {
 
         if (managedUserRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -96,6 +106,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_UPDATE,
+            metadataSpEL = "{'username': #request.username, 'updatedAttributes': #request.attributes.keySet()}")
     public AdminUserResponseDTO updateUser(UUID id, AdminUserRequestDTO request) {
 
         if (keycloakService.isUserBlocked(id)) {
@@ -126,6 +139,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_ACTIVATE,
+            metadataSpEL = "{'reason': 'Manual Admin Activation'}")
     public AdminUserResponseDTO activateUser(UUID id) {
         ManagedUser user = getUser(id);
         String outboxStatus = "PENDING";
@@ -144,6 +160,9 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
+    @PublishAuditEvent(
+            actionType = ActionType.USER_DEACTIVATE,
+            metadataSpEL = "{'reason': 'Manual Admin Deactivation'}")
     public AdminUserResponseDTO deactivateUser(UUID id) {
         ManagedUser user = getUser(id);
         String outboxStatus = "PENDING";
@@ -191,6 +210,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
     @Override
+    @PublishAuditEvent(actionType = ActionType.USER_DELETE)
     public void deleteUser(UUID id) {
         String outboxStatus = "PENDING";
         try {

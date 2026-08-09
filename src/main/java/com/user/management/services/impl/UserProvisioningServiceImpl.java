@@ -125,6 +125,16 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     }
 
     @Override
+    @PublishAuditEvent(
+            resourceIdSpEL = "#event.userId",
+
+            actionTypeSpEL = """
+            #event.eventType == 'USER_UNBLOCKED' ? 
+                (#result ? 'USER_ACTIVATE' : 'NONE') : 
+                'USER_DEACTIVATE'
+            """,
+            metadataSpEL = "{'trigger_event': #event.eventType}"
+    )
     public void handleKeycloakEvent(KeycloakEvent event) {
         log.info("==> SERVICE: Processing Keycloak Event [Type: {}, User: {}]", event.getEventType(), event.getUserId());
 
@@ -135,9 +145,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
         UUID userId = UUID.fromString(event.getUserId());
 
-        if ("LOGIN_ERROR".equals(event.getEventType()) ||
-                "USER_DISABLED_BY_TEMPORARY_LOCKOUT".equals(event.getEventType()) ||
-                "USER_BLOCKED".equals(event.getEventType())) {
+        if ("USER_BLOCKED".equals(event.getEventType())) {
             log.info("==> SERVICE: Potential block detected. Checking Keycloak API for block status...");
 
             boolean isBlocked = keycloakService.isUserBlocked(userId);
@@ -154,7 +162,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
                     }
                 }, () -> log.error("==> SERVICE: Block event for user {} but user not found in local DB!", userId));
             }
-        } else if ("LOGIN".equals(event.getEventType()) || "USER_UNBLOCKED".equals(event.getEventType())) {
+        } else if ("USER_UNBLOCKED".equals(event.getEventType())) {
             log.info("==> SERVICE: Successful login. Re-enabling user if needed...");
             managedUserRepository.findById(userId).ifPresent(user -> {
                 if (!user.getEnabled()) {

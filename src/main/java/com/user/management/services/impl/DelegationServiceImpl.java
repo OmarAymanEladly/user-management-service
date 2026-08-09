@@ -1,5 +1,9 @@
 package com.user.management.services.impl;
 
+import com.user.management.audit.annotation.AuditResource;
+import com.user.management.audit.annotation.PublishAuditEvent;
+import com.user.management.audit.enumeration.ActionType;
+import com.user.management.audit.enumeration.ResourceType;
 import com.user.management.dto.request.DelegationRequestDTO;
 import com.user.management.dto.response.DelegationResponseDTO;
 import com.user.management.model.entity.Delegation;
@@ -20,6 +24,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@AuditResource(type = ResourceType.DELEGATION, idSpEL = "#id.toString()")
 public class DelegationServiceImpl implements DelegationService {
 
     private final DelegationRepository delegationRepository;
@@ -28,6 +33,11 @@ public class DelegationServiceImpl implements DelegationService {
 
     @Override
     @Transactional
+    @PublishAuditEvent(
+            actionType     = ActionType.DELEGATION_CREATE,
+            resourceIdSpEL = "#result.id.toString()",
+            metadataSpEL = "{'delegator': #request.delegatorId, 'delegatee': #request.delegateeId}"
+    )
     public DelegationResponseDTO createDelegation(DelegationRequestDTO request){
 
         LocalDateTime now = LocalDateTime.now();
@@ -95,6 +105,7 @@ public class DelegationServiceImpl implements DelegationService {
 
     @Override
     @Transactional
+    @PublishAuditEvent(actionType = ActionType.DELEGATION_REVOKE)
     public DelegationResponseDTO revokeDelegation(UUID id){
 
         Delegation delegation = delegationRepository.findById(id)
