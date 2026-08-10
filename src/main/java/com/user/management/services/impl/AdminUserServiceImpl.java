@@ -65,11 +65,11 @@ public class AdminUserServiceImpl implements AdminUserService {
             finalId = UUID.fromString(confirmedId);
             outboxStatus = "PROCESSED";
         } catch (Exception e) {
-            log.error("Keycloak unreachable during user creation. Local user saved as PENDING.");;
+            log.error("Keycloak unreachable during user creation. Local user saved as PENDING.");
         }
-        ManagedUser user = ManagedUser.builder().id(finalId)
-                .isNewUser(true)
-                .build();
+        final UUID readyToUseId = finalId;
+        ManagedUser user = managedUserRepository.findById(finalId)
+                .orElseGet(() -> ManagedUser.builder().id(readyToUseId).isNewUser(true).build());
         applyRequest(user, request, userType);
 
 
@@ -220,7 +220,8 @@ public class AdminUserServiceImpl implements AdminUserService {
             log.warn("Delete failed in Keycloak. Outbox will retry.");
         }
 
-        managedUserRepository.deleteById(id);
+        managedUserRepository.deleteByIdIfExists(id);
+
         outboxService.saveEvent(id, "USER", "USER_DELETED", null, outboxStatus);
     }
 

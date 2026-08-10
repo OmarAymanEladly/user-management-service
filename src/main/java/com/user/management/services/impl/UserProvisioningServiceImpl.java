@@ -126,14 +126,13 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
     @Override
     @PublishAuditEvent(
-            resourceIdSpEL = "#event.userId",
 
+            resourceIdSpEL = "#event.userId",
             actionTypeSpEL = """
-            #event.eventType == 'USER_UNBLOCKED' ? 
-                (#result ? 'USER_ACTIVATE' : 'NONE') : 
-                'USER_DEACTIVATE'
+            {'USER_UNBLOCKED': 'USER_ACTIVATE',
+             'USER_BLOCKED':   'USER_DEACTIVATE'}[#event.eventType]
             """,
-            metadataSpEL = "{'trigger_event': #event.eventType}"
+            metadataSpEL = "{'keycloak_event': #event.eventType, 'details': #event.details}"
     )
     public void handleKeycloakEvent(KeycloakEvent event) {
         log.info("==> SERVICE: Processing Keycloak Event [Type: {}, User: {}]", event.getEventType(), event.getUserId());

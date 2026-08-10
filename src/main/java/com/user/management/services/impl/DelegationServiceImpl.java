@@ -78,7 +78,8 @@ public class DelegationServiceImpl implements DelegationService {
 
         String outboxStatus = "PROCESSED";
         if (!rolesFetched) {
-            outboxStatus = "PENDING";
+            outboxStatus = "FAILED";
+            throw new RuntimeException("Keycloak is down try again later.");
         } else if ("ACTIVE".equals(status)) {
 
             try {

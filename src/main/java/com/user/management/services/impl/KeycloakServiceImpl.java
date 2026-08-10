@@ -231,7 +231,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         UPAttributePermissions typePermissions = new UPAttributePermissions();
         typePermissions.setView(Set.of("admin", "user"));
-        typePermissions.setEdit(Set.of("admin"));
+        typePermissions.setEdit(Set.of("admin","user"));
         typeAttr.setPermissions(typePermissions);
 
 
