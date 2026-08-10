@@ -126,8 +126,8 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
 
     @Override
     @PublishAuditEvent(
-
             resourceIdSpEL = "#event.userId",
+            resourceType = ResourceType.USER,
             actionTypeSpEL = """
             {'USER_UNBLOCKED': 'USER_ACTIVATE',
              'USER_BLOCKED':   'USER_DEACTIVATE'}[#event.eventType]
