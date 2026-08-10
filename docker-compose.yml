@@ -37,6 +37,7 @@ services:
     command:
       - start-dev
       - --verbose
+      - --import-realm
     environment:
       KC_DB: postgres
       KC_DB_URL_HOST: keycloak-db
@@ -48,7 +49,7 @@ services:
       KC_LOG_LEVEL: DEBUG
 
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KAFKA_USER_EVENTS_TOPIC: user-provisioning-events
+      KAFKA_USER_EVENTS_TOPIC: user-events
     ports:
       - "8081:8080"
     depends_on:
@@ -63,6 +64,7 @@ services:
       - ./providers/keycloak-field-validator-1.0.0.jar:/opt/keycloak/providers/keycloak-field-validator.jar
 
       - ./src/main/resources/themes/my-portal-theme:/opt/keycloak/themes/my-portal-theme
+      - ./user-management-realm.json:/opt/keycloak/data/import/user-management-realm.json
 
   # 4. Kafka and Kafka UI
   kafka:

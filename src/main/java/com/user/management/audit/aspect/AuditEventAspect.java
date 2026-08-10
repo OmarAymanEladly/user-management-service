@@ -79,7 +79,6 @@ public class AuditEventAspect {
         try {
             EvaluationContext ctx         = buildSpelContext(pjp, result);
             Class<?>          targetClass = pjp.getTarget().getClass();
-
             String              actionType   = resolveActionType(annotation, ctx);
             Resource resource = resolveResource(annotation, targetClass, pjp, ctx);
             Map<String, Object> metadata     = resolveMetadata(annotation, ctx);
@@ -124,9 +123,10 @@ public class AuditEventAspect {
                                      ProceedingJoinPoint pjp, EvaluationContext context) {
 
         // 1. @PublishAuditEvent on method
-        if (annotation.resourceType() != ResourceType.NONE) {
+        if (annotation.resourceType() != ResourceType.NONE
+                && !annotation.resourceIdSpEL().isBlank()) {
             String resourceId = evalSpel(annotation.resourceIdSpEL(), context, String.class);
-            return new Resource(resourceId,annotation.resourceType().name());
+            return new Resource(resourceId, annotation.resourceType().name());
         }
 
         // 2. @AuditResource on class
@@ -135,7 +135,7 @@ public class AuditEventAspect {
 
         if (auditResource != null) {
             String resourceId = evalSpel(auditResource.idSpEL(), context, String.class);
-            return new Resource(auditResource.type().name(), resourceId);
+            return new Resource(resourceId, auditResource.type().name());
         }
 
         // Missing configuration: neither @PublishAuditEvent nor @AuditResource provided resource info

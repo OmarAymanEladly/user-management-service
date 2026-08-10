@@ -51,7 +51,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     @Override
     @PublishAuditEvent(
             actionTypeSpEL = PROVISIONING_ACTION_TYPE_SpEL,
-            resourceType   = ResourceType.USER
+            metadataSpEL   = "{'username': #event.username(), 'source': #event.source().name()}"
     )
     public void handleUserCreated(UserProvisioningEvent event) {
         log.info("Handling USER_CREATED [keycloakId={}, username={}, source={}]",
@@ -62,7 +62,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     @Override
     @PublishAuditEvent(
             actionTypeSpEL = PROVISIONING_ACTION_TYPE_SpEL,
-            resourceType   = ResourceType.USER
+            metadataSpEL   = "{'username': #event.username(), 'source': #event.source().name()}"
     )
     public void handleUserUpdated(UserProvisioningEvent event) {
         log.info("Handling USER_UPDATED [keycloakId={}, username={}, source={}]",
@@ -73,7 +73,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
     @Override
     @PublishAuditEvent(
             actionType = ActionType.USER_DELETE,
-            resourceType   = ResourceType.USER
+            metadataSpEL   = "{'source': #event.source().name()}"
     )
     public void handleUserDeleted(UserProvisioningEvent event) {
         log.info("Handling USER_DELETED [keycloakId={}, source={}]",
