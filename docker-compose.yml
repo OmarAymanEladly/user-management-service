@@ -64,7 +64,6 @@ services:
       - ./providers/keycloak-field-validator-1.0.0.jar:/opt/keycloak/providers/keycloak-field-validator.jar
 
       - ./src/main/resources/themes/my-portal-theme:/opt/keycloak/themes/my-portal-theme
-      - ./user-management-realm.json:/opt/keycloak/data/import/user-management-realm.json
 
   # 4. Kafka and Kafka UI
   kafka:
