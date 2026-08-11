@@ -29,7 +29,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@AuditResource(type = ResourceType.USER, idSpEL = "#id?.toString()")
+@AuditResource(type = ResourceType.USER, idSpEL = "#result.id.toString()")
 public class AdminUserServiceImpl implements AdminUserService {
 
     private final ManagedUserRepository managedUserRepository;
@@ -39,8 +39,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     @PublishAuditEvent(
+         //   resourceIdSpEL = "#result.id.toString()",
+         //   resourceType = ResourceType.USER,
             actionType = ActionType.USER_CREATE,
-            resourceIdSpEL = "#result.id.toString()",
             metadataSpEL = "{'username': #request.username, 'email': #request.email, 'typeId': #request.userTypeId}"
     )
     public AdminUserResponseDTO createUser(AdminUserRequestDTO request) {

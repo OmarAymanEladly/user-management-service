@@ -134,6 +134,7 @@ public class UserProvisioningServiceImpl implements UserProvisioningService {
             """,
             metadataSpEL = "{'keycloak_event': #event.eventType, 'details': #event.details}"
     )
+
     public void handleKeycloakEvent(KeycloakEvent event) {
         log.info("==> SERVICE: Processing Keycloak Event [Type: {}, User: {}]", event.getEventType(), event.getUserId());
 
